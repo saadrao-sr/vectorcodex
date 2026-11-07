@@ -1,0 +1,129 @@
+---
+import {
+  ArrowUpRight,
+  Building2,
+  Bus,
+  Calculator,
+  Car,
+  Cigarette,
+  ClipboardList,
+  HeartPulse,
+  Plane,
+  Stethoscope,
+  type LucideIcon,
+} from 'lucide-react';
+import { industries } from '../../config/industries';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+
+const icons: Record<string, LucideIcon> = {
+  healthcare: HeartPulse,
+  accounting: Calculator,
+  tourism: Plane,
+  tobacco: Cigarette,
+  'real-estate': Building2,
+  'medical-billing': ClipboardList,
+  dental: Stethoscope,
+  minibus: Bus,
+  'car-rental': Car,
+};
+
+const directory = industries.map((industry) => ({
+  id: industry.slug,
+  title: industry.name,
+  href: industry.path,
+  Icon: icons[industry.slug] ?? Building2,
+}));
+---
+
+<section
+  id="industry-listing"
+  class="industries-empower relative isolate scroll-mt-28 overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="industries-empower-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="absolute top-16 right-[10%] h-52 w-52 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-3xl"></div>
+    <div class="absolute bottom-10 left-[6%] h-48 w-48 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="industries-empower__intro mx-auto flex justify-center">
+      <p id="industries-empower-heading" class:list={[eyebrowClass, 'w-fit max-w-full']}>
+        Industries We Serve
+      </p>
+    </div>
+
+    <ul class="industries-empower__grid mt-7 grid grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2 md:grid-cols-3 lg:mt-9 lg:grid-cols-4 lg:gap-4">
+      {
+        directory.map((industry, index) => {
+          const Icon = industry.Icon;
+          return (
+            <li style={`--empower-i: ${index}`}>
+              <a
+                id={`industry-${industry.id}`}
+                href={industry.href}
+                class="industries-empower__card group relative flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-white/12 bg-white/[0.03] p-4 transition duration-300 hover:border-highlight/40 hover:bg-white/[0.05] sm:rounded-[1.4rem] sm:p-5"
+              >
+                <div
+                  class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/12 via-transparent to-transparent opacity-90 transition duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+                ></div>
+                <div
+                  class="pointer-events-none absolute -top-12 -right-10 h-28 w-28 rounded-full bg-highlight/10 blur-2xl transition duration-500 group-hover:bg-highlight/18"
+                  aria-hidden="true"
+                ></div>
+
+                <div class="relative flex items-start justify-between gap-3">
+                  <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-highlight/25 bg-highlight/10 text-highlight transition duration-300 group-hover:border-highlight/45 group-hover:shadow-[0_0_24px_rgb(222_243_77_/0.16)]">
+                    <Icon size={18} aria-hidden="true" />
+                  </span>
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-white/35 transition duration-300 group-hover:border-highlight/35 group-hover:text-highlight">
+                    <ArrowUpRight size={14} aria-hidden="true" />
+                  </span>
+                </div>
+
+                <h3 class="relative mt-4 font-display text-base font-semibold tracking-tight text-white sm:text-lg">
+                  {industry.title}
+                </h3>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </Container>
+</section>
+
+<style>
+  .industries-empower__card {
+    scroll-margin-top: 7rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .industries-empower__intro,
+    .industries-empower__grid > li {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: industries-empower-rise 0.65s ease forwards;
+    }
+
+    .industries-empower__intro {
+      animation-delay: 40ms;
+    }
+
+    .industries-empower__grid > li {
+      animation-delay: calc(90ms + var(--empower-i, 0) * 40ms);
+    }
+
+    .industries-empower__card:hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  @keyframes industries-empower-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+import { faqs } from '../../config/faqs';
+import FaqAccordion from '../interactive/FaqAccordion';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+---
+
+<section
+  id="faq"
+  class="relative isolate overflow-hidden border-t border-white/10 bg-bg py-12 sm:py-14 lg:py-16"
+  aria-labelledby="faq-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="absolute top-20 right-[12%] h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-2xl"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class={eyebrowClass}>FAQs</p>
+      <h2
+        id="faq-heading"
+        class="mt-3 font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.75rem]"
+      >
+        <span class="text-white">Frequently Asked </span>
+        <span class="text-highlight">Questions</span>
+      </h2>
+      <p class="mt-3 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
+        Quick answers about how we work, what we deliver, and how to start.
+      </p>
+    </div>
+
+    <div class="mx-auto mt-8 max-w-3xl sm:mt-10">
+      <FaqAccordion client:visible items={faqs} />
+    </div>
+  </Container>
+</section>

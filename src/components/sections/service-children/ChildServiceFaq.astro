@@ -1,0 +1,73 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import type { ChildServiceLanding } from '../../../config/service-children';
+import FaqAccordion from '../../interactive/FaqAccordion';
+import AmbientBackdrop from '../../ui/AmbientBackdrop.astro';
+import Container from '../../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  service: ChildServiceLanding;
+}
+
+const { service } = Astro.props;
+const { faqs, enquiryValue } = service;
+---
+
+<section
+  id={`${service.slug}-faq`}
+  class="relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby={`${service.slug}-faq-heading`}
+>
+  <AmbientBackdrop variant="orbs" />
+  <Container class="relative">
+    <div class="child-faq">
+      <div class="child-faq__copy min-w-0">
+        <p class:list={[eyebrowClass, 'w-fit max-w-full']}>{faqs.eyebrow}</p>
+        <h2
+          id={`${service.slug}-faq-heading`}
+          class="mt-3 max-w-xl font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem]"
+        >
+          {faqs.titleBefore}
+          <span class="text-highlight"> {faqs.titleHighlight}</span>
+        </h2>
+        <p class="mt-3 max-w-md text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">{faqs.intro}</p>
+        <div class="mt-5">
+          <button
+            type="button"
+            class:list={[buttonClass.base, buttonClass.gradient, 'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto']}
+            data-quote-open
+            data-service={enquiryValue}
+          >
+            {`Discuss ${service.name}`}
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+      <div class="min-w-0">
+        <FaqAccordion client:visible items={faqs.items} />
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .child-faq {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 960px) {
+    .child-faq {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .child-faq__copy {
+      position: sticky;
+      top: 6.5rem;
+    }
+  }
+</style>

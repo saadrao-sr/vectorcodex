@@ -1,0 +1,110 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import type { LocationOffice } from '../../config/locations';
+import FaqAccordion from '../interactive/FaqAccordion';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+import LocationAmbientBg from './LocationAmbientBg.astro';
+
+interface Props {
+  location: LocationOffice;
+}
+
+const { location } = Astro.props;
+const { faqs } = location;
+---
+
+<section
+  id="location-faq"
+  class="location-faq relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="location-faq-heading"
+>
+  <LocationAmbientBg variant="b" />
+
+  <Container class="relative">
+    <div class="location-faq__layout">
+      <div class="location-faq__copy min-w-0">
+        <p class:list={[eyebrowClass, 'location-faq__eyebrow w-fit max-w-full']}>
+          Frequently Asked Questions
+        </p>
+        <h2
+          id="location-faq-heading"
+          class="location-faq__title mt-3 max-w-xl font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.45rem] lg:leading-[1.08]"
+        >
+          Questions About Our Digital Services in
+          <span class="text-highlight"> {location.locationLabel}.</span>
+        </h2>
+        <p class="location-faq__intro mt-3 max-w-md text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">
+          {faqs.intro}
+        </p>
+
+        <div class="location-faq__cta mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:flex-wrap">
+          <button
+            type="button"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto',
+            ]}
+            data-quote-open
+          >
+            Start Your Project
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </button>
+          <a href="/contact/" class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}>
+            Contact Us
+          </a>
+        </div>
+      </div>
+
+      <div class="location-faq__accordion min-w-0">
+        <FaqAccordion client:visible items={faqs.items} />
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .location-faq__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  @media (min-width: 960px) {
+    .location-faq__layout {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 2rem;
+    }
+
+    .location-faq__copy {
+      position: sticky;
+      top: 6.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .location-faq__copy,
+    .location-faq__accordion {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: location-faq-rise 0.7s ease forwards;
+    }
+
+    .location-faq__copy {
+      animation-delay: 60ms;
+    }
+
+    .location-faq__accordion {
+      animation-delay: 140ms;
+    }
+  }
+
+  @keyframes location-faq-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

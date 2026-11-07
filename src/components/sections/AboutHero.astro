@@ -1,0 +1,631 @@
+---
+import { ArrowDown, ArrowUpRight, Code2, LineChart, Search, Target } from 'lucide-react';
+import type { Crumb } from '../../types/content';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+
+interface Props {
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+const pageLabel = crumbs[crumbs.length - 1]?.name ?? 'About';
+
+const floats = [
+  { label: 'SEO', Icon: Search, class: 'about-hero__float about-hero__float--seo' },
+  { label: 'Development', Icon: Code2, class: 'about-hero__float about-hero__float--dev' },
+  { label: 'Strategy', Icon: Target, class: 'about-hero__float about-hero__float--strategy' },
+  { label: 'Growth', Icon: LineChart, class: 'about-hero__float about-hero__float--growth' },
+] as const;
+---
+
+<section
+  id="about-hero"
+  class="about-hero relative isolate overflow-x-clip overflow-y-visible border-b border-white/10 bg-[#0D120C] pt-[calc(var(--header-height)+1.5rem)] pb-12 sm:pt-[calc(var(--header-height)+2rem)] sm:pb-14 lg:pb-16"
+  aria-labelledby="about-hero-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="absolute top-[-8%] left-[12%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.12),transparent_70%)] blur-3xl sm:h-72 sm:w-72"></div>
+    <div class="absolute right-[-4%] bottom-[8%] h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.08),transparent_72%)] blur-3xl sm:h-80 sm:w-80"></div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/30 to-transparent"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="about-hero__intro">
+      <nav class="about-hero__crumbband" aria-label="Breadcrumb">
+        <div class="about-hero__crumbband-bg" aria-hidden="true">
+          <img
+            src="/images/hero-tech.jpg"
+            alt=""
+            width={1200}
+            height={400}
+            loading="eager"
+            decoding="async"
+            class="about-hero__crumbband-image"
+          />
+          <div class="about-hero__crumbband-veil"></div>
+          <div class="about-hero__crumbband-glow"></div>
+        </div>
+
+        <div class="about-hero__crumbband-content">
+          <div class="about-hero__crumbband-rule" aria-hidden="true">
+            <span class="about-hero__crumbband-line"></span>
+            <span class="about-hero__crumbband-mark"></span>
+            <span class="about-hero__crumbband-line"></span>
+          </div>
+
+          <p class="about-hero__crumbband-title">{pageLabel === 'About' ? 'About Us' : pageLabel}</p>
+
+          <ol class="about-hero__crumbband-trail">
+            {
+              crumbs.map((item, index) => {
+                const last = index === crumbs.length - 1;
+                return (
+                  <li class="inline-flex items-center gap-2">
+                    {index > 0 && <span aria-hidden="true" class="text-white/30">/</span>}
+                    {last ? (
+                      <span aria-current="page" class="text-highlight">
+                        {item.name}
+                      </span>
+                    ) : (
+                      <a href={item.href} class="transition hover:text-highlight">
+                        {item.name}
+                      </a>
+                    )}
+                  </li>
+                );
+              })
+            }
+          </ol>
+        </div>
+      </nav>
+    </div>
+
+    <div class="mt-7 grid items-center gap-8 sm:mt-8 sm:gap-9 md:mt-9 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] md:gap-8 lg:mt-10 lg:gap-12 xl:gap-16">
+      <div class="about-hero__copy min-w-0">
+        <p class:list={[eyebrowClass, 'w-fit max-w-full']}>Get to Know VectorCodex</p>
+
+        <h1
+          id="about-hero-heading"
+          class="mt-4 max-w-xl font-display text-[1.85rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-4xl sm:leading-[1.08] md:text-[2.35rem] md:leading-[1.08] lg:text-[3.15rem] lg:leading-[1.05]"
+        >
+          We Turn
+          <span class="text-highlight"> Digital Challenges </span>
+          Into Opportunities for
+          <span class="text-highlight"> Growth.</span>
+        </h1>
+
+        <p class="mt-4 max-w-lg text-sm leading-6 text-white/65 sm:mt-5 sm:text-base sm:leading-7 lg:text-lg lg:leading-8">
+          We are a digital growth partner combining SEO, web development, and marketing expertise to help businesses build stronger online experiences, reach the right audiences, and achieve lasting results.
+        </p>
+
+        <div class="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:flex-wrap">
+          <a
+            href="/contact/"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto',
+            ]}
+          >
+            Let's Work Together
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+          <a href="#our-approach" class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}>
+            Explore Our Approach
+            <ArrowDown size={16} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+
+      <div class="about-hero__visual relative mx-auto w-full max-w-md min-w-0 sm:max-w-lg md:mx-0 md:max-w-none">
+        <div class="about-hero__frame relative px-1 sm:px-2 md:px-0">
+          <div
+            class="pointer-events-none absolute inset-2 rounded-[1.75rem] bg-[radial-gradient(ellipse_at_30%_20%,rgb(222_243_77_/0.14),transparent_55%)] sm:-inset-1 sm:rounded-[2rem] md:-inset-2 lg:-inset-3"
+            aria-hidden="true"
+          ></div>
+
+          <div class="about-hero__stack relative mx-auto w-full">
+            <div class="about-hero__panel about-hero__panel--back" aria-hidden="true"></div>
+            <div class="about-hero__panel about-hero__panel--mid" aria-hidden="true"></div>
+
+            <figure class="about-hero__media relative overflow-hidden rounded-[1.35rem] border border-white/12 bg-surface shadow-[0_28px_80px_rgb(0_0_0_/0.45)] sm:rounded-[1.6rem]">
+              <img
+                src="/images/hero-tech.jpg"
+                alt=""
+                width={1200}
+                height={900}
+                fetchpriority="high"
+                decoding="async"
+                class="about-hero__image h-full w-full object-cover object-center"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0D120C]/85 via-[#0D120C]/2 to-transparent"
+                aria-hidden="true"
+              ></div>
+              <div
+                class="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgb(222_243_77_/0.08),transparent_42%)]"
+                aria-hidden="true"
+              ></div>
+            </figure>
+
+            {
+              floats.map((item) => {
+                const Icon = item.Icon;
+                return (
+                  <div class={item.class}>
+                    <span class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-highlight/30 bg-highlight/10 text-highlight sm:h-7 sm:w-7">
+                      <Icon size={12} aria-hidden="true" />
+                    </span>
+                    <span>{item.label}</span>
+                  </div>
+                );
+              })
+            }
+
+            <div class="about-hero__badge">
+              <img
+                src="/images/google-partner.webp"
+                alt="Google Partner"
+                width={160}
+                height={60}
+                loading="lazy"
+                decoding="async"
+                class="h-6 w-auto object-contain sm:h-7"
+              />
+              <div class="min-w-0">
+                <p class="text-[0.6rem] font-semibold tracking-[0.14em] text-highlight uppercase sm:text-[0.65rem]">
+                  Verified Partner
+                </p>
+                <p class="mt-0.5 text-[0.7rem] leading-4 text-white/65 sm:text-xs">Google Affiliated Partner</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-hero__scroll mt-10 flex justify-center sm:mt-12 lg:mt-14">
+      <a
+        href="#our-approach"
+        class="group inline-flex flex-col items-center gap-2 text-xs font-semibold tracking-[0.16em] text-white/45 uppercase transition hover:text-highlight"
+      >
+        <span>Scroll</span>
+        <span class="about-hero__scroll-line inline-flex h-10 w-6 items-start justify-center rounded-full border border-white/15 pt-1.5">
+          <span class="about-hero__scroll-dot h-1.5 w-1.5 rounded-full bg-highlight"></span>
+        </span>
+      </a>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .about-hero__crumbband {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    min-height: 7.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow: 0 18px 48px rgb(0 0 0 / 0.28);
+  }
+
+  .about-hero__crumbband-bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .about-hero__crumbband-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    transform: scale(1.08);
+    filter: saturate(0.85) brightness(0.72);
+  }
+
+  .about-hero__crumbband-veil {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(13 18 12 / 0.82), rgb(13 18 12 / 0.55) 48%, rgb(13 18 12 / 0.8)),
+      linear-gradient(180deg, rgb(13 18 12 / 0.35), rgb(13 18 12 / 0.78));
+  }
+
+  .about-hero__crumbband-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 70% 40%, rgb(222 243 77 / 0.18), transparent 48%),
+      radial-gradient(ellipse at 20% 70%, rgb(197 246 61 / 0.1), transparent 42%);
+  }
+
+  .about-hero__crumbband-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 1.35rem 1.25rem;
+    text-align: center;
+  }
+
+  .about-hero__crumbband-rule {
+    display: flex;
+    width: min(100%, 18rem);
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  @media (min-width: 640px) {
+    .about-hero__crumbband {
+      min-height: 8.5rem;
+      border-radius: 1.75rem;
+    }
+
+    .about-hero__crumbband-content {
+      padding: 1.6rem 1.5rem;
+    }
+  }
+
+  .about-hero__crumbband-line {
+    height: 1px;
+    flex: 1 1 auto;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgb(222 243 77 / 0.15) 12%,
+      rgb(222 243 77 / 0.55) 50%,
+      rgb(222 243 77 / 0.15) 88%,
+      transparent
+    );
+    background-size: 10px 1px;
+    background-repeat: repeat-x;
+    opacity: 0.9;
+  }
+
+  .about-hero__crumbband-mark {
+    position: relative;
+    width: 0.7rem;
+    height: 0.7rem;
+    flex: 0 0 auto;
+  }
+
+  .about-hero__crumbband-mark::before,
+  .about-hero__crumbband-mark::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: rgb(222 243 77 / 0.85);
+    transform: translate(-50%, -50%);
+  }
+
+  .about-hero__crumbband-mark::before {
+    width: 100%;
+    height: 1px;
+  }
+
+  .about-hero__crumbband-mark::after {
+    width: 1px;
+    height: 100%;
+  }
+
+  .about-hero__crumbband-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    background: linear-gradient(180deg, #ffffff 20%, rgb(255 255 255 / 0.72) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .about-hero__crumbband-trail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem 0.5rem;
+    font-size: 0.8125rem;
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  .about-hero__stack {
+    position: relative;
+    width: 100%;
+    max-width: 22rem;
+    margin-inline: auto;
+    aspect-ratio: 4 / 4.55;
+  }
+
+  .about-hero__panel {
+    position: absolute;
+    border-radius: 1.35rem;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: linear-gradient(160deg, rgb(222 243 77 / 0.08), rgb(255 255 255 / 0.02));
+  }
+
+  .about-hero__panel--back {
+    top: 6%;
+    right: 2%;
+    width: 86%;
+    height: 86%;
+    transform: rotate(3deg);
+  }
+
+  .about-hero__panel--mid {
+    top: 3%;
+    left: 2%;
+    width: 78%;
+    height: 78%;
+    transform: rotate(-4deg);
+    border-color: rgb(222 243 77 / 0.16);
+  }
+
+  .about-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+  }
+
+  .about-hero__float {
+    position: absolute;
+    z-index: 3;
+    display: inline-flex;
+    max-width: calc(100% - 1rem);
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    background: rgb(13 18 12 / 0.88);
+    padding: 0.35rem 0.65rem 0.35rem 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgb(255 255 255 / 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.35);
+  }
+
+  .about-hero__float--seo {
+    top: 8%;
+    left: 3%;
+  }
+
+  .about-hero__float--dev {
+    top: 26%;
+    right: 3%;
+  }
+
+  .about-hero__float--strategy {
+    bottom: 30%;
+    left: 3%;
+  }
+
+  .about-hero__float--growth {
+    right: 4%;
+    bottom: 16%;
+  }
+
+  .about-hero__badge {
+    position: absolute;
+    z-index: 4;
+    right: 0.65rem;
+    bottom: 0.65rem;
+    left: 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    border-radius: 0.9rem;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    background: rgb(13 18 12 / 0.9);
+    padding: 0.55rem 0.7rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 16px 40px rgb(0 0 0 / 0.4);
+  }
+
+  @media (min-width: 640px) {
+    .about-hero__stack {
+      max-width: 26rem;
+      aspect-ratio: 4 / 4.5;
+    }
+
+    .about-hero__panel {
+      border-radius: 1.5rem;
+    }
+
+    .about-hero__float {
+      font-size: 0.72rem;
+      padding: 0.45rem 0.75rem 0.45rem 0.45rem;
+    }
+
+    .about-hero__badge {
+      right: auto;
+      left: 1rem;
+      bottom: 1rem;
+      max-width: 16rem;
+      border-radius: 1rem;
+      padding: 0.7rem 0.85rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .about-hero__stack {
+      max-width: none;
+      width: 100%;
+      margin-inline: 0;
+      aspect-ratio: 4 / 4.55;
+    }
+
+    .about-hero__panel--back {
+      top: 7%;
+      right: 0;
+      width: 84%;
+      height: 84%;
+      transform: rotate(3deg);
+    }
+
+    .about-hero__panel--mid {
+      top: 3%;
+      left: 0;
+      width: 74%;
+      height: 74%;
+      transform: rotate(-4deg);
+    }
+
+    .about-hero__float--seo {
+      left: 2%;
+    }
+
+    .about-hero__float--dev {
+      right: 2%;
+    }
+
+    .about-hero__float--strategy {
+      left: 2%;
+    }
+
+    .about-hero__float--growth {
+      right: 3%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .about-hero__stack {
+      aspect-ratio: 4 / 4.45;
+    }
+
+    .about-hero__panel--back {
+      top: 8%;
+      right: -2%;
+      width: 78%;
+      height: 78%;
+      transform: rotate(4deg);
+    }
+
+    .about-hero__panel--mid {
+      top: 4%;
+      left: -2%;
+      width: 70%;
+      height: 70%;
+      transform: rotate(-5deg);
+    }
+
+    .about-hero__float--seo {
+      left: 0;
+    }
+
+    .about-hero__float--dev {
+      right: 0;
+    }
+
+    .about-hero__float--strategy {
+      left: 0;
+    }
+
+    .about-hero__float--growth {
+      right: 4%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-hero__intro,
+    .about-hero__copy,
+    .about-hero__visual,
+    .about-hero__scroll {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: about-hero-rise 0.7s ease forwards;
+    }
+
+    .about-hero__intro {
+      animation-delay: 40ms;
+    }
+
+    .about-hero__copy {
+      animation-delay: 90ms;
+    }
+
+    .about-hero__visual {
+      animation-delay: 160ms;
+    }
+
+    .about-hero__scroll {
+      animation-delay: 280ms;
+    }
+
+    .about-hero__float--seo {
+      animation: about-hero-float 7s ease-in-out infinite;
+    }
+
+    .about-hero__float--dev {
+      animation: about-hero-float 8s ease-in-out infinite;
+      animation-delay: -2s;
+    }
+
+    .about-hero__float--strategy {
+      animation: about-hero-float 7.5s ease-in-out infinite;
+      animation-delay: -3.5s;
+    }
+
+    .about-hero__float--growth {
+      animation: about-hero-float 8.5s ease-in-out infinite;
+      animation-delay: -1.2s;
+    }
+
+    .about-hero__image {
+      animation: about-hero-pan 18s ease-in-out infinite alternate;
+    }
+
+    .about-hero__scroll-dot {
+      animation: about-hero-scroll 1.6s ease-in-out infinite;
+    }
+  }
+
+  @keyframes about-hero-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes about-hero-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-7px);
+    }
+  }
+
+  @keyframes about-hero-pan {
+    from {
+      transform: scale(1.02) translate3d(0, 0, 0);
+    }
+    to {
+      transform: scale(1.05) translate3d(-1%, 0.8%, 0);
+    }
+  }
+
+  @keyframes about-hero-scroll {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(10px);
+    }
+  }
+</style>

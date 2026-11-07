@@ -1,0 +1,300 @@
+---
+interface Props {
+  /** Slight layout variation so sections do not look identical. */
+  variant?: 'a' | 'b' | 'c';
+}
+
+const { variant = 'a' } = Astro.props;
+---
+
+<div class:list={['location-ambient', `location-ambient--${variant}`]} aria-hidden="true">
+  <div class="location-ambient__glow location-ambient__glow--a"></div>
+  <div class="location-ambient__glow location-ambient__glow--b"></div>
+  <span class="location-ambient__shape location-ambient__shape--ring"></span>
+  <span class="location-ambient__shape location-ambient__shape--orb"></span>
+  <span class="location-ambient__shape location-ambient__shape--square"></span>
+  <span class="location-ambient__shape location-ambient__shape--line"></span>
+  <span class="location-ambient__shape location-ambient__shape--dot"></span>
+  <span class="location-ambient__shape location-ambient__shape--pill"></span>
+  <span class="location-ambient__shape location-ambient__shape--arc"></span>
+</div>
+
+<style>
+  .location-ambient {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .location-ambient__glow {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(48px);
+  }
+
+  .location-ambient__glow--a {
+    top: 2.5rem;
+    left: 6%;
+    width: 13rem;
+    height: 13rem;
+    background: radial-gradient(circle, rgb(222 243 77 / 0.09), transparent 70%);
+  }
+
+  .location-ambient__glow--b {
+    right: 5%;
+    bottom: 2rem;
+    width: 15rem;
+    height: 15rem;
+    background: radial-gradient(circle, rgb(197 246 61 / 0.06), transparent 70%);
+  }
+
+  .location-ambient--b .location-ambient__glow--a {
+    top: 4rem;
+    left: auto;
+    right: 8%;
+  }
+
+  .location-ambient--b .location-ambient__glow--b {
+    right: auto;
+    bottom: 2.5rem;
+    left: 5%;
+  }
+
+  .location-ambient--c .location-ambient__glow--a {
+    top: 3rem;
+    left: 12%;
+  }
+
+  .location-ambient--c .location-ambient__glow--b {
+    right: 10%;
+    bottom: 3rem;
+  }
+
+  .location-ambient__shape {
+    position: absolute;
+    opacity: 0.2;
+    will-change: transform;
+  }
+
+  .location-ambient__shape--ring {
+    top: 12%;
+    left: 5%;
+    width: 6rem;
+    height: 6rem;
+    border: 1.5px solid rgb(222 243 77 / 0.5);
+    border-radius: 9999px;
+  }
+
+  .location-ambient__shape--orb {
+    top: 16%;
+    right: 7%;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(222 243 77 / 0.22);
+    background: radial-gradient(circle at 35% 30%, rgb(222 243 77 / 0.3), transparent 68%);
+  }
+
+  .location-ambient__shape--square {
+    --shape-rot: 16deg;
+    bottom: 16%;
+    left: 9%;
+    width: 2.7rem;
+    height: 2.7rem;
+    border: 1.5px solid rgb(222 243 77 / 0.42);
+    border-radius: 0.55rem;
+    transform: rotate(var(--shape-rot));
+  }
+
+  .location-ambient__shape--line {
+    top: 48%;
+    right: 12%;
+    width: 4rem;
+    height: 1.5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgb(222 243 77 / 0.5), transparent);
+  }
+
+  .location-ambient__shape--dot {
+    bottom: 22%;
+    right: 16%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.28;
+  }
+
+  .location-ambient__shape--pill {
+    --shape-rot: -12deg;
+    top: 58%;
+    left: 14%;
+    width: 3.4rem;
+    height: 1.2rem;
+    border: 1px solid rgb(222 243 77 / 0.38);
+    border-radius: 9999px;
+    transform: rotate(var(--shape-rot));
+  }
+
+  .location-ambient__shape--arc {
+    bottom: 30%;
+    left: 20%;
+    width: 4.75rem;
+    height: 4.75rem;
+    border: 1px dashed rgb(222 243 77 / 0.35);
+    border-radius: 9999px;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+  }
+
+  .location-ambient--b .location-ambient__shape--ring {
+    top: 10%;
+    left: auto;
+    right: 6%;
+  }
+
+  .location-ambient--b .location-ambient__shape--orb {
+    top: 20%;
+    right: auto;
+    left: 6%;
+  }
+
+  .location-ambient--b .location-ambient__shape--square {
+    bottom: 14%;
+    left: auto;
+    right: 10%;
+  }
+
+  .location-ambient--b .location-ambient__shape--line {
+    top: 42%;
+    right: auto;
+    left: 10%;
+    background: linear-gradient(90deg, transparent, rgb(222 243 77 / 0.5));
+  }
+
+  .location-ambient--b .location-ambient__shape--pill {
+    top: auto;
+    bottom: 12%;
+    left: 12%;
+  }
+
+  .location-ambient--b .location-ambient__shape--arc {
+    bottom: auto;
+    top: 34%;
+    left: auto;
+    right: 18%;
+  }
+
+  .location-ambient--c .location-ambient__shape--ring {
+    top: 18%;
+    left: 8%;
+  }
+
+  .location-ambient--c .location-ambient__shape--orb {
+    top: auto;
+    bottom: 18%;
+    right: 8%;
+  }
+
+  .location-ambient--c .location-ambient__shape--square {
+    top: 36%;
+    bottom: auto;
+    left: 5%;
+  }
+
+  .location-ambient--c .location-ambient__shape--line {
+    top: 28%;
+    right: 14%;
+  }
+
+  .location-ambient--c .location-ambient__shape--pill {
+    top: auto;
+    bottom: 20%;
+    left: auto;
+    right: 20%;
+  }
+
+  .location-ambient--c .location-ambient__shape--arc {
+    bottom: 12%;
+    left: 16%;
+  }
+
+  @media (max-width: 639px) {
+    .location-ambient__shape--ring {
+      width: 4.25rem;
+      height: 4.25rem;
+    }
+
+    .location-ambient__shape--orb {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .location-ambient__shape--square,
+    .location-ambient__shape--pill,
+    .location-ambient__shape--arc {
+      opacity: 0.14;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .location-ambient__shape--ring {
+      animation: location-ambient-drift-a 16s ease-in-out infinite;
+    }
+
+    .location-ambient__shape--orb {
+      animation: location-ambient-drift-b 18s ease-in-out infinite;
+    }
+
+    .location-ambient__shape--square {
+      animation: location-ambient-drift-c 14s ease-in-out infinite;
+    }
+
+    .location-ambient__shape--line {
+      animation: location-ambient-drift-a 20s ease-in-out infinite reverse;
+    }
+
+    .location-ambient__shape--dot {
+      animation: location-ambient-drift-b 12s ease-in-out infinite;
+    }
+
+    .location-ambient__shape--pill {
+      animation: location-ambient-drift-c 17s ease-in-out infinite reverse;
+    }
+
+    .location-ambient__shape--arc {
+      animation: location-ambient-drift-a 22s ease-in-out infinite;
+    }
+  }
+
+  @keyframes location-ambient-drift-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(12px, -16px, 0);
+    }
+  }
+
+  @keyframes location-ambient-drift-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-12px, 10px, 0);
+    }
+  }
+
+  @keyframes location-ambient-drift-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--shape-rot, 0deg));
+    }
+    50% {
+      transform: translate3d(10px, -10px, 0) rotate(calc(var(--shape-rot, 0deg) + 8deg));
+    }
+  }
+</style>

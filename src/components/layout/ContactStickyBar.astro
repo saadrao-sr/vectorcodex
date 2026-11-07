@@ -1,0 +1,71 @@
+---
+import { Mail, Phone } from 'lucide-react';
+import { site } from '../../config/site';
+
+const whatsappHref = site.whatsapp ? `https://wa.me/${site.whatsapp}` : '';
+const phoneHref = site.telephone
+  ? `tel:${site.telephone.replace(/\s+/g, '')}`
+  : site.whatsapp
+    ? `tel:+${site.whatsapp}`
+    : '';
+const emailHref = site.email ? `mailto:${site.email}` : '';
+
+const iconBtn =
+  'inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-[#0D120C]/85 text-white shadow-[0_8px_24px_rgb(0_0_0_/0.35)] backdrop-blur-sm transition duration-300 hover:border-highlight/50 hover:bg-highlight/10 hover:text-highlight';
+---
+
+<aside
+  class="pointer-events-none fixed top-1/2 right-0 z-40 hidden -translate-y-1/2 lg:block"
+  aria-label="Quick contact"
+>
+  <div class="pointer-events-auto flex flex-col items-end gap-3 pr-3 lg:pr-5">
+    <ul class="flex flex-col items-center gap-3">
+      {
+        whatsappHref && (
+          <li>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Chat on WhatsApp"
+              class={iconBtn}
+            >
+              <svg viewBox="0 0 24 24" class="h-[1.15rem] w-[1.15rem] fill-current" aria-hidden="true">
+                <path d="M12.04 2C6.58 2 2.15 6.4 2.15 11.84c0 1.99.58 3.84 1.6 5.42L2 22l4.9-1.64a9.86 9.86 0 0 0 5.14 1.4h.01c5.46 0 9.89-4.4 9.89-9.84C21.94 6.4 17.5 2 12.04 2zm5.77 13.99c-.24.67-1.4 1.23-1.94 1.31-.5.07-1.13.1-1.82-.11-.42-.14-.96-.3-1.65-.59-2.9-1.25-4.78-4.17-4.93-4.36-.14-.19-1.19-1.58-1.19-3.02 0-1.44.75-2.15 1.02-2.44.27-.29.59-.36.79-.36h.57c.18 0 .43-.07.67.51.24.6.82 2.01.89 2.16.07.14.12.32.02.51-.1.2-.14.32-.29.49-.14.17-.3.38-.43.51-.14.14-.29.29-.12.57.17.28.74 1.22 1.59 1.98 1.1.97 2.02 1.27 2.31 1.41.28.14.45.12.61-.07.17-.2.71-.82.9-1.1.19-.29.38-.24.64-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.7-.17 1.37z" />
+              </svg>
+            </a>
+          </li>
+        )
+      }
+      {
+        emailHref && (
+          <li>
+            <a href={emailHref} aria-label={`Email ${site.email}`} class={iconBtn}>
+              <Mail size={18} aria-hidden="true" />
+            </a>
+          </li>
+        )
+      }
+      {
+        phoneHref && (
+          <li>
+            <a href={phoneHref} aria-label="Call us" class={iconBtn}>
+              <Phone size={18} aria-hidden="true" />
+            </a>
+          </li>
+        )
+      }
+    </ul>
+
+    <button
+      type="button"
+      data-quote-open
+      class="group inline-flex min-h-[9.5rem] w-11 cursor-pointer items-center justify-center rounded-l-2xl rounded-r-none bg-gradient-to-b from-lime to-gold px-0 py-4 text-bg shadow-[0_12px_32px_rgb(197_246_61_/0.22)] transition duration-300 hover:brightness-105"
+      aria-label="Get a quote"
+    >
+      <span class="rotate-180 text-[0.72rem] font-bold tracking-[0.18em] uppercase [writing-mode:vertical-rl]">
+        Get A Quote!
+      </span>
+    </button>
+  </div>
+</aside>

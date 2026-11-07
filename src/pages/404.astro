@@ -1,0 +1,367 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import { buttonClass } from '../components/ui/styles';
+import { webPageSchema } from '../lib/schema/jsonld';
+import { site } from '../config/site';
+
+const title = 'Page not found';
+const description = 'The page you requested is not on the VectorCodex website.';
+
+const destinations = [
+  { href: '/services/', label: 'Services' },
+  { href: '/industries/', label: 'Industries' },
+  { href: '/case-studies/', label: 'Case Studies' },
+  { href: '/blog/', label: 'Insights' },
+  { href: '/contact/', label: 'Contact' },
+] as const;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path="/404/"
+  noindex
+  schema={[webPageSchema({ title, description, path: '/404/' })]}
+>
+  <section class="not-found" aria-labelledby="not-found-heading">
+    <div class="not-found__atmosphere" aria-hidden="true">
+      <div class="not-found__grid"></div>
+      <div class="not-found__glow not-found__glow--a"></div>
+      <div class="not-found__glow not-found__glow--b"></div>
+      <div class="not-found__scan"></div>
+      <p class="not-found__glyph">404</p>
+    </div>
+
+    <Container class="relative z-10">
+      <div class="not-found__stage">
+        <p class="not-found__brand">{site.name}</p>
+
+        <p class="not-found__status">
+          <span class="not-found__status-dot" aria-hidden="true"></span>
+          Signal lost · route unmapped
+        </p>
+
+        <h1 id="not-found-heading" class="not-found__title">
+          This path isn’t on the map.
+        </h1>
+
+        <p class="not-found__lede">
+          The address may have moved, or it was never published. Pick a clear route
+          back into the site — or tell us what you were looking for.
+        </p>
+
+        <div class="not-found__actions">
+          <a href="/" class:list={[buttonClass.base, buttonClass.gradient, 'not-found__cta']}>
+            Back to home
+          </a>
+          <a href="/contact/" class:list={[buttonClass.base, buttonClass.ghost, 'not-found__cta']}>
+            Contact us
+          </a>
+        </div>
+
+        <nav class="not-found__routes" aria-label="Suggested destinations">
+          <p class="not-found__routes-label">Continue from here</p>
+          <ul class="not-found__routes-list">
+            {
+              destinations.map((item, index) => (
+                <li>
+                  <a href={item.href}>
+                    <span class="not-found__routes-index">{String(index + 1).padStart(2, '0')}</span>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    min-height: calc(100dvh - var(--header-height));
+    display: flex;
+    align-items: center;
+    padding: 4.5rem 0 5rem;
+    background: #0d120c;
+  }
+
+  .not-found__atmosphere {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+  }
+
+  .not-found__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgb(222 243 77 / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(222 243 77 / 0.045) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 42%, #000 20%, transparent 78%);
+  }
+
+  .not-found__glow {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(48px);
+  }
+
+  .not-found__glow--a {
+    top: 8%;
+    left: 12%;
+    width: 18rem;
+    height: 18rem;
+    background: radial-gradient(circle, rgb(222 243 77 / 0.14), transparent 70%);
+  }
+
+  .not-found__glow--b {
+    right: 6%;
+    bottom: 12%;
+    width: 22rem;
+    height: 22rem;
+    background: radial-gradient(circle, rgb(197 246 61 / 0.1), transparent 72%);
+  }
+
+  .not-found__scan {
+    position: absolute;
+    inset-inline: 0;
+    top: 28%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(222 243 77 / 0.55), transparent);
+    opacity: 0.55;
+  }
+
+  .not-found__glyph {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(9rem, 34vw, 26rem);
+    font-weight: 700;
+    letter-spacing: -0.08em;
+    line-height: 0.85;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(222 243 77 / 0.18);
+    text-stroke: 1.5px rgb(222 243 77 / 0.18);
+    user-select: none;
+    transform: translateY(-4%);
+  }
+
+  .not-found__stage {
+    position: relative;
+    max-width: 40rem;
+  }
+
+  .not-found__brand {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2.35rem, 6.5vw, 4.25rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    color: #def34d;
+    text-wrap: balance;
+  }
+
+  .not-found__status {
+    margin: 1.1rem 0 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  .not-found__status-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: #def34d;
+    box-shadow: 0 0 0 0 rgb(222 243 77 / 0.45);
+  }
+
+  .not-found__title {
+    margin: 0.85rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 3.2vw, 2.15rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    text-wrap: balance;
+    color: #fff;
+  }
+
+  .not-found__lede {
+    margin: 1.15rem 0 0;
+    max-width: 32rem;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: rgb(255 255 255 / 0.68);
+  }
+
+  .not-found__actions {
+    margin-top: 1.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .not-found__cta {
+    width: 100%;
+  }
+
+  .not-found__routes {
+    margin-top: 2.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+  }
+
+  .not-found__routes-label {
+    margin: 0;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.4);
+  }
+
+  .not-found__routes-list {
+    margin: 0.85rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.25rem;
+  }
+
+  .not-found__routes-list a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    min-height: 2.25rem;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: rgb(255 255 255 / 0.78);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .not-found__routes-list a:hover {
+    color: #def34d;
+  }
+
+  .not-found__routes-index {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgb(222 243 77 / 0.7);
+  }
+
+  @media (min-width: 640px) {
+    .not-found {
+      padding: 5.5rem 0 6rem;
+    }
+
+    .not-found__actions {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .not-found__cta {
+      width: auto;
+      min-width: 11.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .not-found__stage {
+      animation: not-found-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .not-found__glyph {
+      animation: not-found-drift 14s ease-in-out infinite alternate;
+    }
+
+    .not-found__scan {
+      animation: not-found-scan 4.8s ease-in-out infinite;
+    }
+
+    .not-found__status-dot {
+      animation: not-found-pulse 2.2s ease-out infinite;
+    }
+
+    .not-found__grid {
+      animation: not-found-grid 18s linear infinite;
+    }
+  }
+
+  @keyframes not-found-rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes not-found-drift {
+    from {
+      transform: translateY(-4%) scale(1);
+      opacity: 0.85;
+    }
+    to {
+      transform: translateY(-1%) scale(1.02);
+      opacity: 1;
+    }
+  }
+
+  @keyframes not-found-scan {
+    0%,
+    100% {
+      top: 22%;
+      opacity: 0.2;
+    }
+    50% {
+      top: 58%;
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes not-found-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgb(222 243 77 / 0.45);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgb(222 243 77 / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(222 243 77 / 0);
+    }
+  }
+
+  @keyframes not-found-grid {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 72px 72px;
+    }
+  }
+</style>

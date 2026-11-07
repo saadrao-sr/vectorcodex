@@ -1,0 +1,63 @@
+---
+import { locations, type LocationOffice } from '../../config/locations';
+import { breadcrumbSchema, faqPageSchema, webPageSchema } from '../../lib/schema/jsonld';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageCrumbBand from '../../components/sections/PageCrumbBand.astro';
+import LocationHero from '../../components/sections/LocationHero.astro';
+import LocationLandscape from '../../components/sections/LocationLandscape.astro';
+import LocationChallenges from '../../components/sections/LocationChallenges.astro';
+import LocationServices from '../../components/sections/LocationServices.astro';
+import LocationIndustries from '../../components/sections/LocationIndustries.astro';
+import LocationWhyChoose from '../../components/sections/LocationWhyChoose.astro';
+import LocationLanding from '../../components/sections/LocationLanding.astro';
+import LocationFaq from '../../components/sections/LocationFaq.astro';
+import LocationFinalCta from '../../components/sections/LocationFinalCta.astro';
+import QuoteModal from '../../components/interactive/QuoteModal';
+import BookingModal from '../../components/interactive/BookingModal';
+
+export function getStaticPaths() {
+  return locations.map((location) => ({
+    params: { slug: location.slug },
+    props: { location },
+  }));
+}
+
+interface Props {
+  location: LocationOffice;
+}
+
+const { location } = Astro.props;
+const title = `Digital Growth in ${location.name}`;
+const description = location.heroDescription;
+const path = location.path;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Contact', href: '/contact/' },
+  { name: location.name, href: path },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  noindex={location.placeholder}
+  schema={[
+    webPageSchema({ title, description, path }),
+    breadcrumbSchema(crumbs),
+    faqPageSchema(location.faqs.items),
+  ]}
+>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <BookingModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <PageCrumbBand title={location.name} crumbs={crumbs} />
+  <LocationHero location={location} />
+  <LocationLandscape location={location} />
+  <LocationServices location={location} />
+  <LocationChallenges location={location} />
+  <LocationIndustries location={location} />
+  <LocationWhyChoose location={location} />
+  <LocationLanding location={location} />
+  <LocationFaq location={location} />
+  <LocationFinalCta location={location} />
+</BaseLayout>

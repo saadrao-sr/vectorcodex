@@ -1,0 +1,432 @@
+---
+import {
+  Award,
+  Compass,
+  Eye,
+  Lightbulb,
+  ShieldCheck,
+  TrendingUp,
+  Users,
+  type LucideIcon,
+} from 'lucide-react';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+
+type ValueItem = {
+  title: string;
+  text: string;
+  Icon: LucideIcon;
+};
+
+const values: ValueItem[] = [
+  {
+    title: 'Integrity',
+    text: 'We believe in honesty, transparency, and building trust.',
+    Icon: ShieldCheck,
+  },
+  {
+    title: 'Innovation',
+    text: 'We embrace new ideas, technologies, and better ways of working.',
+    Icon: Lightbulb,
+  },
+  {
+    title: 'Collaboration',
+    text: 'We achieve stronger outcomes through teamwork and shared goals.',
+    Icon: Users,
+  },
+  {
+    title: 'Excellence',
+    text: 'We focus on quality, attention to detail, and continuous improvement.',
+    Icon: Award,
+  },
+  {
+    title: 'Growth',
+    text: 'We prioritize meaningful progress and long-term partnerships.',
+    Icon: TrendingUp,
+  },
+];
+---
+
+<section
+  id="mission-vision-values"
+  class="about-mvv relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-8 sm:py-10 lg:py-11"
+  aria-labelledby="mission-vision-values-heading"
+>
+  <div class="about-mvv__bg pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute top-20 left-[4%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-3xl"></div>
+    <div class="absolute right-[6%] bottom-16 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.06),transparent_70%)] blur-3xl"></div>
+    <span class="about-mvv__shape about-mvv__shape--ring"></span>
+    <span class="about-mvv__shape about-mvv__shape--orb"></span>
+    <span class="about-mvv__shape about-mvv__shape--square"></span>
+    <span class="about-mvv__shape about-mvv__shape--line"></span>
+    <span class="about-mvv__shape about-mvv__shape--dot"></span>
+    <span class="about-mvv__shape about-mvv__shape--arc"></span>
+  </div>
+
+  <Container class="relative">
+    <header class="about-mvv__intro mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'w-fit max-w-full']}>What Drives Us</p>
+      <h2
+        id="mission-vision-values-heading"
+        class="mt-4 font-display text-[1.75rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-3xl md:text-[2.25rem] lg:text-[2.65rem] lg:leading-[1.08]"
+      >
+        The Principles Behind
+        <span class="text-highlight"> Everything We Build.</span>
+      </h2>
+      <p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-7 lg:text-[1.0625rem] lg:leading-8">
+        Our purpose, ambition, and values shape how we think, collaborate, and deliver digital solutions. They guide every decision we make and every partnership we build.
+      </p>
+    </header>
+
+    <div class="about-mvv__grid mt-7 grid gap-3 sm:mt-8 sm:gap-4 lg:mt-9 lg:grid-cols-12 lg:gap-4">
+      <article
+        class="about-mvv__panel about-mvv__panel--mission group relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.03] p-5 sm:rounded-[1.75rem] sm:p-6 lg:col-span-7 lg:min-h-[16.5rem] lg:p-7"
+      >
+        <div
+          class="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgb(222_243_77_/0.12),transparent_42%,transparent_100%)] transition duration-500 group-hover:opacity-100"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute -top-16 -right-10 h-44 w-44 rounded-full bg-highlight/10 blur-3xl transition duration-500 group-hover:bg-highlight/16"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="about-mvv__compass pointer-events-none absolute right-4 bottom-4 h-36 w-36 rounded-full border border-highlight/15 sm:right-6 sm:bottom-6 sm:h-44 sm:w-44"
+          aria-hidden="true"
+        >
+          <span class="about-mvv__compass-ring"></span>
+          <span class="about-mvv__compass-cross"></span>
+        </div>
+
+        <div class="relative flex h-full flex-col">
+          <div class="flex items-start justify-between gap-4">
+            <p class="font-display text-xs font-semibold tracking-[0.18em] text-highlight uppercase">01 — Our Mission</p>
+            <div class="about-mvv__icon inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-highlight/30 bg-highlight/10 text-highlight">
+              <Compass size={20} aria-hidden="true" />
+            </div>
+          </div>
+
+          <h3 class="mt-4 max-w-md font-display text-2xl font-semibold tracking-tight text-white sm:text-[1.75rem] lg:text-[1.9rem] lg:leading-tight">
+            Making Digital Growth
+            <span class="text-highlight"> More Meaningful.</span>
+          </h3>
+          <p class="mt-3 max-w-xl text-sm leading-7 text-white/65 sm:text-base sm:leading-7">
+            Our mission is to empower businesses with effective digital strategies, innovative technology, and creative solutions that strengthen their online presence and support sustainable growth.
+          </p>
+        </div>
+      </article>
+
+      <article
+        class="about-mvv__panel about-mvv__panel--vision group relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-[#101610] p-5 sm:rounded-[1.75rem] sm:p-6 lg:col-span-5 lg:min-h-[16.5rem] lg:p-7"
+      >
+        <div
+          class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgb(222_243_77_/0.14),transparent_55%)]"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute -bottom-10 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full border border-highlight/20"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute -bottom-2 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full border border-highlight/10"
+          aria-hidden="true"
+        ></div>
+
+        <div class="relative flex h-full flex-col">
+          <div class="flex items-start justify-between gap-4">
+            <p class="font-display text-xs font-semibold tracking-[0.18em] text-highlight uppercase">02 — Our Vision</p>
+            <div class="about-mvv__icon inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-highlight/30 bg-highlight/10 text-highlight">
+              <Eye size={20} aria-hidden="true" />
+            </div>
+          </div>
+
+          <h3 class="mt-4 font-display text-2xl font-semibold tracking-tight text-white sm:text-[1.75rem] lg:text-[1.85rem] lg:leading-tight">
+            Building What's Next
+            <span class="text-highlight"> in Digital.</span>
+          </h3>
+          <p class="mt-3 text-sm leading-7 text-white/65 sm:text-base sm:leading-7">
+            Our vision is to become a trusted digital growth partner for businesses worldwide, helping them adapt, innovate, and succeed in an ever-evolving digital landscape.
+          </p>
+        </div>
+      </article>
+
+      <article
+        class="about-mvv__panel about-mvv__panel--values group relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.03] p-5 sm:rounded-[1.75rem] sm:p-6 lg:col-span-12 lg:p-7"
+      >
+        <div
+          class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(222_243_77_/0.06),transparent_38%)]"
+          aria-hidden="true"
+        ></div>
+
+        <div class="relative">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div class="max-w-xl">
+              <p class="font-display text-xs font-semibold tracking-[0.18em] text-highlight uppercase">03 — Our Values</p>
+              <h3 class="mt-3 font-display text-2xl font-semibold tracking-tight text-white sm:text-[1.75rem]">
+                The Standards Behind
+                <span class="text-highlight"> Our Work.</span>
+              </h3>
+            </div>
+          </div>
+
+          <ul class="mt-5 grid gap-3 sm:mt-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+            {
+              values.map((value, index) => {
+                const Icon = value.Icon;
+                return (
+                  <li
+                    class="about-mvv__value group/value relative overflow-hidden rounded-[1.15rem] border border-white/10 bg-[#0D120C]/65 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-highlight/40 hover:bg-[#0D120C]/9"
+                    style={`--value-delay: ${index * 60}ms`}
+                  >
+                    <div class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-highlight/25 bg-highlight/10 text-highlight transition duration-300 group-hover/value:border-highlight/45">
+                      <Icon size={16} aria-hidden="true" />
+                    </div>
+                    <h4 class="mt-3 font-display text-base font-semibold tracking-tight text-white">{value.title}</h4>
+                    <p class="mt-1.5 text-sm leading-6 text-white/60">{value.text}</p>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </div>
+      </article>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .about-mvv__shape {
+    position: absolute;
+    opacity: 0.2;
+    will-change: transform;
+  }
+
+  .about-mvv__shape--ring {
+    top: 10%;
+    left: 5%;
+    width: 6.5rem;
+    height: 6.5rem;
+    border: 1.5px solid rgb(222 243 77 / 0.5);
+    border-radius: 9999px;
+  }
+
+  .about-mvv__shape--orb {
+    top: 14%;
+    right: 7%;
+    width: 4.75rem;
+    height: 4.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(222 243 77 / 0.22);
+    background: radial-gradient(circle at 35% 30%, rgb(222 243 77 / 0.32), transparent 68%);
+  }
+
+  .about-mvv__shape--square {
+    --shape-rot: 16deg;
+    bottom: 14%;
+    left: 9%;
+    width: 2.85rem;
+    height: 2.85rem;
+    border: 1.5px solid rgb(222 243 77 / 0.42);
+    border-radius: 0.6rem;
+    transform: rotate(var(--shape-rot));
+  }
+
+  .about-mvv__shape--line {
+    top: 48%;
+    right: 11%;
+    width: 4.25rem;
+    height: 1.5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgb(222 243 77 / 0.5), transparent);
+  }
+
+  .about-mvv__shape--dot {
+    bottom: 20%;
+    right: 16%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.28;
+  }
+
+  .about-mvv__shape--arc {
+    bottom: 28%;
+    left: 18%;
+    width: 5rem;
+    height: 5rem;
+    border: 1px dashed rgb(222 243 77 / 0.35);
+    border-radius: 9999px;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+  }
+
+  @media (max-width: 639px) {
+    .about-mvv__shape--ring {
+      width: 4.5rem;
+      height: 4.5rem;
+    }
+
+    .about-mvv__shape--orb {
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+
+    .about-mvv__shape--square,
+    .about-mvv__shape--arc {
+      opacity: 0.14;
+    }
+  }
+
+  .about-mvv__panel {
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s ease,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .about-mvv__panel:hover {
+    border-color: rgb(222 243 77 / 0.35);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.28);
+  }
+
+  .about-mvv__icon {
+    transition:
+      transform 0.35s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .about-mvv__panel:hover .about-mvv__icon {
+    border-color: rgb(222 243 77 / 0.5);
+    box-shadow: 0 0 28px rgb(222 243 77 / 0.18);
+    transform: translateY(-2px);
+  }
+
+  .about-mvv__compass-ring {
+    position: absolute;
+    inset: 18%;
+    border-radius: 9999px;
+    border: 1px dashed rgb(222 243 77 / 0.22);
+  }
+
+  .about-mvv__compass-cross {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgb(222 243 77 / 0.18), rgb(222 243 77 / 0.18)) center / 1px 56% no-repeat,
+      linear-gradient(rgb(222 243 77 / 0.18), rgb(222 243 77 / 0.18)) center / 56% 1px no-repeat;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-mvv__intro,
+    .about-mvv__panel {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: about-mvv-rise 0.75s ease forwards;
+    }
+
+    .about-mvv__intro {
+      animation-delay: 40ms;
+    }
+
+    .about-mvv__panel--mission {
+      animation-delay: 120ms;
+    }
+
+    .about-mvv__panel--vision {
+      animation-delay: 180ms;
+    }
+
+    .about-mvv__panel--values {
+      animation-delay: 240ms;
+    }
+
+    .about-mvv__value {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: about-mvv-rise 0.6s ease forwards;
+      animation-delay: calc(280ms + var(--value-delay, 0ms));
+    }
+
+    .about-mvv__compass {
+      animation: about-mvv-spin 28s linear infinite;
+    }
+
+    .about-mvv__panel--mission:hover {
+      transform: translateY(-3px);
+    }
+
+    .about-mvv__panel--vision:hover {
+      transform: translateY(-3px);
+    }
+
+    .about-mvv__shape--ring {
+      animation: about-mvv-drift-a 16s ease-in-out infinite;
+    }
+
+    .about-mvv__shape--orb {
+      animation: about-mvv-drift-b 18s ease-in-out infinite;
+    }
+
+    .about-mvv__shape--square {
+      animation: about-mvv-drift-c 14s ease-in-out infinite;
+    }
+
+    .about-mvv__shape--line {
+      animation: about-mvv-drift-a 20s ease-in-out infinite reverse;
+    }
+
+    .about-mvv__shape--dot {
+      animation: about-mvv-drift-b 12s ease-in-out infinite;
+    }
+
+    .about-mvv__shape--arc {
+      animation: about-mvv-drift-c 22s ease-in-out infinite reverse;
+    }
+  }
+
+  @keyframes about-mvv-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes about-mvv-drift-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(12px, -16px, 0);
+    }
+  }
+
+  @keyframes about-mvv-drift-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-12px, 10px, 0);
+    }
+  }
+
+  @keyframes about-mvv-drift-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--shape-rot, 0deg));
+    }
+    50% {
+      transform: translate3d(10px, -10px, 0) rotate(calc(var(--shape-rot, 0deg) + 8deg));
+    }
+  }
+
+  @keyframes about-mvv-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

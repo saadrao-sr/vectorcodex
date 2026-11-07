@@ -1,0 +1,609 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import { webDevelopmentParentService } from '../../../../config/service-parents/web-development';
+import AmbientBackdrop from '../../../ui/AmbientBackdrop.astro';
+import Container from '../../../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../../../ui/styles';
+import ServiceParentFaq from '../shared/ServiceParentFaq.astro';
+import ServiceParentFinalCta from '../shared/ServiceParentFinalCta.astro';
+import ServiceParentMidCta from '../shared/ServiceParentMidCta.astro';
+
+const service = webDevelopmentParentService;
+const { hero, problems, capabilities, method, showcase, children, deliverables, enquiryValue } = service;
+
+const featuredKeys = new Set([
+  'Custom website development',
+  'WordPress development',
+  'Shopify development',
+]);
+const featuredCaps = capabilities.items.filter((c) => featuredKeys.has(c.title));
+const compactCaps = capabilities.items.filter((c) => !featuredKeys.has(c.title));
+
+---
+
+<div class="web-landing bg-[#0D120C] text-white">
+  <section class="web-hero relative isolate overflow-hidden border-b border-white/10 py-8 sm:py-12 lg:py-16" aria-labelledby="web-hero-heading">
+    <AmbientBackdrop variant="orbs" />
+    <Container class="relative">
+      <div class="web-hero__layout">
+        <div class="web-hero__copy min-w-0">
+          <p class:list={[eyebrowClass, 'w-fit max-w-full']}>{hero.eyebrow}</p>
+          <h1
+            id="web-hero-heading"
+            class="mt-3 font-display text-[1.85rem] leading-[1.1] font-semibold tracking-tight text-balance sm:mt-4 sm:text-[2.35rem] sm:leading-[1.08] lg:text-[2.85rem]"
+          >
+            {hero.titleBefore}
+            <span class="text-highlight"> {hero.titleHighlight}</span>
+          </h1>
+          <p class="mt-3 max-w-lg text-sm leading-7 text-white/70 sm:mt-4 sm:text-base sm:leading-8">{hero.intro}</p>
+          <div class="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:flex-wrap">
+            <button
+              type="button"
+              class:list={[
+                buttonClass.base,
+                buttonClass.gradient,
+                'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto',
+              ]}
+              data-quote-open
+              data-service={enquiryValue}
+            >
+              {hero.primaryCtaLabel}
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}
+              data-booking-open
+              data-service={enquiryValue}
+            >
+              {hero.secondaryCtaLabel}
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </button>
+          </div>
+          <p class="mt-4 max-w-md text-xs leading-6 text-white/45 sm:mt-5 sm:text-sm">{hero.proofLine}</p>
+        </div>
+
+        <div class="web-browser relative min-w-0">
+          <div
+            class="web-browser__chrome overflow-hidden rounded-[1.15rem] border border-white/14 bg-[#121812] shadow-[0_16px_48px_rgb(0_0_0_/0.3)] sm:rounded-2xl sm:shadow-[0_24px_70px_rgb(0_0_0_/0.4)]"
+            aria-hidden="true"
+          >
+            <div class="flex items-center gap-2 border-b border-white/10 px-3 pt-3 pb-2.5 sm:px-4 sm:pt-3.5 sm:pb-3">
+              <div class="flex gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-white/12"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-white/12"></span>
+              </div>
+              <div class="ml-2 flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-white/10 bg-black/35 px-2.5 py-1.5 text-[10px] text-white/45 sm:text-[11px]">
+                <span class="shrink-0 rounded border border-white/15 px-1 py-px text-[8px] tracking-wider uppercase">https</span>
+                <span class="truncate">vectorcodex.example / build-preview</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-[minmax(0,0.28fr)_minmax(0,1fr)] border-b border-white/10">
+              <div class="border-r border-white/10 bg-black/20 p-2.5 sm:p-3">
+                <div class="h-2 w-14 rounded bg-white/12"></div>
+                <div class="mt-2.5 space-y-2">
+                  {
+                    Array.from({ length: 4 }).map((_, i) => (
+                      <div class="h-1.5 rounded bg-white/8 web-browser__row" style={`width:${72 - i * 10}%`} />
+                    ))
+                  }
+                </div>
+              </div>
+              <div class="relative bg-gradient-to-br from-white/[0.05] to-transparent p-2.5 sm:p-3.5">
+                <div class="h-2.5 w-36 max-w-[70%] rounded bg-highlight/25"></div>
+                <div class="mt-3 space-y-2">
+                  <div class="h-1.5 w-full rounded bg-white/10"></div>
+                  <div class="h-1.5 w-[88%] rounded bg-white/8"></div>
+                  <div class="h-1.5 w-[76%] rounded bg-white/8"></div>
+                </div>
+                <div class="mt-4 grid grid-cols-3 gap-2">
+                  <div class="h-12 rounded-lg border border-white/10 bg-black/25 sm:h-14 web-browser__tile"></div>
+                  <div class="h-12 rounded-lg border border-white/10 bg-black/25 sm:h-14 web-browser__tile" style="animation-delay:0.1s"></div>
+                  <div class="h-12 rounded-lg border border-white/10 bg-black/25 sm:h-14 web-browser__tile" style="animation-delay:0.2s"></div>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between gap-2 bg-black/45 px-3 py-2 text-[9px] text-white/35 sm:px-4 sm:text-[10px]">
+              <span>Elements</span>
+              <span class="hidden sm:inline">Styles</span>
+              <span class="text-white/25">Console</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <section class="web-problems relative isolate border-b border-white/10 py-10 sm:py-12 lg:py-14" aria-labelledby="web-problems-heading">
+    <AmbientBackdrop variant="mesh" class="opacity-75" />
+    <Container class="relative">
+      <header class="mx-auto max-w-2xl text-center">
+        <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{problems.eyebrow}</p>
+        <h2 id="web-problems-heading" class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]">
+          {problems.titleBefore}
+          <span class="text-highlight"> {problems.titleHighlight}</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/68 sm:text-base sm:leading-8">{problems.intro}</p>
+      </header>
+
+      <ol class="web-problems-rail mt-7 list-none p-0 sm:mt-8">
+        {
+          problems.items.map((item, index) => (
+            <li class="web-problems-rail__item">
+              <span class="web-problems-rail__num font-display" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3 class="font-display text-[0.88rem] font-semibold leading-snug tracking-tight text-white sm:text-[0.92rem]">
+                {item.title}
+              </h3>
+              <p class="mt-1.5 text-[0.72rem] leading-5 text-white/55 sm:text-[0.75rem]">{item.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </Container>
+  </section>
+
+  <section class="web-capabilities relative isolate border-b border-white/10 py-10 sm:py-12 lg:py-14" aria-labelledby="web-capabilities-heading">
+    <AmbientBackdrop variant="drift" class="opacity-70" />
+    <Container class="relative">
+      <header class="mx-auto max-w-2xl text-center">
+        <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{capabilities.eyebrow}</p>
+        <h2 id="web-capabilities-heading" class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]">
+          {capabilities.titleBefore}
+          <span class="text-highlight"> {capabilities.titleHighlight}</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/68 sm:text-base sm:leading-8">{capabilities.intro}</p>
+      </header>
+
+      <div class="web-caps-featured mt-7 sm:mt-8">
+        {
+          featuredCaps.map((cap) => (
+            <article class="web-caps-featured__card">
+              <h3 class="font-display text-lg font-semibold tracking-tight text-white sm:text-xl">{cap.title}</h3>
+              <p class="mt-2 flex-1 text-sm leading-6 text-white/62">{cap.text}</p>
+              <div class="web-caps-featured__footer">
+                {cap.href ? (
+                  <a href={cap.href} class="inline-flex items-center gap-1 text-sm font-semibold text-highlight/90">
+                    View service
+                    <ArrowUpRight size={16} aria-hidden="true" />
+                  </a>
+                ) : (
+                  <p class="text-[0.65rem] font-semibold tracking-[0.14em] text-white/35 uppercase">Build path</p>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="web-caps-compact mt-3">
+        {
+          compactCaps.map((cap) => (
+            <div class="web-caps-compact__card">
+              <h3 class="font-display text-base font-semibold tracking-tight text-white">{cap.title}</h3>
+              <p class="mt-2 text-xs leading-5 text-white/60 sm:text-sm sm:leading-6">{cap.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </Container>
+  </section>
+
+  <section class="web-method relative isolate border-b border-white/10 py-10 sm:py-12 lg:py-14" aria-labelledby="web-method-heading">
+    <AmbientBackdrop variant="orbs" class="opacity-50" />
+    <Container class="relative">
+      <header class="mx-auto max-w-2xl text-center">
+        <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{method.eyebrow}</p>
+        <h2 id="web-method-heading" class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]">
+          {method.titleBefore}
+          <span class="text-highlight"> {method.titleHighlight}</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/68 sm:text-base sm:leading-8">{method.intro}</p>
+      </header>
+
+      <ol class="web-method-rail mt-7 list-none p-0 sm:mt-8">
+        {
+          method.steps.map((step, index) => (
+            <li class="web-method-rail__step">
+              <div class="web-method-rail__node" aria-hidden="true">
+                <span class="web-method-rail__index font-display">{step.number}</span>
+              </div>
+              {index < method.steps.length - 1 ? <span class="web-method-rail__connector" aria-hidden="true" /> : null}
+              <h3 class="mt-3 font-display text-[0.95rem] font-semibold tracking-tight text-white sm:text-base">{step.title}</h3>
+              <p class="mt-1.5 text-[0.75rem] leading-5 text-white/58 sm:text-[0.8rem] sm:leading-6">{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </Container>
+  </section>
+
+  <section class="relative isolate border-b border-white/10 py-12 sm:py-14 lg:py-16" aria-labelledby="web-showcase-heading">
+    <AmbientBackdrop variant="orbs" class="opacity-60" />
+    <Container class="relative">
+      <div class="max-w-2xl">
+        <p class:list={[eyebrowClass, 'w-fit']}>{showcase.eyebrow}</p>
+        <h2 id="web-showcase-heading" class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight sm:text-[2.1rem]">
+          {showcase.titleBefore}
+          <span class="text-highlight"> {showcase.titleHighlight}</span>
+        </h2>
+        <p class="mt-3 max-w-xl text-sm leading-7 text-white/68 sm:text-base sm:leading-8">{showcase.intro}</p>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2">
+        {
+          showcase.panels.map((panel) => (
+            <article class="web-foundations-card rounded-2xl border border-white/12 bg-[#121812] p-6 sm:p-7">
+              <h3 class="font-display text-xl font-semibold">{panel.title}</h3>
+              <p class="mt-3 text-sm leading-7 text-white/68">{panel.text}</p>
+              <ul class="mt-5 grid gap-2 sm:grid-cols-2">
+                {panel.points.map((point) => (
+                  <li class="flex gap-2 text-sm text-white/72">
+                    <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-sm bg-highlight/75" aria-hidden="true" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </section>
+
+  <section class="border-b border-white/10 py-10 sm:py-12" aria-labelledby="web-portfolio-note-heading">
+    <Container>
+      <div class="web-portfolio-note relative overflow-hidden rounded-2xl border border-highlight/25 px-5 py-6 sm:px-8 sm:py-7">
+        <div
+          class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_50%,rgb(222_243_77_/0.14),transparent_55%),linear-gradient(135deg,rgb(18_24_17_/0.98),rgb(13_18_12_/0.96))]"
+          aria-hidden="true"
+        >
+        </div>
+        <div class="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+          <div class="min-w-0">
+            <h2 id="web-portfolio-note-heading" class="font-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+              Selected builds publish when approved
+            </h2>
+            <p class="mt-2 max-w-xl text-sm leading-7 text-white/65">
+              Client work appears in the case studies library after sign-off. Browse published stories or enquire with your project brief.
+            </p>
+          </div>
+          <a
+            href="/case-studies/"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'w-full shrink-0 shadow-[0_12px_32px_rgb(197_246_61_/0.16)] sm:w-auto',
+            ]}
+          >
+            View case studies
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <section class="relative isolate border-b border-white/10 py-12 sm:py-14 lg:py-16" aria-labelledby="web-children-heading">
+    <Container>
+      <header class="mx-auto max-w-2xl text-center">
+        <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{children.eyebrow}</p>
+        <h2 id="web-children-heading" class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]">
+          {children.titleBefore}
+          <span class="text-highlight"> {children.titleHighlight}</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/68 sm:text-base sm:leading-8">{children.intro}</p>
+      </header>
+      <ul class="mt-8 grid gap-3 md:grid-cols-2">
+        {
+          children.items.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="group flex h-full flex-row items-start justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-highlight/40 sm:p-5"
+              >
+                <div class="min-w-0">
+                  <span class="font-display text-lg font-semibold">{link.label}</span>
+                  <p class="mt-1 text-sm leading-6 text-white/65">{link.text}</p>
+                </div>
+                <ArrowUpRight
+                  size={18}
+                  className="mt-1 shrink-0 text-highlight/80 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  aria-hidden="true"
+                />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </section>
+
+  <ServiceParentMidCta service={service} tone="rail" />
+
+  <section class="web-deliverables relative isolate border-b border-white/10 py-10 sm:py-12 lg:py-14" aria-labelledby="web-deliverables-heading">
+    <AmbientBackdrop variant="mesh" class="opacity-55" />
+    <Container class="relative">
+      <header class="mx-auto max-w-2xl text-center">
+        <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{deliverables.eyebrow}</p>
+        <h2 id="web-deliverables-heading" class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]">
+          {deliverables.titleBefore}
+          <span class="text-highlight"> {deliverables.titleHighlight}</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/68 sm:text-base sm:leading-8">{deliverables.intro}</p>
+      </header>
+
+      <ul class="mt-7 grid list-none grid-cols-1 gap-3 p-0 sm:mt-8 sm:grid-cols-2 sm:gap-3.5">
+        {
+          deliverables.items.map((d, index) => {
+            const isMaintenance = index === deliverables.items.length - 1;
+            return (
+              <li class="min-w-0">
+                <article class="web-deliverables__card flex h-full min-h-[10.5rem] flex-col rounded-2xl border border-white/12 bg-white/[0.03] p-5">
+                  <div class="flex items-center justify-between gap-3">
+                    <span
+                      class:list={[
+                        'inline-flex items-center rounded-full border px-2.5 py-1 text-[0.62rem] font-semibold tracking-[0.12em] uppercase',
+                        isMaintenance
+                          ? 'border-highlight/35 bg-highlight/10 text-highlight'
+                          : 'border-white/15 bg-white/[0.04] text-white/55',
+                      ]}
+                    >
+                      {isMaintenance ? 'Maintenance' : 'Shipped'}
+                    </span>
+                    <span class="font-display text-[0.68rem] font-bold tracking-[0.14em] text-highlight/80" aria-hidden="true">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <h3 class="mt-3 font-display text-lg font-semibold tracking-tight text-white">{d.title}</h3>
+                  <p class="mt-2 flex-1 text-sm leading-6 text-white/62">{d.text}</p>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </Container>
+  </section>
+
+  <ServiceParentFaq service={service} layout="stack" />
+  <ServiceParentFinalCta service={service} />
+</div>
+
+<style>
+  .web-hero__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .web-hero__layout {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 1.75rem;
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .web-hero__layout {
+      gap: 2.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .web-browser__tile {
+      animation: web-float 5s ease-in-out infinite;
+    }
+
+    .web-browser__row {
+      animation: web-shimmer 3.2s ease-in-out infinite;
+    }
+
+    .web-foundations-card {
+      transition: border-color 0.2s ease;
+    }
+  }
+
+  @keyframes web-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes web-shimmer {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .web-caps-featured {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 700px) {
+    .web-caps-featured {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+  }
+
+  .web-caps-featured__card {
+    display: flex;
+    height: 100%;
+    min-height: 11.75rem;
+    flex-direction: column;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.15rem;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02));
+    padding: 1.2rem 1.15rem 1.15rem;
+  }
+
+  .web-caps-featured__footer {
+    display: flex;
+    align-items: center;
+    min-height: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .web-caps-compact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 700px) {
+    .web-caps-compact {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .web-caps-compact__card {
+    height: 100%;
+    min-width: 0;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 1.1rem;
+    background: rgb(255 255 255 / 0.03);
+    padding: 1.05rem 1.1rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .web-caps-compact__card:hover {
+    border-color: rgb(222 243 77 / 0.3);
+  }
+
+  .web-problems-rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .web-problems-rail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 900px) {
+    .web-problems-rail {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+  }
+
+  .web-problems-rail__item {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1rem;
+    background:
+      linear-gradient(165deg, rgb(222 243 77 / 0.06), transparent 40%),
+      rgb(255 255 255 / 0.03);
+    padding: 0.95rem 0.9rem 1rem;
+  }
+
+  .web-problems-rail__num {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #def34d;
+  }
+
+  .web-method-rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .web-method-rail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem 0.85rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .web-method-rail {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+  }
+
+  .web-method-rail__step {
+    position: relative;
+    min-width: 0;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 1.1rem;
+    background: rgb(255 255 255 / 0.03);
+    padding: 1rem 0.9rem 1.05rem;
+  }
+
+  .web-method-rail__node {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.4rem;
+    border: 1px solid rgb(222 243 77 / 0.35);
+    border-radius: 9999px;
+    background: rgb(222 243 77 / 0.1);
+    padding: 0.3rem 0.55rem;
+  }
+
+  .web-method-rail__index {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #def34d;
+  }
+
+  .web-method-rail__connector {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .web-method-rail__step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 1.45rem;
+      right: -0.55rem;
+      z-index: 1;
+      width: 0.85rem;
+      height: 1px;
+      background: linear-gradient(90deg, rgb(222 243 77 / 0.45), transparent);
+    }
+  }
+
+  .web-deliverables__card {
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .web-deliverables__card:hover {
+    border-color: rgb(222 243 77 / 0.28);
+    background: rgb(255 255 255 / 0.045);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .web-browser__tile,
+    .web-browser__row {
+      animation: none;
+    }
+  }
+</style>

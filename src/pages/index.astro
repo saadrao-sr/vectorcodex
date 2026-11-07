@@ -1,0 +1,50 @@
+---
+import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ClientLogoSlider from '../components/sections/ClientLogoSlider.astro';
+import Hero from '../components/sections/Hero.astro';
+import HomeServices from '../components/sections/HomeServices.astro';
+import WhyChoose from '../components/sections/WhyChoose.astro';
+import HomeProjectCta from '../components/sections/HomeProjectCta.astro';
+import ResultsStats from '../components/sections/ResultsStats.astro';
+import HowWeWork from '../components/sections/HowWeWork.astro';
+import IndustriesWeServe from '../components/sections/IndustriesWeServe.astro';
+import CaseStudiesShowcase from '../components/sections/CaseStudiesShowcase.astro';
+import ClientTestimonials from '../components/sections/ClientTestimonials.astro';
+import InsightsResources from '../components/sections/InsightsResources.astro';
+import FaqSection from '../components/sections/FaqSection.astro';
+import ExtendedDigitalTeam from '../components/sections/ExtendedDigitalTeam.astro';
+import ContactFaq from '../components/sections/ContactFaq.astro';
+import SocialStickyBar from '../components/layout/SocialStickyBar.astro';
+import ContactStickyBar from '../components/layout/ContactStickyBar.astro';
+import BookingModal from '../components/interactive/BookingModal';
+import QuoteModal from '../components/interactive/QuoteModal';
+import TeamRequirementsModal from '../components/interactive/TeamRequirementsModal';
+
+const title = 'VectorCodex | SEO, web development and digital marketing';
+const description =
+  'VectorCodex is a UK digital agency for SEO, web development, and digital marketing. Clear strategy, fast websites, and search-ready structure.';
+const crumbs = [{ name: 'Home', href: '/' }];
+---
+
+<BaseLayout title={title} description={description} path="/" schema={[webPageSchema({ title, description, path: '/' }), breadcrumbSchema(crumbs)]}>
+  <SocialStickyBar />
+  <ContactStickyBar />
+  <BookingModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <TeamRequirementsModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <Hero />
+  <ClientLogoSlider />
+  <HomeServices />
+  <WhyChoose />
+  <HomeProjectCta />
+  <ResultsStats />
+  <HowWeWork />
+  <IndustriesWeServe />
+  <CaseStudiesShowcase />
+  <ClientTestimonials />
+  <InsightsResources />
+  <ExtendedDigitalTeam />
+  <FaqSection />
+  <ContactFaq />
+</BaseLayout>

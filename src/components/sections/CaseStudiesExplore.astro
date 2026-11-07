@@ -1,0 +1,26 @@
+---
+import { caseStudies } from '../../config/case-studies';
+import CaseStudiesPortfolio from '../interactive/CaseStudiesPortfolio';
+import Container from '../ui/Container.astro';
+---
+
+<section
+  id="case-studies-listing"
+  class="case-studies-explore relative isolate scroll-mt-28 overflow-x-clip border-t border-white/10 bg-[#0D120C] py-12 sm:py-14 lg:py-16"
+  aria-labelledby="case-studies-listing-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="absolute top-20 left-[8%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.07),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute right-[10%] bottom-16 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"
+    >
+    </div>
+  </div>
+
+  <Container class="relative">
+    <CaseStudiesPortfolio client:visible items={caseStudies} />
+  </Container>
+</section>

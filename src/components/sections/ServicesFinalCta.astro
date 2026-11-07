@@ -1,0 +1,67 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import { servicesFinalCta } from '../../config/services-page';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+
+const cta = servicesFinalCta;
+---
+
+<section
+  id="services-final-cta"
+  class="services-final-cta relative isolate overflow-hidden border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="services-final-cta-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="absolute top-1/2 left-1/2 h-[20rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.15),transparent_68%)] blur-2xl sm:h-[24rem] sm:w-[24rem]"
+    >
+    </div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/40 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-highlight/25 to-transparent"></div>
+  </div>
+
+  <Container class="relative">
+    <div
+      class="relative mx-auto w-full max-w-6xl overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.03] px-5 py-7 text-center sm:rounded-[1.75rem] sm:px-10 sm:py-8 lg:px-14 lg:py-9"
+    >
+      <div
+        class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/12 via-transparent to-transparent"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="relative">
+        <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{cta.eyebrow}</p>
+        <h2
+          id="services-final-cta-heading"
+          class="mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.45rem] lg:leading-[1.08]"
+        >
+          {cta.titleBefore}
+          <span class="text-highlight"> {cta.titleHighlight}</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-3xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">
+          {cta.text}
+        </p>
+        <div class="mt-5 flex items-center justify-center sm:mt-6">
+          <button
+            type="button"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'group w-full px-7 shadow-[0_16px_48px_rgb(197_246_61_/0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_56px_rgb(197_246_61_/0.28)] motion-reduce:transform-none sm:w-auto',
+            ]}
+            data-booking-open
+          >
+            {cta.secondaryLabel}
+            <ArrowUpRight
+              size={16}
+              aria-hidden="true"
+              className="transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

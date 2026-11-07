@@ -1,0 +1,39 @@
+---
+import PageCrumbBand from '../../../../components/sections/PageCrumbBand.astro';
+import ChildServiceLanding from '../../../../components/sections/service-children/ChildServiceLanding.astro';
+import QuoteModal from '../../../../components/interactive/QuoteModal';
+import BookingModal from '../../../../components/interactive/BookingModal';
+import { aiSeoChildService } from '../../../../config/service-children';
+import { getService } from '../../../../config/services';
+import { breadcrumbSchema, faqPageSchema, serviceSchema, webPageSchema } from '../../../../lib/schema/jsonld';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+
+const service = aiSeoChildService;
+const title = service.seoTitle;
+const description = service.seoDescription;
+const path = service.path;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: '/services/' },
+  { name: service.parentLabel, href: service.parentPath },
+  { name: service.name, href: path },
+];
+const catalogService = getService(service.slug);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schema={[
+    webPageSchema({ title, description, path }),
+    breadcrumbSchema(crumbs),
+    faqPageSchema(service.faqs.items),
+    serviceSchema(catalogService),
+  ]}
+>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <BookingModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <PageCrumbBand title={service.name} crumbs={crumbs} />
+  <ChildServiceLanding service={service} />
+</BaseLayout>

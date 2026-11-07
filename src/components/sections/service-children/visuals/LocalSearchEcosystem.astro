@@ -1,0 +1,148 @@
+---
+interface Props {
+  hubLabel: string;
+  hubText: string;
+  nodes: { title: string; text: string }[];
+}
+
+const { hubLabel, hubText, nodes } = Astro.props;
+---
+
+<div class="local-eco">
+  <div class="local-eco__hub">
+    <span class="local-eco__hub-ring" aria-hidden="true"></span>
+    <p class="local-eco__hub-label">{hubLabel}</p>
+    <p class="local-eco__hub-text">{hubText}</p>
+  </div>
+
+  <ul class="local-eco__nodes">
+    {
+      nodes.map((node, index) => (
+        <li class={`local-eco__node local-eco__node--${index}`}>
+          <span class="local-eco__connector" aria-hidden="true"></span>
+          <h3 class="font-display text-[0.95rem] font-semibold tracking-tight text-white">{node.title}</h3>
+          <p class="mt-1.5 text-[0.8rem] leading-6 text-white/60">{node.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .local-eco {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .local-eco__hub {
+    position: relative;
+    z-index: 1;
+    max-width: 22rem;
+    margin-inline: auto;
+    border: 1px solid rgb(222 243 77 / 0.3);
+    border-radius: 1.5rem;
+    background:
+      radial-gradient(circle at 50% 0%, rgb(222 243 77 / 0.12), transparent 60%),
+      rgb(13 18 12 / 0.9);
+    padding: 1.25rem 1.15rem;
+    text-align: center;
+  }
+
+  .local-eco__hub-ring {
+    position: absolute;
+    inset: -0.55rem;
+    border: 1px dashed rgb(222 243 77 / 0.22);
+    border-radius: 1.75rem;
+    pointer-events: none;
+  }
+
+  .local-eco__hub-label {
+    margin: 0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #def34d;
+  }
+
+  .local-eco__hub-text {
+    margin: 0.45rem 0 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .local-eco__nodes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    .local-eco__nodes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .local-eco {
+      gap: 1.5rem;
+      padding-top: 0.5rem;
+    }
+
+    .local-eco__nodes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+  }
+
+  .local-eco__node {
+    position: relative;
+    min-height: 100%;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.05rem;
+    background: rgb(255 255 255 / 0.03);
+    padding: 1rem 0.95rem 1.05rem;
+    transition:
+      border-color 0.22s ease,
+      background-color 0.22s ease,
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+
+  .local-eco__node:hover {
+    border-color: rgb(222 243 77 / 0.45);
+    background: rgb(255 255 255 / 0.05);
+    box-shadow: 0 14px 36px rgb(0 0 0 / 0.26);
+    transform: translateY(-2px);
+  }
+
+  .local-eco__node:hover .local-eco__connector {
+    width: 2.25rem;
+  }
+
+  .local-eco__connector {
+    display: block;
+    width: 1.5rem;
+    height: 2px;
+    margin-bottom: 0.7rem;
+    background: linear-gradient(90deg, #def34d, transparent);
+    transition: width 0.22s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .local-eco__node,
+    .local-eco__node:hover {
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+      transform: none;
+    }
+
+    .local-eco__connector {
+      transition: none;
+    }
+  }
+</style>

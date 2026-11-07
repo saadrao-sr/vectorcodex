@@ -1,0 +1,253 @@
+---
+import { Mail, MapPin, Phone } from 'lucide-react';
+import { industries } from '../../config/industry-landings';
+import { locations } from '../../config/locations';
+import { footerServiceLinks, legalLinks } from '../../config/navigation';
+import { site } from '../../config/site';
+import Logo from '../ui/Logo.astro';
+
+const year = new Date().getFullYear();
+const whatsappHref = site.whatsapp ? `https://wa.me/${site.whatsapp}` : '';
+const whatsappDisplay = site.whatsapp
+  ? `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)} ${site.whatsapp.slice(5)}`
+  : '';
+
+const officeLocations = locations.map((office) => ({
+  href: office.path,
+  label: `${office.name} Office`,
+  place: office.address,
+}));
+
+const companyLinks = [
+  { href: '/blog/', label: 'Insights' },
+  { href: '/about/', label: 'About us' },
+  { href: '/pricing/', label: 'Pricing' },
+  { href: '/contact/', label: 'Contact Us' },
+  { href: '/case-studies/', label: 'Case Studies' },
+];
+
+/** Featured industry landings + directory CTA. */
+const featuredIndustrySlugs = ['dental', 'healthcare', 'accounting', 'car-rental'] as const;
+const industryLinks = [
+  ...featuredIndustrySlugs
+    .map((slug) => industries.find((item) => item.slug === slug))
+    .filter((item): item is (typeof industries)[number] => Boolean(item))
+    .map((item) => ({ href: item.path, label: item.name })),
+  { href: '/industries/', label: 'View all industries' },
+];
+
+const headingClass =
+  'font-display text-sm font-semibold tracking-[0.14em] text-highlight uppercase';
+const linkClass =
+  'inline-flex min-h-8 items-center text-sm text-white/70 transition hover:text-highlight';
+---
+
+<footer class="relative isolate overflow-hidden border-t border-white/10 bg-bg">
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="footer-bg__glow absolute top-[18%] left-[18%] h-[16rem] w-[16rem] rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.12),transparent_68%)] blur-3xl"
+    >
+    </div>
+    <div
+      class="footer-bg__glow footer-bg__glow--delay absolute right-[12%] bottom-[20%] h-[14rem] w-[14rem] rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.08),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/40 to-transparent"></div>
+  </div>
+
+  <div class="relative mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-11 lg:px-8 lg:py-12">
+    {/* Top: brand + contact strip */}
+    <div
+      class="flex flex-col gap-6 border-b border-white/10 pb-8 lg:flex-row lg:items-end lg:justify-between lg:gap-10"
+    >
+      <div class="max-w-md">
+        <a href="/" class="inline-block rounded-sm" aria-label={`${site.name}, home`}>
+          <Logo />
+        </a>
+        <p class="mt-4 text-sm leading-6 text-white/65">Your growth starts here.</p>
+        <p class="mt-2 text-sm leading-6 text-white/50">
+          We combine technology, creativity, and digital strategy to help businesses grow online.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        {
+          whatsappHref && (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-4 text-sm text-white/80 transition hover:border-highlight/40 hover:text-highlight"
+            >
+              <Phone size={14} aria-hidden="true" className="text-highlight" />
+              {whatsappDisplay}
+            </a>
+          )
+        }
+        {
+          site.email && (
+            <a
+              href={`mailto:${site.email}`}
+              class="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-4 text-sm text-white/80 transition hover:border-highlight/40 hover:text-highlight"
+            >
+              <Mail size={14} aria-hidden="true" className="text-highlight" />
+              {site.email}
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    {/* Mid: balanced link columns */}
+    <div class="mt-8 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-3 lg:gap-10">
+      <nav aria-label="Services">
+        <h2 class={headingClass}>Services</h2>
+        <ul class="mt-4 space-y-1.5">
+          {
+            footerServiceLinks.map((link) => (
+              <li>
+                <a href={link.href} class={linkClass}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href="/services/" class={linkClass}>
+              All Services
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Company">
+        <h2 class={headingClass}>Company</h2>
+        <ul class="mt-4 space-y-1.5">
+          {
+            companyLinks.map((link) => (
+              <li>
+                <a href={link.href} class={linkClass}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Industries" class="col-span-2 sm:col-span-1">
+        <h2 class={headingClass}>Industry</h2>
+        <ul class="mt-4 columns-2 gap-x-6 space-y-1.5 sm:columns-1">
+          {
+            industryLinks.map((link) => (
+              <li class="break-inside-avoid">
+                <a href={link.href} class={linkClass}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    {/* Offices row */}
+    <div class="mt-9">
+      <h2 class={headingClass}>Our Offices</h2>
+      <ul class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {
+          officeLocations.map((office) => (
+            <li>
+              <a
+                href={office.href}
+                class="group flex h-full items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 transition hover:border-highlight/35 hover:bg-white/[0.06]"
+              >
+                <span class="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-highlight/30 bg-highlight/10 text-highlight">
+                  <MapPin size={14} aria-hidden="true" />
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-sm font-semibold text-highlight">{office.label}</span>
+                  <span class="mt-1 block text-sm leading-5 text-white/70 transition group-hover:text-white/85">
+                    {office.place}
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {/* Socials */}
+    {
+      site.socials.length > 0 ? (
+        <div class="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <h2 class="text-xs font-semibold tracking-[0.16em] text-white/45 uppercase">Follow Us</h2>
+          <ul class="flex flex-wrap gap-2" aria-label="Social media">
+            {site.socials.map((social) => (
+              <li>
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex h-9 items-center rounded-full border border-highlight/30 bg-highlight/10 px-3.5 text-xs font-semibold text-highlight transition hover:bg-highlight/20"
+                >
+                  {social.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null
+    }
+  </div>
+
+  <div class="relative border-t border-white/10">
+    <div
+      class="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8"
+    >
+      <p class="text-sm text-white/55">
+        &copy; {year}
+        {site.name}. All rights reserved.
+      </p>
+      <ul class="flex flex-wrap gap-x-4 gap-y-1">
+        {
+          legalLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="inline-flex min-h-9 items-center text-sm text-white/55 transition hover:text-highlight"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .footer-bg__glow {
+      animation: footer-bg-pulse 8s ease-in-out infinite;
+    }
+
+    .footer-bg__glow--delay {
+      animation-delay: -3s;
+    }
+  }
+
+  @keyframes footer-bg-pulse {
+    0%,
+    100% {
+      opacity: 0.65;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+  }
+</style>

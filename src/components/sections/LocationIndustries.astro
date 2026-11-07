@@ -1,0 +1,227 @@
+---
+import {
+  ArrowUpRight,
+  Building2,
+  Bus,
+  Calculator,
+  Car,
+  Cigarette,
+  ClipboardList,
+  HeartPulse,
+  Plane,
+  Stethoscope,
+  type LucideIcon,
+} from 'lucide-react';
+import type { LocationIndustryIcon, LocationOffice } from '../../config/locations';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+import LocationAmbientBg from './LocationAmbientBg.astro';
+
+interface Props {
+  location: LocationOffice;
+}
+
+const { location } = Astro.props;
+const { industries } = location;
+
+const possessive = location.locationLabel.endsWith('s')
+  ? `${location.locationLabel}'`
+  : `${location.locationLabel}'s`;
+
+const icons: Record<LocationIndustryIcon, LucideIcon> = {
+  healthcare: HeartPulse,
+  accounting: Calculator,
+  tourism: Plane,
+  'real-estate': Building2,
+  dental: Stethoscope,
+  'car-rental': Car,
+  tobacco: Cigarette,
+  'medical-billing': ClipboardList,
+  minibus: Bus,
+};
+---
+
+<section
+  id="location-industries"
+  class="location-industries relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="location-industries-heading"
+>
+  <LocationAmbientBg variant="b" />
+
+  <Container class="relative">
+    <header class="mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'location-industries__eyebrow mx-auto w-fit max-w-full']}>
+        Industries We Empower
+      </p>
+      <h2
+        id="location-industries-heading"
+        class="location-industries__title mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.45rem] lg:leading-[1.08]"
+      >
+        Supporting Businesses Across
+        <span class="text-highlight"> {possessive} </span>
+        Key Industries
+      </h2>
+      <p class="location-industries__intro mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">
+        {industries.intro}
+      </p>
+    </header>
+
+    <ul class="location-industries__bento mt-7 sm:mt-8">
+      {
+        industries.items.map((item, index) => {
+          const Icon = icons[item.icon];
+          return (
+            <li
+              class:list={[
+                'location-industries__tile',
+                item.featured && 'location-industries__tile--featured',
+                `location-industries__tile--${index + 1}`,
+              ]}
+              style={`--tile-i: ${index}`}
+            >
+              <a
+                href={item.href}
+                class:list={[
+                  'group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border bg-white/[0.03] p-4 transition duration-300 hover:border-highlight/40 hover:bg-white/[0.05] sm:p-5',
+                  item.featured ? 'border-highlight/25' : 'border-white/12',
+                ]}
+              >
+                <div
+                  class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/12 via-transparent to-transparent opacity-80 transition duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+                <div class="relative flex h-full flex-col">
+                  <div class="flex items-start justify-between gap-3">
+                    <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-highlight/30 bg-highlight/10 text-highlight transition duration-300 group-hover:border-highlight/50 group-hover:bg-highlight/15">
+                      <Icon size={20} aria-hidden="true" />
+                    </span>
+                    <ArrowUpRight
+                      size={16}
+                      aria-hidden="true"
+                      className="text-white/35 transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-highlight"
+                    />
+                  </div>
+                  <h3 class="mt-3 font-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+                    {item.title}
+                  </h3>
+                  <p class="mt-2 flex-1 text-sm leading-6 text-white/60">{item.description}</p>
+                  <p class="mt-3 text-xs font-semibold tracking-[0.12em] text-highlight/85 uppercase">
+                    View industry
+                  </p>
+                </div>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <div class="location-industries__cta mt-7 flex justify-center sm:mt-8">
+      <a
+        href="/industries/"
+        class:list={[
+          buttonClass.base,
+          buttonClass.gradient,
+          'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto',
+        ]}
+      >
+        Explore How We Can Help
+        <ArrowUpRight size={16} aria-hidden="true" />
+      </a>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .location-industries__bento {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  @media (min-width: 640px) {
+    .location-industries__bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .location-industries__bento {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 1.05rem;
+    }
+
+    .location-industries__tile {
+      grid-column: span 3;
+    }
+
+    .location-industries__tile--featured {
+      grid-column: span 6;
+    }
+
+    .location-industries__tile--1 {
+      grid-column: span 7;
+    }
+
+    .location-industries__tile--2 {
+      grid-column: span 5;
+    }
+
+    .location-industries__tile--3,
+    .location-industries__tile--4 {
+      grid-column: span 3;
+    }
+
+    .location-industries__tile--5,
+    .location-industries__tile--6 {
+      grid-column: span 3;
+    }
+
+    .location-industries__tile--7,
+    .location-industries__tile--8 {
+      grid-column: span 6;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .location-industries__eyebrow,
+    .location-industries__title,
+    .location-industries__intro,
+    .location-industries__cta {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: location-industries-rise 0.7s ease forwards;
+    }
+
+    .location-industries__eyebrow {
+      animation-delay: 40ms;
+    }
+
+    .location-industries__title {
+      animation-delay: 90ms;
+    }
+
+    .location-industries__intro {
+      animation-delay: 140ms;
+    }
+
+    .location-industries__cta {
+      animation-delay: 280ms;
+    }
+
+    .location-industries__tile {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: location-industries-rise 0.65s ease forwards;
+      animation-delay: calc(180ms + var(--tile-i, 0) * 60ms);
+    }
+  }
+
+  @keyframes location-industries-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

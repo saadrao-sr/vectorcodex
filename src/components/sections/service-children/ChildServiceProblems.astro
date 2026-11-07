@@ -1,0 +1,98 @@
+---
+import type { ChildServiceLanding } from '../../../config/service-children';
+import AmbientBackdrop from '../../ui/AmbientBackdrop.astro';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+import LocalPresenceCompare from './visuals/LocalPresenceCompare.astro';
+
+interface Props {
+  service: ChildServiceLanding;
+}
+
+const { service } = Astro.props;
+const { problems } = service;
+---
+
+<section
+  class="relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby={`${service.slug}-problems-heading`}
+>
+  <AmbientBackdrop variant="drift" class="opacity-55" />
+  <Container class="relative">
+    <div class="child-problems">
+      <div class="child-problems__copy min-w-0">
+        <p class:list={[eyebrowClass, 'w-fit max-w-full']}>{problems.eyebrow}</p>
+        <h2
+          id={`${service.slug}-problems-heading`}
+          class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]"
+        >
+          {problems.titleBefore}
+          <span class="text-highlight"> {problems.titleHighlight}</span>
+        </h2>
+        <p class="mt-3 max-w-xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">{problems.intro}</p>
+        <ul class="child-problems__list mt-7 space-y-3">
+          {
+            problems.items.map((item) => (
+              <li class="child-problems__item">
+                <h3 class="font-display text-[0.95rem] font-semibold text-white">{item.title}</h3>
+                <p class="mt-1 text-sm leading-6 text-white/58">{item.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="min-w-0">
+        <LocalPresenceCompare
+          weakLabel={problems.compare.weakLabel}
+          strongLabel={problems.compare.strongLabel}
+          weakPoints={problems.compare.weakPoints}
+          strongPoints={problems.compare.strongPoints}
+          note={problems.compare.note}
+        />
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .child-problems {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  @media (min-width: 960px) {
+    .child-problems {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 2rem;
+      align-items: center;
+    }
+  }
+
+  .child-problems__item {
+    border-left: 2px solid rgb(222 243 77 / 0.35);
+    border-radius: 0 0.75rem 0.75rem 0;
+    padding: 0.55rem 0.75rem 0.55rem 1rem;
+    transition:
+      border-color 0.22s ease,
+      background-color 0.22s ease,
+      padding-left 0.22s ease;
+  }
+
+  .child-problems__item:hover {
+    border-left-color: #def34d;
+    background: rgb(255 255 255 / 0.03);
+    padding-left: 1.15rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .child-problems__item {
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .child-problems__item:hover {
+      padding-left: 1rem;
+    }
+  }
+</style>

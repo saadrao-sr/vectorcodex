@@ -1,0 +1,149 @@
+---
+/**
+ * Configurable illustrative dashboard for child-service heroes.
+ * Labels are UI chrome only — never presented as live client metrics.
+ */
+interface Props {
+  chromeLabel: string;
+  primaryLabel: string;
+  rows: { label: string; width: string; accent?: boolean }[];
+  chips: string[];
+  footnote?: string;
+}
+
+const {
+  chromeLabel,
+  primaryLabel,
+  rows,
+  chips,
+  footnote = 'Illustrative interface only — not live client data',
+} = Astro.props;
+---
+
+<div class="motif-hero" aria-hidden="true">
+  <div class="motif-hero__panel">
+    <div class="motif-hero__chrome">
+      <span class="motif-hero__dot"></span>
+      <span class="motif-hero__dot"></span>
+      <span class="motif-hero__dot"></span>
+      <span class="motif-hero__chrome-label">{chromeLabel}</span>
+    </div>
+    <div class="motif-hero__body">
+      <p class="motif-hero__primary">{primaryLabel}</p>
+      <div class="motif-hero__rows">
+        {
+          rows.map((row) => (
+            <div class="motif-hero__row">
+              <span class="motif-hero__row-label">{row.label}</span>
+              <span class:list={['motif-hero__bar', row.accent && 'motif-hero__bar--accent']} style={`width:${row.width}`} />
+            </div>
+          ))
+        }
+      </div>
+      <div class="motif-hero__chips">
+        {chips.map((chip) => <span class="motif-hero__chip">{chip}</span>)}
+      </div>
+      <p class="motif-hero__footnote">{footnote}</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .motif-hero__panel {
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.25rem;
+    background:
+      linear-gradient(160deg, rgb(222 243 77 / 0.06), transparent 42%),
+      rgb(255 255 255 / 0.03);
+    box-shadow: 0 20px 60px rgb(0 0 0 / 0.35);
+  }
+
+  .motif-hero__chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    padding: 0.75rem 1rem;
+  }
+
+  .motif-hero__dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.2);
+  }
+
+  .motif-hero__chrome-label {
+    margin-left: 0.5rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.4);
+  }
+
+  .motif-hero__body {
+    padding: 1rem 1.05rem 1.1rem;
+  }
+
+  .motif-hero__primary {
+    margin: 0 0 0.85rem;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .motif-hero__rows {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .motif-hero__row-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.45);
+  }
+
+  .motif-hero__bar {
+    display: block;
+    height: 0.4rem;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.12);
+  }
+
+  .motif-hero__bar--accent {
+    background: linear-gradient(90deg, #def34d, rgb(197 246 61 / 0.35));
+  }
+
+  .motif-hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.95rem;
+  }
+
+  .motif-hero__chip {
+    border: 1px solid rgb(222 243 77 / 0.28);
+    border-radius: 9999px;
+    background: rgb(222 243 77 / 0.08);
+    padding: 0.25rem 0.55rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #def34d;
+  }
+
+  .motif-hero__footnote {
+    margin: 0.85rem 0 0;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.32);
+  }
+</style>

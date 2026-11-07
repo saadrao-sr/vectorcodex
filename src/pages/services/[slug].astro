@@ -1,0 +1,31 @@
+---
+import ServiceView from '../../components/sections/ServiceView.astro';
+import { CHILD_LANDING_SLUGS } from '../../config/service-children';
+import { services } from '../../config/services';
+import type { Service } from '../../types/content';
+
+export function getStaticPaths() {
+  /** Parent landings use dedicated routes under `services/<slug>/index.astro`. */
+  const parentLandingSlugs = new Set([
+    'seo',
+    'web-development',
+    'social-media-marketing',
+    'ppc-management',
+  ]);
+
+  return services
+    .filter((service) => !parentLandingSlugs.has(service.slug) && !CHILD_LANDING_SLUGS.has(service.slug))
+    .map((service) => ({
+      params: { slug: service.slug },
+      props: { service },
+    }));
+}
+
+interface Props {
+  service: Service;
+}
+
+const { service } = Astro.props;
+---
+
+<ServiceView service={service} />

@@ -1,0 +1,166 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import type { ChildServiceLanding } from '../../../config/service-children';
+import AmbientBackdrop from '../../ui/AmbientBackdrop.astro';
+import Container from '../../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../../ui/styles';
+import LocalSearchHeroVisual from './visuals/LocalSearchHeroVisual.astro';
+import MotifHeroVisual from './visuals/MotifHeroVisual.astro';
+
+interface Props {
+  service: ChildServiceLanding;
+}
+
+const { service } = Astro.props;
+const { hero, enquiryValue, visual } = service;
+
+const motifByVisual: Record<
+  string,
+  { chromeLabel: string; primaryLabel: string; rows: { label: string; width: string; accent?: boolean }[]; chips: string[] }
+> = {
+  'technical-crawl': {
+    chromeLabel: 'Crawl health · Illustrative',
+    primaryLabel: 'Technical coverage map',
+    rows: [
+      { label: 'Indexable templates', width: '82%', accent: true },
+      { label: 'Canonical clarity', width: '68%', accent: true },
+      { label: 'Script weight', width: '44%' },
+      { label: 'CWV attention', width: '57%', accent: true },
+    ],
+    chips: ['Crawl', 'Index', 'Render', 'Schema'],
+  },
+  'ecommerce-catalog': {
+    chromeLabel: 'Catalogue structure · Illustrative',
+    primaryLabel: 'Category & product graph',
+    rows: [
+      { label: 'Primary categories', width: '76%', accent: true },
+      { label: 'Facet control', width: '61%', accent: true },
+      { label: 'Duplicate SKUs', width: '33%' },
+      { label: 'Internal paths', width: '70%', accent: true },
+    ],
+    chips: ['Categories', 'Products', 'Facets', 'Links'],
+  },
+  'ai-answer': {
+    chromeLabel: 'Answer readiness · Illustrative',
+    primaryLabel: 'Entity & citation surface',
+    rows: [
+      { label: 'Entity consistency', width: '79%', accent: true },
+      { label: 'Extractable answers', width: '66%', accent: true },
+      { label: 'Conflicting facts', width: '28%' },
+      { label: 'Machine-readable files', width: '58%', accent: true },
+    ],
+    chips: ['AEO', 'GEO', 'Entities', 'llms.txt'],
+  },
+  'wordpress-editor': {
+    chromeLabel: 'Editorial system · Illustrative',
+    primaryLabel: 'Theme & publishing flow',
+    rows: [
+      { label: 'Editor templates', width: '84%', accent: true },
+      { label: 'Plugin surface', width: '41%' },
+      { label: 'Front-end speed', width: '72%', accent: true },
+      { label: 'Role governance', width: '63%', accent: true },
+    ],
+    chips: ['Blocks', 'Themes', 'REST', 'Care'],
+  },
+  'shopify-store': {
+    chromeLabel: 'Storefront preview · Illustrative',
+    primaryLabel: 'Product journey clarity',
+    rows: [
+      { label: 'Collection clarity', width: '74%', accent: true },
+      { label: 'PDP storytelling', width: '69%', accent: true },
+      { label: 'Theme debt', width: '36%' },
+      { label: 'Mobile checkout path', width: '71%', accent: true },
+    ],
+    chips: ['Theme', 'PDP', 'Collections', 'UX'],
+  },
+  'content-studio': {
+    chromeLabel: 'Content studio · Illustrative',
+    primaryLabel: 'Format & message board',
+    rows: [
+      { label: 'Message pillars', width: '80%', accent: true },
+      { label: 'Format mix', width: '67%', accent: true },
+      { label: 'Brand drift', width: '31%' },
+      { label: 'Publish readiness', width: '73%', accent: true },
+    ],
+    chips: ['Copy', 'Creative', 'Series', 'Review'],
+  },
+  default: {
+    chromeLabel: 'Service overview · Illustrative',
+    primaryLabel: 'Engagement readiness',
+    rows: [
+      { label: 'Scope clarity', width: '70%', accent: true },
+      { label: 'Delivery path', width: '62%', accent: true },
+      { label: 'Open questions', width: '40%' },
+    ],
+    chips: ['Plan', 'Build', 'Measure'],
+  },
+};
+
+const motif = motifByVisual[visual] ?? motifByVisual.default;
+---
+
+<section
+  class="child-service-hero relative isolate overflow-x-clip border-b border-white/10 bg-[#0D120C] py-8 sm:py-12 lg:py-16"
+  aria-labelledby={`${service.slug}-hero-heading`}
+>
+  <AmbientBackdrop variant="mesh" />
+  <Container class="relative">
+    <div class="child-service-hero__grid">
+      <div class="child-service-hero__copy min-w-0">
+        <p class:list={[eyebrowClass, 'w-fit max-w-full']}>{hero.eyebrow}</p>
+        <h1
+          id={`${service.slug}-hero-heading`}
+          class="mt-3 font-display text-[1.85rem] leading-[1.1] font-semibold tracking-tight text-balance sm:mt-4 sm:text-[2.35rem] sm:leading-[1.08] lg:text-[2.85rem]"
+        >
+          {hero.titleBefore}
+          <span class="text-highlight"> {hero.titleHighlight}</span>
+        </h1>
+        <p class="mt-3 max-w-lg text-sm leading-7 text-white/70 sm:mt-4 sm:text-base sm:leading-8">{hero.intro}</p>
+        <div class="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:flex-wrap">
+          <button
+            type="button"
+            class:list={[buttonClass.base, buttonClass.gradient, 'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto']}
+            data-quote-open
+            data-service={enquiryValue}
+          >
+            {hero.primaryCtaLabel}
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </button>
+          {
+            hero.secondaryCtaLabel && hero.secondaryCtaHref ? (
+              <a href={hero.secondaryCtaHref} class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}>
+                {hero.secondaryCtaLabel}
+              </a>
+            ) : null
+          }
+        </div>
+        {
+          hero.proofLine ? (
+            <p class="mt-4 max-w-md text-xs leading-6 text-white/45 sm:mt-5 sm:text-sm">{hero.proofLine}</p>
+          ) : null
+        }
+      </div>
+
+      <div class="child-service-hero__visual min-w-0">
+        {visual === 'local-search' ? <LocalSearchHeroVisual /> : <MotifHeroVisual {...motif} />}
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .child-service-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.35rem;
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .child-service-hero__grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 1.75rem;
+      align-items: center;
+    }
+  }
+</style>

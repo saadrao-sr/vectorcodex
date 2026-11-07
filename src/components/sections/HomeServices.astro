@@ -1,0 +1,136 @@
+---
+import { Code2, Megaphone, Search, Share2, type LucideIcon } from 'lucide-react';
+import { publishedChildren, type PublishedChildLink } from '../../config/published-service-children';
+import AmbientBackdrop from '../ui/AmbientBackdrop.astro';
+import { buttonClass } from '../ui/styles';
+import Container from '../ui/Container.astro';
+
+type ServiceCard = {
+  title: string;
+  description: string;
+  serviceValue: string;
+  href: string;
+  accent: string;
+  Icon: LucideIcon;
+  children: readonly PublishedChildLink[];
+};
+
+const cards: ServiceCard[] = [
+  {
+    title: 'SEO',
+    description: 'Improve organic visibility, attract qualified traffic, and build sustainable search growth.',
+    serviceValue: 'SEO',
+    href: '/services/seo/',
+    accent: 'from-highlight/20 via-transparent to-transparent',
+    Icon: Search,
+    children: publishedChildren('seo'),
+  },
+  {
+    title: 'Web Development',
+    description: 'Build fast, scalable, responsive websites designed for performance and conversions.',
+    serviceValue: 'Web Development',
+    href: '/services/web-development/',
+    accent: 'from-lime/20 via-transparent to-transparent',
+    Icon: Code2,
+    children: publishedChildren('web'),
+  },
+  {
+    title: 'Social Media Marketing',
+    description: 'Build brand awareness, engage audiences, and turn social platforms into growth channels.',
+    serviceValue: 'Social Media Marketing',
+    href: '/services/social-media-marketing/',
+    accent: 'from-gold/20 via-transparent to-transparent',
+    Icon: Share2,
+    children: publishedChildren('social'),
+  },
+  {
+    title: 'PPC Management',
+    description: 'Generate qualified leads and maximize advertising performance through data-driven campaigns.',
+    serviceValue: 'PPC Management',
+    href: '/services/ppc-management/',
+    accent: 'from-cta/25 via-transparent to-transparent',
+    Icon: Megaphone,
+    children: publishedChildren('ppc'),
+  },
+];
+
+const childPillClass =
+  'inline-flex items-center rounded-full border border-highlight/35 bg-highlight/10 px-3 py-1.5 text-xs font-medium tracking-tight text-highlight transition duration-200 ease-out hover:-translate-y-0.5 hover:border-highlight/60 hover:bg-highlight/15 hover:shadow-[0_8px_24px_rgb(222_243_77_/0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-highlight motion-reduce:transform-none';
+---
+
+<section id="solutions" class="relative isolate overflow-hidden border-t border-white/10 bg-bg py-12 sm:py-14 lg:py-16" aria-labelledby="solutions-heading">
+  <AmbientBackdrop variant="mesh" />
+  <Container class="relative">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 id="solutions-heading" class="font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.75rem]">
+        <span class="text-white">Solutions That Drive </span>
+        <span class="text-highlight">Digital Growth</span>
+      </h2>
+      <p class="mt-3 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
+        From search visibility to high-performing websites, we build digital experiences that move businesses forward.
+      </p>
+    </div>
+
+    <ul class="mt-8 grid grid-cols-1 gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:gap-5">
+      {
+        cards.map((card) => {
+          const Icon = card.Icon;
+          return (
+            <li class="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-6 transition duration-300 hover:border-highlight/40 hover:bg-white/[0.05] sm:p-7 lg:p-8">
+              <div
+                class:list={[
+                  'pointer-events-none absolute inset-0 bg-gradient-to-br opacity-90 transition duration-300 group-hover:opacity-100',
+                  card.accent,
+                ]}
+                aria-hidden="true"
+              />
+
+              <div class="relative flex h-full flex-1 flex-col">
+                <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-highlight/25 bg-highlight/10 text-highlight shadow-[0_0_40px_rgb(222_243_77_/0.12)]">
+                  <Icon size={22} aria-hidden="true" />
+                </div>
+                <h3 class="mt-5 font-display text-2xl font-semibold tracking-tight text-white">{card.title}</h3>
+                <p class="mt-3 min-h-[4.5rem] text-sm leading-6 text-white/68 sm:min-h-[5.25rem] sm:text-[0.9375rem] sm:leading-7">
+                  {card.description}
+                </p>
+
+                {
+                  card.children.length > 0 ? (
+                    <ul class="mt-6 flex flex-1 flex-wrap content-start gap-2" aria-label={`${card.title} specialised services`}>
+                      {card.children.map((child) => (
+                        <li>
+                          <a href={child.href} class={childPillClass}>
+                            {child.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div class="mt-6 flex-1" aria-hidden="true" />
+                  )
+                }
+
+                <div class="mt-auto grid grid-cols-1 gap-3 pt-7 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    class:list={[buttonClass.base, buttonClass.gradient, 'w-full whitespace-nowrap px-4 text-[0.8125rem] sm:text-sm']}
+                    data-booking-open
+                    data-service={card.serviceValue}
+                  >
+                    Book a Consultation
+                  </button>
+                  <a
+                    href={card.href}
+                    class:list={[buttonClass.base, buttonClass.ghost, 'w-full whitespace-nowrap px-4 text-[0.8125rem] sm:text-sm']}
+                  >
+                    Explore Service
+                  </a>
+                </div>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </Container>
+</section>

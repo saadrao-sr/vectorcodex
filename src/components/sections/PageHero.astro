@@ -1,0 +1,26 @@
+---
+import type { Crumb } from '../../types/content';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede: string;
+  crumbs: Crumb[];
+}
+
+const { eyebrow, title, lede, crumbs } = Astro.props;
+---
+
+<section class="border-b border-white/10 py-12 sm:py-16 lg:py-20">
+  <Container>
+    <Breadcrumbs items={crumbs} />
+    {eyebrow && <p class:list={[eyebrowClass, 'mt-6']}>{eyebrow}</p>}
+    <h1 class="mt-3 max-w-4xl font-display text-4xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+      {title}
+    </h1>
+    <p class="mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">{lede}</p>
+  </Container>
+</section>

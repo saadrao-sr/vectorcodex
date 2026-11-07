@@ -1,0 +1,24 @@
+---
+import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageCrumbBand from '../components/sections/PageCrumbBand.astro';
+import PricingCalculatorSection from '../components/sections/PricingCalculatorSection.astro';
+import PricingHero from '../components/sections/PricingHero.astro';
+import QuoteModal from '../components/interactive/QuoteModal';
+
+const title = 'Pricing';
+const description =
+  'Calculate your VectorCodex digital project requirements and request a tailored proposal for SEO, websites, social media, and PPC.';
+const path = '/pricing/';
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Pricing', href: path },
+];
+---
+
+<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <PageCrumbBand title="Pricing" crumbs={crumbs} />
+  <PricingHero />
+  <PricingCalculatorSection />
+</BaseLayout>

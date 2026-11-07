@@ -1,0 +1,237 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+---
+
+<section
+  id="who-we-are"
+  class="about-story relative isolate overflow-hidden border-t border-white/10 bg-[#0D120C] py-8 sm:py-10 lg:py-11"
+  aria-labelledby="who-we-are-heading"
+>
+  <div class="about-story__bg pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute top-12 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.07),transparent_70%)] blur-3xl"></div>
+    <div class="absolute right-[8%] bottom-8 h-52 w-52 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"></div>
+
+    <span class="about-story__shape about-story__shape--ring"></span>
+    <span class="about-story__shape about-story__shape--orb"></span>
+    <span class="about-story__shape about-story__shape--square"></span>
+    <span class="about-story__shape about-story__shape--line"></span>
+    <span class="about-story__shape about-story__shape--dot"></span>
+    <span class="about-story__shape about-story__shape--pill"></span>
+  </div>
+
+  <Container class="relative">
+    <div class="about-story__copy mx-auto flex max-w-3xl flex-col items-center text-center">
+      <p class:list={[eyebrowClass, 'w-fit max-w-full']}>The Story Behind VectorCodex</p>
+
+      <h2
+        id="who-we-are-heading"
+        class="mt-4 max-w-3xl font-display text-[1.75rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-3xl md:text-[2.25rem] lg:text-[2.75rem] lg:leading-[1.08]"
+      >
+        Not Just Another Digital Agency.
+        <span class="text-highlight"> A Partner in Progress.</span>
+      </h2>
+
+      <div class="mt-4 max-w-2xl space-y-3 text-sm leading-7 text-white/65 sm:mt-5 sm:text-base sm:leading-7 lg:text-[1.0625rem] lg:leading-8">
+        <p>
+          At VectorCodex, we believe digital growth takes more than individual services. It requires the right strategy, technology, creativity, and people working together. We bring these capabilities together to help businesses build stronger digital foundations, connect with the right audiences, and create meaningful growth.
+        </p>
+        <p>
+          From improving search visibility and developing high-performing websites to executing digital marketing strategies, we focus on solutions that address real business challenges. Whether you need a complete digital partner or dedicated professionals to strengthen your existing team, we're here to help you move forward.
+        </p>
+      </div>
+
+      <p class="about-story__highlight mt-5 font-display text-lg font-semibold tracking-tight text-white sm:mt-6 sm:text-xl">
+        Strategy. Technology. Creativity.
+        <span class="text-highlight"> Growth.</span>
+      </p>
+
+      <div class="mt-5 flex w-full justify-center sm:mt-6">
+        <a
+          href="/services/"
+          class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}
+        >
+          Discover What We Do
+          <ArrowUpRight size={16} aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .about-story__highlight {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.35rem;
+  }
+
+  .about-story__highlight::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 4.5rem;
+    height: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #def34d, transparent);
+    transform: translateX(-50%);
+  }
+
+  .about-story__shape {
+    position: absolute;
+    opacity: 0.22;
+    will-change: transform;
+  }
+
+  .about-story__shape--ring {
+    top: 12%;
+    left: 6%;
+    width: 7.5rem;
+    height: 7.5rem;
+    border: 1.5px solid rgb(222 243 77 / 0.55);
+    border-radius: 9999px;
+  }
+
+  .about-story__shape--orb {
+    top: 18%;
+    right: 8%;
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 35% 30%, rgb(222 243 77 / 0.35), transparent 68%);
+    border: 1px solid rgb(222 243 77 / 0.2);
+  }
+
+  .about-story__shape--square {
+    --shape-rot: 18deg;
+    bottom: 16%;
+    left: 10%;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1.5px solid rgb(222 243 77 / 0.45);
+    border-radius: 0.65rem;
+    transform: rotate(var(--shape-rot));
+  }
+
+  .about-story__shape--line {
+    top: 42%;
+    right: 14%;
+    width: 4.5rem;
+    height: 1.5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgb(222 243 77 / 0.55), transparent);
+  }
+
+  .about-story__shape--dot {
+    bottom: 22%;
+    right: 18%;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.28;
+  }
+
+  .about-story__shape--pill {
+    --shape-rot: -12deg;
+    top: 58%;
+    left: 16%;
+    width: 3.75rem;
+    height: 1.35rem;
+    border: 1px solid rgb(222 243 77 / 0.4);
+    border-radius: 9999px;
+    transform: rotate(var(--shape-rot));
+  }
+
+  @media (max-width: 639px) {
+    .about-story__shape--ring {
+      width: 5rem;
+      height: 5rem;
+      left: 2%;
+    }
+
+    .about-story__shape--orb {
+      width: 3.75rem;
+      height: 3.75rem;
+      right: 3%;
+    }
+
+    .about-story__shape--square,
+    .about-story__shape--pill {
+      opacity: 0.16;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-story__copy {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: about-story-rise 0.7s ease forwards;
+      animation-delay: 60ms;
+    }
+
+    .about-story__shape--ring {
+      animation: about-story-drift-a 16s ease-in-out infinite;
+    }
+
+    .about-story__shape--orb {
+      animation: about-story-drift-b 18s ease-in-out infinite;
+    }
+
+    .about-story__shape--square {
+      animation: about-story-drift-c 14s ease-in-out infinite;
+    }
+
+    .about-story__shape--line {
+      animation: about-story-drift-a 20s ease-in-out infinite reverse;
+    }
+
+    .about-story__shape--dot {
+      animation: about-story-drift-b 12s ease-in-out infinite;
+    }
+
+    .about-story__shape--pill {
+      animation: about-story-drift-c 17s ease-in-out infinite reverse;
+    }
+  }
+
+  @keyframes about-story-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes about-story-drift-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(12px, -18px, 0);
+    }
+  }
+
+  @keyframes about-story-drift-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-14px, 12px, 0);
+    }
+  }
+
+  @keyframes about-story-drift-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--shape-rot, 0deg));
+    }
+    50% {
+      transform: translate3d(10px, -10px, 0) rotate(calc(var(--shape-rot, 0deg) + 8deg));
+    }
+  }
+</style>
+

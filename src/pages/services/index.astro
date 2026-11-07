@@ -1,0 +1,46 @@
+---
+import {
+  servicesFaqs,
+  servicesPageMeta,
+} from '../../config/services-page';
+import { breadcrumbSchema, faqPageSchema, webPageSchema } from '../../lib/schema/jsonld';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageCrumbBand from '../../components/sections/PageCrumbBand.astro';
+import ServicesHero from '../../components/sections/ServicesHero.astro';
+import ServicesPillars from '../../components/sections/ServicesPillars.astro';
+import ServicesExpertise from '../../components/sections/ServicesExpertise.astro';
+import ServicesWhy from '../../components/sections/ServicesWhy.astro';
+import ServicesProcess from '../../components/sections/ServicesProcess.astro';
+import ServicesFaq from '../../components/sections/ServicesFaq.astro';
+import ServicesFinalCta from '../../components/sections/ServicesFinalCta.astro';
+import QuoteModal from '../../components/interactive/QuoteModal';
+import BookingModal from '../../components/interactive/BookingModal';
+
+const { title, description, path } = servicesPageMeta;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: path },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schema={[
+    webPageSchema({ title, description, path }),
+    breadcrumbSchema(crumbs),
+    faqPageSchema(servicesFaqs),
+  ]}
+>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <BookingModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <PageCrumbBand title="Services" crumbs={crumbs} />
+  <ServicesHero />
+  <ServicesPillars />
+  <ServicesExpertise />
+  <ServicesWhy />
+  <ServicesProcess />
+  <ServicesFaq />
+  <ServicesFinalCta />
+</BaseLayout>

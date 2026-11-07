@@ -1,0 +1,38 @@
+---
+import BookingModal from '../../../components/interactive/BookingModal';
+import QuoteModal from '../../../components/interactive/QuoteModal';
+import PageCrumbBand from '../../../components/sections/PageCrumbBand.astro';
+import PpcServiceLanding from '../../../components/sections/service-parents/ppc/PpcServiceLanding.astro';
+import { ppcParentService } from '../../../config/service-parents/ppc-management';
+import { getService } from '../../../config/services';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { breadcrumbSchema, faqPageSchema, serviceSchema, webPageSchema } from '../../../lib/schema/jsonld';
+
+const service = getService('ppc-management');
+const parent = ppcParentService;
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: '/services/' },
+  { name: service.title, href: service.path },
+];
+
+const faqEntities = parent.faqs.items.map(({ question, answer }) => ({ question, answer }));
+---
+
+<BaseLayout
+  title={parent.seoTitle}
+  description={parent.seoDescription}
+  path={service.path}
+  schema={[
+    webPageSchema({ title: parent.seoTitle, description: parent.seoDescription, path: service.path }),
+    breadcrumbSchema(crumbs),
+    faqPageSchema(faqEntities),
+    serviceSchema(service),
+  ]}
+>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <BookingModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <PageCrumbBand title={service.title} crumbs={crumbs} />
+  <PpcServiceLanding />
+</BaseLayout>

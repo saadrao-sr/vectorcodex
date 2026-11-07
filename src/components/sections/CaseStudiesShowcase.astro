@@ -1,0 +1,56 @@
+---
+import { getHomepageCaseStudies } from '../../config/case-studies';
+import CaseStudyCarousel from '../interactive/CaseStudyCarousel';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+
+const whatsappHref = 'https://wa.me/923185730513';
+const studies = getHomepageCaseStudies();
+---
+
+<section
+  id="case-studies"
+  class="relative isolate overflow-hidden border-t border-white/10 bg-bg py-12 sm:py-14 lg:py-16"
+  aria-labelledby="case-studies-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="absolute top-20 left-[12%] h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-2xl"></div>
+    <div class="absolute right-[10%] bottom-16 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-2xl"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class={eyebrowClass}>Our Work</p>
+      <h2
+        id="case-studies-heading"
+        class="mt-3 font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.75rem]"
+      >
+        <span class="text-white">Case Studies That Show </span>
+        <span class="text-highlight">Real Progress</span>
+      </h2>
+      <p class="mt-3 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
+        Explore how we approach SEO, websites, and marketing programmes. Published studies are added only when an engagement can be described accurately.
+      </p>
+    </div>
+
+    <CaseStudyCarousel client:visible items={studies} />
+
+    <div class="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
+      <a href="/case-studies/" class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}>
+        See All Case Study
+      </a>
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class:list={[
+          buttonClass.base,
+          buttonClass.gradient,
+          'w-full shadow-[0_12px_40px_rgb(197_246_61_/0.16)] sm:w-auto',
+        ]}
+      >
+        Talk to our Expert
+      </a>
+    </div>
+  </Container>
+</section>

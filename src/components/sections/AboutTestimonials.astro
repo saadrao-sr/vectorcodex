@@ -1,0 +1,225 @@
+---
+import { Quote } from 'lucide-react';
+import { testimonials } from '../../config/testimonials';
+import TestimonialsCarousel from '../interactive/TestimonialsCarousel';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+
+const hasPlaceholders = testimonials.some((item) => item.placeholder);
+---
+
+<section
+  id="about-testimonials"
+  class="about-testimonials relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-6 sm:py-8 lg:py-9"
+  aria-labelledby="about-testimonials-heading"
+>
+  <div class="about-testimonials__bg pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute top-12 left-[10%] h-48 w-48 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.07),transparent_70%)] blur-3xl"></div>
+    <div class="absolute right-[8%] bottom-10 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"></div>
+    <span class="about-testimonials__quote-mark" aria-hidden="true">”</span>
+    <span class="about-testimonials__shape about-testimonials__shape--ring"></span>
+    <span class="about-testimonials__shape about-testimonials__shape--orb"></span>
+    <span class="about-testimonials__shape about-testimonials__shape--line"></span>
+    <span class="about-testimonials__shape about-testimonials__shape--dot"></span>
+    <span class="about-testimonials__shape about-testimonials__shape--pill"></span>
+  </div>
+
+  <Container class="relative">
+    <header class="about-testimonials__intro mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'w-fit max-w-full']}>Trust Built Through Collaboration</p>
+      <h2
+        id="about-testimonials-heading"
+        class="mt-2.5 font-display text-[1.6rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[1.85rem] md:text-[2rem] lg:text-[2.35rem] lg:leading-[1.08]"
+      >
+        The Partnerships That Make
+        <span class="text-highlight"> Our Work Matter.</span>
+      </h2>
+      <p class="mx-auto mt-2.5 max-w-2xl text-sm leading-6 text-white/65 sm:mt-3 sm:text-[0.95rem] sm:leading-7">
+        Strong partnerships are built on trust, communication, and meaningful outcomes. Discover what our clients say about working with VectorCodex.
+      </p>
+      {
+        hasPlaceholders && (
+          <p class="mt-2 inline-flex items-center gap-2 text-[0.7rem] tracking-wide text-white/40 sm:text-xs">
+            <Quote size={12} aria-hidden="true" className="text-highlight/60" />
+            Quotes below are editable placeholders until approved client feedback is published.
+          </p>
+        )
+      }
+    </header>
+
+    <div class="about-testimonials__stage">
+      <TestimonialsCarousel client:visible items={testimonials} />
+    </div>
+  </Container>
+</section>
+
+<style>
+  .about-testimonials__shape {
+    position: absolute;
+    opacity: 0.2;
+    will-change: transform;
+  }
+
+  .about-testimonials__shape--ring {
+    top: 18%;
+    left: 5%;
+    width: 5.75rem;
+    height: 5.75rem;
+    border: 1.5px solid rgb(222 243 77 / 0.45);
+    border-radius: 9999px;
+  }
+
+  .about-testimonials__shape--orb {
+    bottom: 18%;
+    right: 6%;
+    width: 4.25rem;
+    height: 4.25rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(222 243 77 / 0.2);
+    background: radial-gradient(circle at 35% 30%, rgb(222 243 77 / 0.28), transparent 68%);
+  }
+
+  .about-testimonials__shape--line {
+    top: 46%;
+    left: 10%;
+    width: 3.75rem;
+    height: 1.5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgb(222 243 77 / 0.48), transparent);
+  }
+
+  .about-testimonials__shape--dot {
+    top: 28%;
+    right: 14%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.28;
+  }
+
+  .about-testimonials__shape--pill {
+    --shape-rot: -10deg;
+    bottom: 14%;
+    left: 14%;
+    width: 3.25rem;
+    height: 1.15rem;
+    border: 1px solid rgb(222 243 77 / 0.36);
+    border-radius: 9999px;
+    transform: rotate(var(--shape-rot));
+  }
+
+  @media (max-width: 639px) {
+    .about-testimonials__shape--ring {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .about-testimonials__shape--orb {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .about-testimonials__shape--pill {
+      opacity: 0.14;
+    }
+  }
+
+  .about-testimonials__quote-mark {
+    position: absolute;
+    top: 4.5rem;
+    right: 6%;
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 18vw, 12rem);
+    font-weight: 700;
+    line-height: 0.8;
+    color: rgb(222 243 77 / 0.05);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .about-testimonials__stage :global(.mt-8) {
+    margin-top: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .about-testimonials__stage :global(.mt-8.sm\:mt-10),
+    .about-testimonials__stage :global(.sm\:mt-10) {
+      margin-top: 1.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-testimonials__intro,
+    .about-testimonials__stage {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: about-testimonials-rise 0.7s ease forwards;
+    }
+
+    .about-testimonials__intro {
+      animation-delay: 40ms;
+    }
+
+    .about-testimonials__stage {
+      animation-delay: 120ms;
+    }
+
+    .about-testimonials__shape--ring {
+      animation: about-testimonials-drift-a 17s ease-in-out infinite;
+    }
+
+    .about-testimonials__shape--orb {
+      animation: about-testimonials-drift-b 19s ease-in-out infinite;
+    }
+
+    .about-testimonials__shape--line {
+      animation: about-testimonials-drift-a 21s ease-in-out infinite reverse;
+    }
+
+    .about-testimonials__shape--dot {
+      animation: about-testimonials-drift-b 13s ease-in-out infinite;
+    }
+
+    .about-testimonials__shape--pill {
+      animation: about-testimonials-drift-c 16s ease-in-out infinite;
+    }
+  }
+
+  @keyframes about-testimonials-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes about-testimonials-drift-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(12px, -14px, 0);
+    }
+  }
+
+  @keyframes about-testimonials-drift-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-10px, 12px, 0);
+    }
+  }
+
+  @keyframes about-testimonials-drift-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--shape-rot, 0deg));
+    }
+    50% {
+      transform: translate3d(8px, -8px, 0) rotate(calc(var(--shape-rot, 0deg) + 8deg));
+    }
+  }
+</style>

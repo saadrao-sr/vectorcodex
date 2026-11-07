@@ -1,0 +1,52 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import type { ChildServiceLanding } from '../../../config/service-children';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  service: ChildServiceLanding;
+}
+
+const { service } = Astro.props;
+const { related } = service;
+---
+
+<section
+  class="relative isolate border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby={`${service.slug}-related-heading`}
+>
+  <Container>
+    <header class="max-w-2xl">
+      <p class:list={[eyebrowClass, 'w-fit max-w-full']}>{related.eyebrow}</p>
+      <h2
+        id={`${service.slug}-related-heading`}
+        class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]"
+      >
+        {related.titleBefore}
+        <span class="text-highlight"> {related.titleHighlight}</span>
+      </h2>
+      <p class="mt-3 max-w-xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">{related.intro}</p>
+    </header>
+
+    <ul class="mt-8 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        related.items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="group flex h-full flex-col rounded-2xl border border-white/12 bg-white/[0.02] p-5 transition hover:border-highlight/45 hover:bg-white/[0.05]"
+            >
+              <span class="text-sm font-semibold text-white group-hover:text-highlight">{item.label}</span>
+              {item.text ? <span class="mt-2 text-sm leading-6 text-white/65">{item.text}</span> : null}
+              <span class="mt-4 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.14em] text-highlight/90">
+                Open
+                <ArrowUpRight size={14} aria-hidden="true" />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Container>
+</section>

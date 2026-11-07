@@ -1,0 +1,112 @@
+---
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { buttonClass } from '../ui/styles';
+---
+
+<section
+  id="final-cta"
+  class="relative isolate overflow-hidden border-t border-white/10 bg-bg py-12 sm:py-14 lg:py-16"
+  aria-labelledby="final-cta-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="final-cta__glow absolute top-1/2 left-1/2 h-[18rem] w-[18rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.16),transparent_68%)] blur-2xl sm:h-[22rem] sm:w-[22rem]"></div>
+    <div class="final-cta__orb absolute top-[16%] left-[10%] h-24 w-24 rounded-full border border-highlight/15 bg-highlight/5 sm:h-32 sm:w-32"></div>
+    <div class="final-cta__orb final-cta__orb--delay absolute right-[12%] bottom-[14%] h-20 w-20 rotate-12 rounded-[1.25rem] border border-lime/20 bg-gradient-to-br from-lime/10 to-gold/5 sm:h-24 sm:w-24"></div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/40 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-highlight/25 to-transparent"></div>
+    <svg class="absolute inset-0 h-full w-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <pattern id="final-cta-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+          <path d="M48 0H0V48" fill="none" stroke="rgb(222 243 77)" stroke-width="0.6"></path>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#final-cta-grid)"></rect>
+    </svg>
+  </div>
+
+  <div class="relative mx-auto w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+    <h2
+      id="final-cta-heading"
+      class="font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.75rem]"
+    >
+      <span class="text-white">Your Next Chapter Starts With a </span>
+      <span class="text-highlight">Better Digital Presence.</span>
+    </h2>
+    <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
+      Whether you're ready to scale, modernize, or explore new opportunities, let's build something that moves your business forward.
+    </p>
+
+    <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-7 sm:flex-row sm:gap-4">
+      <button
+        type="button"
+        class:list={[
+          buttonClass.base,
+          buttonClass.gradient,
+          'group w-full px-7 shadow-[0_16px_48px_rgb(197_246_61_/0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_56px_rgb(197_246_61_/0.28)] motion-reduce:transform-none sm:w-auto',
+        ]}
+        data-booking-open
+        data-service=""
+      >
+        Let's Build Something Great
+        <ArrowRight
+          size={16}
+          aria-hidden="true"
+          className="transition duration-300 group-hover:translate-x-0.5"
+        />
+      </button>
+      <a
+        href="/#solutions"
+        class:list={[
+          buttonClass.base,
+          buttonClass.ghost,
+          'group w-full sm:w-auto',
+        ]}
+      >
+        Explore Our Services
+        <ArrowUpRight
+          size={16}
+          aria-hidden="true"
+          className="transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .final-cta__glow {
+      animation: final-cta-pulse 7s ease-in-out infinite;
+    }
+
+    .final-cta__orb {
+      animation: final-cta-float 9s ease-in-out infinite;
+    }
+
+    .final-cta__orb--delay {
+      animation-delay: -3.5s;
+    }
+  }
+
+  @keyframes final-cta-pulse {
+    0%,
+    100% {
+      opacity: 0.7;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+  }
+
+  @keyframes final-cta-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+</style>

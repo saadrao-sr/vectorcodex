@@ -1,0 +1,28 @@
+---
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  title?: string;
+  text?: string;
+}
+
+const {
+  title = 'Tell us what you want the site to do.',
+  text = 'Share the business, the audience, and the constraint. We will reply with a scoped next step, not a generic pitch.',
+} = Astro.props;
+---
+
+<section class="py-16 sm:py-20" aria-labelledby="cta-heading">
+  <Container>
+    <div class="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent px-6 py-10 sm:px-10 sm:py-12">
+      <h2 id="cta-heading" class="max-w-2xl font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+        {title}
+      </h2>
+      <p class="mt-4 max-w-xl text-base leading-7 text-white/75">{text}</p>
+      <div class="mt-8">
+        <Button href="/contact/">Start a project</Button>
+      </div>
+    </div>
+  </Container>
+</section>

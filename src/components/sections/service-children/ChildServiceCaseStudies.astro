@@ -1,0 +1,57 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import { caseStudies } from '../../../config/case-studies';
+import type { ChildServiceLanding } from '../../../config/service-children';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  service: ChildServiceLanding;
+}
+
+const { service } = Astro.props;
+
+const studies = service.caseStudySlugs
+  .map((slug) => caseStudies.find((item) => item.slug === slug))
+  .filter((item): item is NonNullable<typeof item> => Boolean(item) && !item.placeholder);
+---
+
+{
+  studies.length > 0 ? (
+    <section
+      class="relative isolate border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+      aria-labelledby={`${service.slug}-cases-heading`}
+    >
+      <Container>
+        <header class="max-w-2xl">
+          <p class:list={[eyebrowClass, 'w-fit max-w-full']}>Relevant Case Studies</p>
+          <h2
+            id={`${service.slug}-cases-heading`}
+            class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]"
+          >
+            Proof From
+            <span class="text-highlight"> Local Search Work.</span>
+          </h2>
+        </header>
+
+        <ul class="mt-8 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2">
+          {studies.map((study) => (
+            <li>
+              <a
+                href={study.path}
+                class="group flex h-full flex-col rounded-2xl border border-white/12 bg-white/[0.03] p-5 transition hover:border-highlight/45"
+              >
+                <h3 class="font-display text-lg font-semibold text-white group-hover:text-highlight">{study.title}</h3>
+                <p class="mt-2 flex-1 text-sm leading-6 text-white/62">{study.summary}</p>
+                <span class="mt-4 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.14em] text-highlight/90">
+                  View case study
+                  <ArrowUpRight size={14} aria-hidden="true" />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Container>
+    </section>
+  ) : null
+}

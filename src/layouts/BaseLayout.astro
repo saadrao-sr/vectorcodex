@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import Footer from '../components/layout/Footer.astro';
+import Header from '../components/layout/Header.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import Seo from '../components/seo/Seo.astro';
+import { organizationSchema, webPageSchema } from '../lib/schema/jsonld';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  publishedAt?: string;
+  modifiedAt?: string;
+  prev?: string;
+  next?: string;
+  schema?: unknown[];
+}
+
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+  noindex = false,
+  ogType = 'website',
+  image,
+  imageAlt,
+  imageWidth,
+  imageHeight,
+  publishedAt,
+  modifiedAt,
+  prev,
+  next,
+  schema = [webPageSchema({ title, description, path })],
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <Seo
+      title={title}
+      description={description}
+      path={path}
+      noindex={noindex}
+      ogType={ogType}
+      image={image}
+      imageAlt={imageAlt}
+      imageWidth={imageWidth}
+      imageHeight={imageHeight}
+      publishedAt={publishedAt}
+      modifiedAt={modifiedAt}
+      prev={prev}
+      next={next}
+    />
+    <JsonLd data={organizationSchema()} />
+    {schema.map((entry) => <JsonLd data={entry} />)}
+    <slot name="head" />
+  </head>
+  <body class="bg-bg font-sans text-ink antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[70] focus:rounded-full focus:bg-cta focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-bg"
+    >
+      Skip to content
+    </a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,64 @@
+---
+import { industries, type IndustryLanding } from '../../config/industries';
+import { breadcrumbSchema, faqPageSchema, webPageSchema } from '../../lib/schema/jsonld';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageCrumbBand from '../../components/sections/PageCrumbBand.astro';
+import IndustryHero from '../../components/sections/industry/IndustryHero.astro';
+import IndustryChallenges from '../../components/sections/industry/IndustryChallenges.astro';
+import IndustryAudience from '../../components/sections/industry/IndustryAudience.astro';
+import IndustrySolutions from '../../components/sections/industry/IndustrySolutions.astro';
+import IndustryServices from '../../components/sections/industry/IndustryServices.astro';
+import IndustryWhy from '../../components/sections/industry/IndustryWhy.astro';
+import IndustryProcess from '../../components/sections/industry/IndustryProcess.astro';
+import IndustryCaseStudies from '../../components/sections/industry/IndustryCaseStudies.astro';
+import IndustryFaq from '../../components/sections/industry/IndustryFaq.astro';
+import IndustryFinalCta from '../../components/sections/industry/IndustryFinalCta.astro';
+import QuoteModal from '../../components/interactive/QuoteModal';
+import BookingModal from '../../components/interactive/BookingModal';
+
+export function getStaticPaths() {
+  return industries.map((industry) => ({
+    params: { slug: industry.slug },
+    props: { industry },
+  }));
+}
+
+interface Props {
+  industry: IndustryLanding;
+}
+
+const { industry } = Astro.props;
+const title = industry.seoTitle;
+const description = industry.seoDescription;
+const path = industry.path;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Industries', href: '/industries/' },
+  { name: industry.name, href: path },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schema={[
+    webPageSchema({ title, description, path }),
+    breadcrumbSchema(crumbs),
+    faqPageSchema(industry.faqs.items),
+  ]}
+>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <BookingModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <PageCrumbBand title={industry.name} crumbs={crumbs} />
+  <IndustryHero industry={industry} />
+  <IndustryChallenges industry={industry} />
+  <IndustryAudience industry={industry} />
+  <IndustrySolutions industry={industry} />
+  <IndustryServices industry={industry} />
+  <IndustryWhy industry={industry} />
+  <IndustryProcess industry={industry} />
+  <IndustryCaseStudies industry={industry} />
+  <IndustryFaq industry={industry} />
+  <IndustryFinalCta industry={industry} />
+</BaseLayout>

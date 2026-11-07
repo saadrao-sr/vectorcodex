@@ -1,0 +1,355 @@
+---
+import { Compass, Globe2, Search, Smartphone, type LucideIcon } from 'lucide-react';
+import type { LocationOffice } from '../../config/locations';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+import LocationAmbientBg from './LocationAmbientBg.astro';
+
+interface Props {
+  location: LocationOffice;
+}
+
+const { location } = Astro.props;
+const { landscape } = location;
+
+const insightIcons: LucideIcon[] = [Globe2, Search, Compass, Smartphone];
+---
+
+<section
+  id="location-landscape"
+  class="location-landscape relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="location-landscape-heading"
+>
+  <LocationAmbientBg variant="b" />
+
+  <Container class="relative">
+    <header class="location-landscape__header mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'location-landscape__eyebrow mx-auto w-fit max-w-full']}>
+        The Local Digital Landscape
+      </p>
+
+      <h2
+        id="location-landscape-heading"
+        class="location-landscape__title mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.45rem] lg:leading-[1.08]"
+      >
+        Understanding the Digital Landscape in
+        <span class="text-highlight"> {location.locationLabel}.</span>
+      </h2>
+
+      <p class="location-landscape__intro mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">
+        {landscape.intro}
+      </p>
+    </header>
+
+    <div class="location-landscape__body mt-7 sm:mt-8">
+      <div class="location-landscape__visual" aria-hidden="true">
+        <div class="location-landscape__stage">
+          <div class="location-landscape__glow"></div>
+          <div class="location-landscape__orbit location-landscape__orbit--outer"></div>
+          <div class="location-landscape__orbit location-landscape__orbit--mid"></div>
+
+          <div class="location-landscape__core">
+            <p class="location-landscape__core-kicker">Market lens</p>
+            <p class="location-landscape__core-title">{location.name}</p>
+            <p class="location-landscape__core-sub">{landscape.visualLabel}</p>
+          </div>
+
+          <div class="location-landscape__float location-landscape__float--a">
+            <span>Audience journeys</span>
+          </div>
+          <div class="location-landscape__float location-landscape__float--b">
+            <span>Search intent</span>
+          </div>
+          <div class="location-landscape__float location-landscape__float--c">
+            <span>Channel fit</span>
+          </div>
+
+          <svg class="location-landscape__grid" viewBox="0 0 320 360" preserveAspectRatio="none">
+            <path d="M40 80 H280"></path>
+            <path d="M40 140 H280"></path>
+            <path d="M40 200 H280"></path>
+            <path d="M40 260 H280"></path>
+            <path d="M80 40 V320"></path>
+            <path d="M160 40 V320"></path>
+            <path d="M240 40 V320"></path>
+            <circle cx="160" cy="180" r="4"></circle>
+            <circle cx="110" cy="120" r="3"></circle>
+            <circle cx="220" cy="230" r="3"></circle>
+            <path d="M110 120 L160 180 L220 230"></path>
+          </svg>
+        </div>
+      </div>
+
+      <ul class="location-landscape__insights grid gap-3 sm:grid-cols-2 sm:gap-4">
+        {
+          landscape.insights.map((insight, index) => {
+            const Icon = insightIcons[index % insightIcons.length];
+            return (
+              <li>
+                <article class="location-landscape__card group relative h-full overflow-hidden rounded-[1.35rem] border border-white/12 bg-white/[0.03] p-4 transition duration-300 hover:border-highlight/40 sm:p-5">
+                  <div
+                    class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/10 via-transparent to-transparent opacity-80 transition duration-300 group-hover:opacity-100"
+                    aria-hidden="true"
+                  />
+                  <div class="relative">
+                    <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-highlight/25 bg-highlight/10 text-highlight">
+                      <Icon size={17} aria-hidden="true" />
+                    </span>
+                    <h3 class="mt-3 font-display text-base font-semibold tracking-tight text-white sm:text-lg">
+                      {insight.title}
+                    </h3>
+                    <p class="mt-2 text-sm leading-6 text-white/60">{insight.text}</p>
+                  </div>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+
+    <p
+      class="location-landscape__closing mx-auto mt-5 max-w-4xl rounded-[1.35rem] border border-highlight/25 bg-highlight/[0.07] px-5 py-3.5 text-center text-sm leading-7 text-white/80 sm:mt-6 sm:px-6 sm:py-4 sm:text-[0.95rem] sm:leading-8"
+    >
+      {landscape.closing}
+    </p>
+  </Container>
+</section>
+
+<style>
+  .location-landscape__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 960px) {
+    .location-landscape__body {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: 1.25rem;
+    }
+  }
+
+  .location-landscape__visual {
+    min-width: 0;
+    height: 100%;
+  }
+
+  .location-landscape__stage {
+    position: relative;
+    height: 100%;
+    min-height: 16.5rem;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.5rem;
+    background:
+      linear-gradient(165deg, rgb(18 24 17 / 0.96), rgb(13 18 12 / 0.92)),
+      radial-gradient(circle at 50% 40%, rgb(222 243 77 / 0.08), transparent 58%);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.3);
+  }
+
+  @media (min-width: 640px) {
+    .location-landscape__stage {
+      min-height: 18rem;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .location-landscape__stage {
+      min-height: 100%;
+    }
+  }
+
+  .location-landscape__glow {
+    position: absolute;
+    inset: 18% 16% 22% 16%;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgb(222 243 77 / 0.16), transparent 68%);
+    filter: blur(16px);
+  }
+
+  .location-landscape__orbit {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    border: 1px solid rgb(222 243 77 / 0.18);
+    border-radius: 9999px;
+    transform: translate(-50%, -50%);
+  }
+
+  .location-landscape__orbit--outer {
+    width: min(78%, 18rem);
+    aspect-ratio: 1;
+  }
+
+  .location-landscape__orbit--mid {
+    width: min(54%, 12.5rem);
+    aspect-ratio: 1;
+    border-color: rgb(222 243 77 / 0.28);
+  }
+
+  .location-landscape__core {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    z-index: 2;
+    width: min(12.5rem, 58%);
+    transform: translate(-50%, -50%);
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: 1.25rem;
+    background: rgb(13 18 12 / 0.88);
+    padding: 1rem 1.1rem;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+
+  .location-landscape__core-kicker {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #def34d;
+  }
+
+  .location-landscape__core-title {
+    margin-top: 0.35rem;
+    font-family: var(--font-display, inherit);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  .location-landscape__core-sub {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  .location-landscape__float {
+    position: absolute;
+    z-index: 3;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: 9999px;
+    background: rgb(13 18 12 / 0.88);
+    padding: 0.45rem 0.75rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.78);
+    backdrop-filter: blur(8px);
+  }
+
+  .location-landscape__float--a {
+    top: 11%;
+    left: 8%;
+  }
+
+  .location-landscape__float--b {
+    top: 16%;
+    right: 7%;
+  }
+
+  .location-landscape__float--c {
+    bottom: 12%;
+    left: 14%;
+  }
+
+  .location-landscape__grid {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.35;
+  }
+
+  .location-landscape__grid path,
+  .location-landscape__grid circle {
+    fill: none;
+    stroke: rgb(222 243 77 / 0.22);
+    stroke-width: 1;
+  }
+
+  .location-landscape__grid circle {
+    fill: rgb(222 243 77 / 0.45);
+    stroke: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .location-landscape__header,
+    .location-landscape__visual,
+    .location-landscape__insights,
+    .location-landscape__closing {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: location-landscape-rise 0.7s ease forwards;
+    }
+
+    .location-landscape__header {
+      animation-delay: 60ms;
+    }
+
+    .location-landscape__visual {
+      animation-delay: 140ms;
+    }
+
+    .location-landscape__insights {
+      animation-delay: 180ms;
+    }
+
+    .location-landscape__closing {
+      animation-delay: 240ms;
+    }
+
+    .location-landscape__float--a {
+      animation: location-landscape-float-a 8s ease-in-out infinite;
+    }
+
+    .location-landscape__float--b {
+      animation: location-landscape-float-b 9s ease-in-out infinite;
+    }
+
+    .location-landscape__float--c {
+      animation: location-landscape-float-c 7.5s ease-in-out infinite;
+    }
+  }
+
+  @keyframes location-landscape-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes location-landscape-float-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -6px, 0);
+    }
+  }
+
+  @keyframes location-landscape-float-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, 7px, 0);
+    }
+  }
+
+  @keyframes location-landscape-float-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -5px, 0);
+    }
+  }
+</style>

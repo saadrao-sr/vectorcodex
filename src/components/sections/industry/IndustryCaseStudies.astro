@@ -1,0 +1,109 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import { caseStudies } from '../../../config/case-studies';
+import type { IndustryLanding } from '../../../config/industries';
+import AmbientBackdrop from '../../ui/AmbientBackdrop.astro';
+import Container from '../../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  industry: IndustryLanding;
+}
+
+const { industry } = Astro.props;
+
+const studies = industry.caseStudySlugs
+  .map((slug) => caseStudies.find((item) => item.slug === slug))
+  .filter((item): item is (typeof caseStudies)[number] => Boolean(item))
+  .filter((item) => !item.placeholder);
+---
+
+{
+  studies.length > 0 && (
+    <section
+      id="industry-case-studies"
+      class="industry-case-studies relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+      aria-labelledby="industry-case-studies-heading"
+    >
+      <AmbientBackdrop variant="drift" />
+
+      <Container class="relative">
+        <header class="mx-auto max-w-3xl text-center">
+          <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>Relevant Case Studies</p>
+          <h2
+            id="industry-case-studies-heading"
+            class="mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.55rem] lg:leading-[1.06]"
+          >
+            Work Relevant to
+            <span class="text-highlight"> {industry.name}.</span>
+          </h2>
+          <p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">
+            Only published, verified projects are shown here. Placeholder entries are excluded until they can be described accurately.
+          </p>
+        </header>
+
+        <ul class="industry-case-studies__grid">
+          {studies.map((study) => (
+            <li>
+              <a href={study.path} class="industry-case-studies__card group">
+                <p class="text-[0.65rem] font-semibold tracking-[0.14em] text-highlight uppercase">
+                  {study.service}
+                </p>
+                <h3 class="mt-2 font-display text-xl font-semibold tracking-tight text-white">{study.title}</h3>
+                <p class="mt-2 text-sm leading-6 text-white/60">{study.summary}</p>
+                <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-highlight">
+                  View case study
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-7 flex justify-center sm:mt-8">
+          <a href="/case-studies/" class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}>
+            Browse All Case Studies
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+<style>
+  .industry-case-studies__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+    margin: 3rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    .industry-case-studies__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 3.5rem;
+    }
+  }
+
+  .industry-case-studies__card {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.35rem;
+    background: rgb(255 255 255 / 0.03);
+    padding: 1.25rem 1.2rem 1.3rem;
+    transition:
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .industry-case-studies__card:hover {
+    border-color: rgb(222 243 77 / 0.4);
+    background: rgb(255 255 255 / 0.05);
+  }
+</style>

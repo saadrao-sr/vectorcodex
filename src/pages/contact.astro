@@ -1,0 +1,23 @@
+---
+import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageCrumbBand from '../components/sections/PageCrumbBand.astro';
+import ContactHero from '../components/sections/ContactHero.astro';
+import ContactInquiry from '../components/sections/ContactInquiry.astro';
+import ContactLocations from '../components/sections/ContactLocations.astro';
+
+const title = 'Contact';
+const description = 'Contact VectorCodex about SEO, web development, or digital marketing for a UK organisation.';
+const path = '/contact/';
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Contact', href: path },
+];
+---
+
+<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+  <PageCrumbBand title="Contact" crumbs={crumbs} />
+  <ContactHero />
+  <ContactInquiry />
+  <ContactLocations />
+</BaseLayout>

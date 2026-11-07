@@ -1,0 +1,120 @@
+---
+import type { ChildServiceLanding } from '../../../config/service-children';
+import AmbientBackdrop from '../../ui/AmbientBackdrop.astro';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  service: ChildServiceLanding;
+}
+
+const { service } = Astro.props;
+const { outcomes } = service;
+---
+
+<section
+  class="relative isolate border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby={`${service.slug}-outcomes-heading`}
+>
+  <AmbientBackdrop variant="orbs" class="opacity-45" />
+  <Container class="relative">
+    <header class="mx-auto max-w-2xl text-center">
+      <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{outcomes.eyebrow}</p>
+      <h2
+        id={`${service.slug}-outcomes-heading`}
+        class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]"
+      >
+        {outcomes.titleBefore}
+        <span class="text-highlight"> {outcomes.titleHighlight}</span>
+      </h2>
+      <p class="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">{outcomes.intro}</p>
+    </header>
+
+    <ol class="child-outcomes mt-8 list-none p-0 sm:mt-10">
+      {
+        outcomes.items.map((item, index) => (
+          <li class={`child-outcomes__item child-outcomes__item--${item.motif}`}>
+            <span class="child-outcomes__idx font-display" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <div class="child-outcomes__panel">
+              <h3 class="font-display text-lg font-semibold tracking-tight text-white sm:text-xl">{item.title}</h3>
+              <p class="mt-2 max-w-2xl text-sm leading-7 text-white/62">{item.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+</section>
+
+<style>
+  .child-outcomes {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .child-outcomes__item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.85rem 1rem;
+    align-items: start;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.25rem;
+    padding: 1.1rem 1.1rem 1.2rem;
+    transition:
+      border-color 0.22s ease,
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+
+  .child-outcomes__item:hover {
+    border-color: rgb(222 243 77 / 0.42);
+    box-shadow: 0 14px 36px rgb(0 0 0 / 0.26);
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .child-outcomes__item,
+    .child-outcomes__item:hover {
+      transition: border-color 0.2s ease;
+      transform: none;
+    }
+  }
+
+  .child-outcomes__item--maps {
+    background: linear-gradient(120deg, rgb(222 243 77 / 0.08), transparent 42%), rgb(255 255 255 / 0.02);
+  }
+
+  .child-outcomes__item--organic {
+    background: linear-gradient(200deg, rgb(197 246 61 / 0.07), transparent 48%), rgb(255 255 255 / 0.02);
+  }
+
+  .child-outcomes__item--trust {
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.05), transparent 50%), rgb(255 255 255 / 0.02);
+  }
+
+  @media (min-width: 768px) {
+    .child-outcomes__item:nth-child(2) {
+      margin-left: 1.25rem;
+    }
+
+    .child-outcomes__item:nth-child(3) {
+      margin-left: 2.5rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .child-outcomes__item:nth-child(n) {
+      margin-left: 0;
+    }
+  }
+
+  .child-outcomes__idx {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #def34d;
+    padding-top: 0.2rem;
+  }
+</style>

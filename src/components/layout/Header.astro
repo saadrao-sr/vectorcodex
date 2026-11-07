@@ -1,0 +1,100 @@
+---
+import { headerLinks, mobileMenuLinks } from '../../config/navigation';
+import { site } from '../../config/site';
+import { isActivePath, isExactPath } from '../../lib/seo/url';
+import FreeAuditModal from '../interactive/FreeAuditModal';
+import HeaderScroll from '../navigation/HeaderScroll';
+import MobileNav from '../navigation/MobileNav';
+import ServicesMegaMenu from '../navigation/ServicesMegaMenu';
+import IndustriesMegaMenu from '../navigation/IndustriesMegaMenu';
+import Logo from '../ui/Logo.astro';
+import { buttonClass } from '../ui/styles';
+
+const path = Astro.url.pathname;
+const homeLink = headerLinks.find((link) => link.href === '/');
+const aboutLink = headerLinks.find((link) => link.href === '/about/');
+const afterIndustries = headerLinks.filter(
+  (link) => link.href !== '/' && link.href !== '/about/' && link.href !== '/industries/',
+);
+
+function navItemClass(active: boolean) {
+  return [
+    'inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-3.5 text-[0.8125rem] font-medium transition',
+    active ? 'bg-white text-bg' : 'text-white/80 hover:bg-white/10 hover:text-white',
+  ].join(' ');
+}
+---
+
+<header id="site-header" data-scrolled="false" class="pointer-events-none fixed inset-x-0 top-0 z-50 pt-3 sm:pt-4">
+  <HeaderScroll client:load />
+  <FreeAuditModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <div class="pointer-events-auto relative mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+    <a
+      href="/"
+      class="header-glass shrink-0 rounded-full border border-white/10 bg-white/[0.05] px-3 py-2 backdrop-blur-xl"
+      aria-label="VectorCodex, home"
+    >
+      <Logo class="h-7 sm:h-8" />
+    </a>
+
+    <nav
+      aria-label="Primary"
+      class="header-glass relative hidden items-center gap-0.5 overflow-visible rounded-full border border-white/12 bg-white/[0.06] p-1.5 shadow-[0_8px_40px_rgb(0_0_0_/0.28)] backdrop-blur-xl lg:flex"
+    >
+      {
+        homeLink && (
+          <a href={homeLink.href} aria-current={isExactPath(path, homeLink.href) ? 'page' : undefined} class={navItemClass(isExactPath(path, homeLink.href))}>
+            {homeLink.label}
+          </a>
+        )
+      }
+
+      <ServicesMegaMenu client:load currentPath={path} />
+
+      {
+        aboutLink && (
+          <a
+            href={aboutLink.href}
+            aria-current={isExactPath(path, aboutLink.href) ? 'page' : undefined}
+            class={navItemClass(isExactPath(path, aboutLink.href) || isActivePath(path, aboutLink.href))}
+          >
+            {aboutLink.label}
+          </a>
+        )
+      }
+
+      <IndustriesMegaMenu client:load currentPath={path} />
+
+      {
+        afterIndustries.map((link) => (
+          <a
+            href={link.href}
+            aria-current={isExactPath(path, link.href) ? 'page' : undefined}
+            class={navItemClass(isExactPath(path, link.href) || (link.href !== '/' && isActivePath(path, link.href)))}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        data-audit-open
+        class:list={[buttonClass.base, buttonClass.cta, 'max-lg:hidden shadow-[0_8px_24px_rgb(255_222_93_/0.18)]']}
+      >
+        Get Free Audit
+      </button>
+      <div class="header-glass rounded-full border border-white/12 bg-white/[0.06] p-1 backdrop-blur-xl lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+        <MobileNav client:load links={mobileMenuLinks} currentPath={path} socials={site.socials} />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  #site-header[data-scrolled='true'] .header-glass {
+    background-color: rgb(13 18 12 / 0.72);
+  }
+</style>

@@ -1,0 +1,161 @@
+---
+import type { IndustryLanding } from '../../../config/industries';
+import AmbientBackdrop from '../../ui/AmbientBackdrop.astro';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  industry: IndustryLanding;
+}
+
+const { industry } = Astro.props;
+const { process } = industry;
+---
+
+<section
+  id="industry-process"
+  class="industry-process relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="industry-process-heading"
+>
+  <AmbientBackdrop variant="mesh" />
+
+  <Container class="relative">
+    <header class="mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{process.eyebrow}</p>
+      <h2
+        id="industry-process-heading"
+        class="mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.55rem] lg:leading-[1.06]"
+      >
+        {process.titleBefore}
+        <span class="text-highlight"> {process.titleHighlight}</span>
+      </h2>
+      <p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">
+        {process.intro}
+      </p>
+    </header>
+
+    <ol class="industry-process__timeline">
+      <div class="industry-process__line" aria-hidden="true"></div>
+      {
+        process.steps.map((step, index) => (
+          <li class="industry-process__step" style={`--i: ${index}`}>
+            <div class="industry-process__marker" aria-hidden="true">
+              <span class="industry-process__dot"></span>
+            </div>
+            <article class="industry-process__card">
+              <p class="industry-process__number font-display">{step.number}</p>
+              <h3 class="mt-2 font-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+                {step.title}
+              </h3>
+              <p class="mt-2 text-sm leading-6 text-white/60">{step.text}</p>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+</section>
+
+<style>
+  .industry-process__timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+    margin: 3rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    .industry-process__timeline {
+      margin-top: 3.5rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .industry-process__timeline {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+  }
+
+  .industry-process__line {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .industry-process__line {
+      position: absolute;
+      top: 1.05rem;
+      left: 8%;
+      right: 8%;
+      display: block;
+      height: 2px;
+      background: linear-gradient(90deg, rgb(222 243 77 / 0.55), rgb(222 243 77 / 0.12));
+    }
+  }
+
+  .industry-process__step {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .industry-process__marker {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .industry-process__marker {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .industry-process__dot {
+      width: 0.85rem;
+      height: 0.85rem;
+      border: 2px solid #def34d;
+      border-radius: 9999px;
+      background: #0d120c;
+      box-shadow: 0 0 12px rgb(222 243 77 / 0.35);
+    }
+  }
+
+  .industry-process__card {
+    height: 100%;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.25rem;
+    background: rgb(255 255 255 / 0.03);
+    padding: 1.1rem 1.1rem 1.15rem;
+    transition: border-color 0.25s ease;
+  }
+
+  .industry-process__card:hover {
+    border-color: rgb(222 243 77 / 0.4);
+  }
+
+  .industry-process__number {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #def34d;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .industry-process__step {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: industry-process-rise 0.6s ease forwards;
+      animation-delay: calc(100ms + var(--i, 0) * 70ms);
+    }
+  }
+
+  @keyframes industry-process-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

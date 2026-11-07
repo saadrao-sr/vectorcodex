@@ -1,0 +1,45 @@
+---
+import PricingCalculator from '../interactive/PricingCalculator';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+---
+
+<section
+  id="pricing-packages"
+  class="pricing-calculator relative isolate scroll-mt-28 overflow-x-clip border-t border-white/10 bg-[#0D120C] py-12 sm:py-14 lg:py-16"
+  aria-labelledby="pricing-calculator-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="absolute top-16 left-[8%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute right-[6%] bottom-12 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"
+    >
+    </div>
+  </div>
+
+  <Container class="relative">
+    <header class="mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>
+        Your Project. Your Requirements. Your Quote.
+      </p>
+      <h2
+        id="pricing-calculator-heading"
+        class="mt-4 font-display text-[1.75rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-4xl lg:text-[2.65rem] lg:leading-[1.08]"
+      >
+        Calculate Your Digital
+        <span class="text-highlight"> Project Cost.</span>
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">
+        Every business has different needs. Tell us about your project, select the services you need, and answer a few
+        simple questions. We&apos;ll review your requirements and get back to you with a tailored proposal.
+      </p>
+    </header>
+
+    <div class="mt-10 sm:mt-12">
+      <PricingCalculator client:visible endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+    </div>
+  </Container>
+</section>

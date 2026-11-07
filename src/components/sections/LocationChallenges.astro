@@ -1,0 +1,155 @@
+---
+import {
+  Gauge,
+  Globe2,
+  MapPin,
+  Megaphone,
+  MousePointerClick,
+  Search,
+  Smartphone,
+  Sparkles,
+  type LucideIcon,
+} from 'lucide-react';
+import type { LocationChallengeIcon, LocationOffice } from '../../config/locations';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+import LocationAmbientBg from './LocationAmbientBg.astro';
+
+interface Props {
+  location: LocationOffice;
+}
+
+const { location } = Astro.props;
+const { challenges } = location;
+
+const icons: Record<LocationChallengeIcon, LucideIcon> = {
+  search: Search,
+  'map-pin': MapPin,
+  gauge: Gauge,
+  'mouse-pointer': MousePointerClick,
+  megaphone: Megaphone,
+  sparkles: Sparkles,
+  globe: Globe2,
+  smartphone: Smartphone,
+};
+---
+
+<section
+  id="location-challenges"
+  class="location-challenges relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="location-challenges-heading"
+>
+  <LocationAmbientBg variant="a" />
+
+  <Container class="relative">
+    <header class="mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'location-challenges__eyebrow mx-auto w-fit max-w-full']}>
+        Challenges &amp; Opportunities
+      </p>
+      <h2
+        id="location-challenges-heading"
+        class="location-challenges__title mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.45rem] lg:leading-[1.08]"
+      >
+        What&apos;s Holding Businesses in
+        <span class="text-highlight"> {location.locationLabel} </span>
+        Back Online?
+      </h2>
+      <p class="location-challenges__intro mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">
+        {challenges.intro}
+      </p>
+    </header>
+
+    <ul class="location-challenges__bento mt-7 sm:mt-8">
+      {
+        challenges.items.map((item, index) => {
+          const Icon = icons[item.icon];
+          return (
+            <li class="location-challenges__tile" style={`--tile-i: ${index}`}>
+              <article
+                class:list={[
+                  'group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border bg-white/[0.03] p-4 transition duration-300 hover:border-highlight/40 sm:p-5',
+                  item.featured ? 'border-highlight/25' : 'border-white/12',
+                ]}
+              >
+                <div
+                  class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/10 via-transparent to-transparent opacity-80 transition duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+                <div class="relative flex h-full flex-col">
+                  <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-highlight/30 bg-highlight/10 text-highlight transition duration-300 group-hover:border-highlight/50">
+                    <Icon size={20} aria-hidden="true" />
+                  </span>
+                  <h3 class="mt-3 font-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+                    {item.title}
+                  </h3>
+                  <p class="mt-2 flex-1 text-sm leading-6 text-white/60">{item.problem}</p>
+                  <p class="mt-3 border-t border-white/10 pt-3 text-sm font-medium leading-6 text-highlight/90">
+                    Opportunity: {item.opportunity}
+                  </p>
+                </div>
+              </article>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </Container>
+</section>
+
+<style>
+  .location-challenges__bento {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  @media (min-width: 640px) {
+    .location-challenges__bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .location-challenges__bento {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.05rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .location-challenges__eyebrow,
+    .location-challenges__title,
+    .location-challenges__intro {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: location-challenges-rise 0.7s ease forwards;
+    }
+
+    .location-challenges__eyebrow {
+      animation-delay: 40ms;
+    }
+
+    .location-challenges__title {
+      animation-delay: 90ms;
+    }
+
+    .location-challenges__intro {
+      animation-delay: 140ms;
+    }
+
+    .location-challenges__tile {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: location-challenges-rise 0.65s ease forwards;
+      animation-delay: calc(180ms + var(--tile-i, 0) * 70ms);
+    }
+  }
+
+  @keyframes location-challenges-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

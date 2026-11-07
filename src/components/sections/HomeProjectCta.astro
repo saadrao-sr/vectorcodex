@@ -1,0 +1,64 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+---
+
+<section
+  id="pricing-cta"
+  class="relative isolate overflow-hidden border-y border-white/10 bg-bg py-10 sm:py-12 lg:py-12"
+  aria-labelledby="pricing-cta-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <img
+      src="/images/hero-tech.jpg"
+      alt=""
+      width={1920}
+      height={1080}
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 h-full w-full object-cover object-center"
+    />
+    <div class="absolute inset-0 bg-[#0D120C]/78"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgb(222_243_77_/0.14),transparent_62%)]"></div>
+    <div class="absolute inset-0 bg-[linear-gradient(135deg,rgb(197_246_61_/0.06),transparent_45%,rgb(246_239_92_/0.04))]"></div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/45 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-highlight/25 to-transparent"></div>
+  </div>
+
+  <div class="relative mx-auto w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+    <p class={eyebrowClass}>Project Cost Calculator</p>
+    <h2
+      id="pricing-cta-heading"
+      class="mt-3 font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.75rem]"
+    >
+      <span class="text-white">Calculate Your Digital </span>
+      <span class="text-highlight">Project Cost.</span>
+    </h2>
+    <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/70 sm:text-lg sm:leading-8">
+      Tell us about your project, choose the services you need, and answer a few simple questions. We&apos;ll review
+      your requirements and prepare a tailored proposal for SEO, websites, social, or PPC.
+    </p>
+
+    <div class="mt-7 flex justify-center">
+      <a
+        href="/pricing/#pricing-packages"
+        class:list={[
+          buttonClass.base,
+          buttonClass.gradient,
+          'group w-full px-7 shadow-[0_16px_40px_rgb(197_246_61_/0.18)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_48px_rgb(197_246_61_/0.28)] motion-reduce:transform-none sm:w-auto',
+        ]}
+      >
+        Calculate My Cost
+        <ArrowUpRight
+          size={16}
+          aria-hidden="true"
+          className="transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </a>
+    </div>
+
+    <p class="mt-5 text-sm leading-6 text-white/55">
+      Your requirements. Your scope. A personalised proposal — no invented package prices.
+    </p>
+  </div>
+</section>

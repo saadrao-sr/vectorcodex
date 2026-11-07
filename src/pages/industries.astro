@@ -1,0 +1,28 @@
+---
+import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageCrumbBand from '../components/sections/PageCrumbBand.astro';
+import IndustriesHero from '../components/sections/IndustriesHero.astro';
+import IndustriesEmpower from '../components/sections/IndustriesEmpower.astro';
+import IndustriesJourney from '../components/sections/IndustriesJourney.astro';
+import IndustriesFinalCta from '../components/sections/IndustriesFinalCta.astro';
+import QuoteModal from '../components/interactive/QuoteModal';
+
+const title = 'Industries';
+const description =
+  'VectorCodex works with UK organisations across sectors that need clear search, websites, and marketing. Sector detail will expand as published work is approved.';
+const path = '/industries/';
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Industries', href: path },
+];
+---
+
+<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <PageCrumbBand title="Industries" crumbs={crumbs} />
+  <IndustriesHero />
+  <IndustriesEmpower />
+  <IndustriesJourney />
+  <IndustriesFinalCta />
+</BaseLayout>

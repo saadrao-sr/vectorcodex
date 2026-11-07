@@ -1,0 +1,128 @@
+---
+import { BadgeCheck, Layers3, LineChart, type LucideIcon } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+
+type ValueProp = {
+  title: string;
+  text: string;
+  Icon: LucideIcon;
+};
+
+const valueProps: ValueProp[] = [
+  {
+    title: 'Transparent Pricing',
+    text: 'Clear scope and deliverables.',
+    Icon: BadgeCheck,
+  },
+  {
+    title: 'Flexible Solutions',
+    text: 'Packages tailored to your requirements.',
+    Icon: Layers3,
+  },
+  {
+    title: 'Scalable Growth',
+    text: 'Solutions that grow with your business.',
+    Icon: LineChart,
+  },
+];
+---
+
+<section
+  id="pricing-hero"
+  class="pricing-hero relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] pt-8 pb-12 sm:pt-10 sm:pb-14 lg:pt-12 lg:pb-16"
+  aria-labelledby="pricing-hero-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="absolute top-10 left-[7%] h-60 w-60 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.11),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute right-[4%] bottom-8 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.07),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/30 to-transparent"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="pricing-hero__copy mx-auto w-full text-center">
+      <p class:list={[eyebrowClass, 'pricing-hero__eyebrow mx-auto w-fit max-w-full']}>
+        Simple. Transparent. Flexible.
+      </p>
+
+      <h1
+        id="pricing-hero-heading"
+        class="pricing-hero__title mt-4 font-display text-[1.85rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-4xl sm:leading-[1.08] md:text-[2.45rem] lg:text-[3rem] lg:leading-[1.05]"
+      >
+        The Right Digital Investment.
+        <span class="mt-1 block text-highlight">Built Around Your Growth.</span>
+      </h1>
+
+      <p
+        class="pricing-hero__lede mx-auto mt-4 text-sm leading-7 text-white/65 sm:mt-5 sm:text-base sm:leading-7 lg:text-[1.0625rem] lg:leading-8"
+      >
+        Explore flexible digital marketing and development packages designed around your business goals. Whether you
+        need better search visibility, a high-performing website, or a complete digital growth strategy, find the right
+        starting point for your business.
+      </p>
+
+      <ul class="pricing-hero__values mx-auto mt-6 grid gap-2.5 text-left sm:mt-7 sm:gap-3">
+        {
+          valueProps.map((item) => {
+            const Icon = item.Icon;
+            return (
+              <li>
+                <article class="pricing-hero__value group flex gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 transition duration-300 hover:border-highlight/40 hover:bg-white/[0.05] sm:p-4">
+                  <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-highlight/25 bg-highlight/10 text-highlight transition duration-300 group-hover:border-highlight/50">
+                    <Icon size={17} aria-hidden="true" />
+                  </span>
+                  <div class="min-w-0">
+                    <h2 class="font-display text-sm font-semibold tracking-tight text-white sm:text-base">{item.title}</h2>
+                    <p class="mt-0.5 text-sm leading-5 text-white/60">{item.text}</p>
+                  </div>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </Container>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .pricing-hero__eyebrow,
+    .pricing-hero__title,
+    .pricing-hero__lede,
+    .pricing-hero__values {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: pricing-hero-rise 0.7s ease forwards;
+    }
+
+    .pricing-hero__eyebrow {
+      animation-delay: 40ms;
+    }
+
+    .pricing-hero__title {
+      animation-delay: 100ms;
+    }
+
+    .pricing-hero__lede {
+      animation-delay: 160ms;
+    }
+
+    .pricing-hero__values {
+      animation-delay: 210ms;
+    }
+  }
+
+  @keyframes pricing-hero-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

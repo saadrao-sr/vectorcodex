@@ -1,0 +1,290 @@
+@import "tailwindcss";
+@import "@fontsource-variable/outfit";
+@import "@fontsource-variable/manrope";
+
+@theme {
+  --font-sans: "Manrope Variable", "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit Variable", "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --color-bg: #0d120c;
+  --color-ink: #ffffff;
+  --color-highlight: #def34d;
+  --color-lime: #c5f63d;
+  --color-gold: #f6ef5c;
+  --color-cta: #ffde5d;
+  --color-muted: #c5cbb8;
+  --color-surface: #151c14;
+  --color-line: rgb(255 255 255 / 0.1);
+}
+
+:root {
+  --header-height: 5.25rem;
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + 0.5rem);
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
+/* Astro islands default to inline; force full-width block so forms/cards don't shrink. */
+astro-island {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+:where(a, button, summary, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-highlight);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #def34d;
+  color: #0d120c;
+}
+
+summary {
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+.prose-vc {
+  color: rgb(255 255 255 / 0.82);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+.prose-vc > * + * {
+  margin-top: 1.15em;
+}
+
+.prose-vc h2,
+.prose-vc h3,
+.prose-vc h4 {
+  color: white;
+  font-family: var(--font-display);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.prose-vc h2 {
+  margin-top: 2em;
+  font-size: clamp(1.5rem, 2vw, 1.875rem);
+}
+
+.prose-vc h3 {
+  margin-top: 1.6em;
+  font-size: 1.35rem;
+}
+
+.prose-vc a {
+  color: #def34d;
+  text-underline-offset: 0.18em;
+}
+
+.prose-vc a:hover {
+  text-decoration: underline;
+}
+
+.prose-vc ul,
+.prose-vc ol {
+  padding-left: 1.25rem;
+}
+
+.prose-vc ul {
+  list-style: disc;
+}
+
+.prose-vc ol {
+  list-style: decimal;
+}
+
+.prose-vc li + li {
+  margin-top: 0.4em;
+}
+
+.prose-vc blockquote {
+  border-left: 3px solid #def34d;
+  padding-left: 1rem;
+  color: white;
+}
+
+.prose-vc img,
+.prose-vc video {
+  height: auto;
+  border-radius: 1rem;
+}
+
+.prose-vc pre,
+.prose-vc table {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.prose-vc pre {
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 0.04);
+}
+
+.prose-vc table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prose-vc th,
+.prose-vc td {
+  border: 1px solid rgb(255 255 255 / 0.12);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose-vc figcaption {
+  margin-top: 0.5rem;
+  color: rgb(255 255 255 / 0.55);
+  font-size: 0.875rem;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  box-shadow: 0 0 0 1000px #151c14 inset;
+}
+
+/* Selective section ambient motion — used only where AmbientBackdrop is mounted. */
+@media (prefers-reduced-motion: no-preference) {
+  .ambient-backdrop__orb--a {
+    animation: ambient-float-a 11s ease-in-out infinite;
+  }
+
+  .ambient-backdrop__orb--b {
+    animation: ambient-float-b 14s ease-in-out infinite;
+  }
+
+  .ambient-backdrop__ring {
+    animation: ambient-spin 28s linear infinite;
+  }
+
+  .ambient-backdrop__beam--a {
+    animation: ambient-beam 8s ease-in-out infinite;
+  }
+
+  .ambient-backdrop__beam--b {
+    animation: ambient-beam 10s ease-in-out infinite reverse;
+  }
+
+  .ambient-backdrop__chip {
+    animation: ambient-float-a 12s ease-in-out infinite;
+  }
+
+  .ambient-backdrop__dot--a {
+    animation: ambient-pulse 4.5s ease-in-out infinite;
+  }
+
+  .ambient-backdrop__dot--b {
+    animation: ambient-pulse 5.5s ease-in-out infinite 0.6s;
+  }
+
+  .ambient-backdrop__dot--c {
+    animation: ambient-pulse 6s ease-in-out infinite 1.1s;
+  }
+}
+
+@keyframes ambient-float-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(18px, -22px, 0) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes ambient-float-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate3d(-24px, 16px, 0) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes ambient-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ambient-beam {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scaleY(0.85);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes ambient-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

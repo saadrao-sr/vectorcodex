@@ -1,0 +1,483 @@
+---
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+
+const frames = [
+  {
+    label: 'SEO',
+    className: 'case-studies-hero__frame--back',
+    bars: [72, 48, 86, 40, 64],
+  },
+  {
+    label: 'Web development',
+    className: 'case-studies-hero__frame--mid',
+    bars: [58, 78, 44, 70],
+  },
+  {
+    label: 'Digital marketing',
+    className: 'case-studies-hero__frame--front',
+    bars: [66, 42, 80, 54, 74],
+  },
+] as const;
+---
+
+<section
+  id="case-studies-hero"
+  class="case-studies-hero relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] pt-8 pb-12 sm:pt-10 sm:pb-14 lg:pt-12 lg:pb-16"
+  aria-labelledby="case-studies-hero-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="absolute top-8 left-[6%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.1),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute right-[4%] bottom-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.07),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/30 to-transparent"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="case-studies-hero__layout">
+      <div class="case-studies-hero__copy min-w-0">
+        <p class:list={[eyebrowClass, 'case-studies-hero__eyebrow w-fit max-w-full']}>
+          Our Work. Real Impact.
+        </p>
+
+        <h1
+          id="case-studies-hero-heading"
+          class="case-studies-hero__title mt-4 max-w-xl font-display text-[1.85rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-4xl sm:leading-[1.08] md:text-[2.45rem] lg:text-[3rem] lg:leading-[1.05]"
+        >
+          Digital Strategies.
+          <span class="block text-highlight">Real Business Growth.</span>
+        </h1>
+
+        <p
+          class="case-studies-hero__lede mt-4 max-w-lg text-sm leading-7 text-white/65 sm:mt-5 sm:text-base sm:leading-7 lg:text-[1.0625rem] lg:leading-8"
+        >
+          Explore how we help businesses overcome digital challenges through strategic SEO, web development, and digital
+          marketing. Every project reflects our approach to building meaningful digital experiences and measurable
+          progress.
+        </p>
+
+        <div class="case-studies-hero__actions mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:flex-wrap">
+          <a
+            href="#case-studies-listing"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto',
+            ]}
+          >
+            Explore Our Work
+            <ArrowDown size={16} aria-hidden="true" />
+          </a>
+          <button
+            type="button"
+            class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}
+            data-quote-open
+          >
+            Discuss Your Project
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <div class="case-studies-hero__visual" aria-hidden="true">
+        <div class="case-studies-hero__stage">
+          <div class="case-studies-hero__glow"></div>
+
+          {
+            frames.map((frame) => (
+              <article class:list={['case-studies-hero__frame', frame.className]}>
+                <div class="case-studies-hero__chrome">
+                  <span class="case-studies-hero__dot"></span>
+                  <span class="case-studies-hero__dot"></span>
+                  <span class="case-studies-hero__dot"></span>
+                  <span class="case-studies-hero__chip">{frame.label}</span>
+                </div>
+                <div class="case-studies-hero__screen">
+                  <img
+                    src="/images/hero-tech.jpg"
+                    alt=""
+                    width={960}
+                    height={540}
+                    loading="eager"
+                    decoding="async"
+                    class="case-studies-hero__texture"
+                  />
+                  <div class="case-studies-hero__veil"></div>
+                  <div class="case-studies-hero__ui">
+                    <span class="case-studies-hero__ui-line case-studies-hero__ui-line--wide"></span>
+                    <span class="case-studies-hero__ui-line"></span>
+                    <div class="case-studies-hero__bars">
+                      {frame.bars.map((height) => (
+                        <span class="case-studies-hero__bar" style={`--bar-h: ${height}%`} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))
+          }
+
+          <span class="case-studies-hero__accent case-studies-hero__accent--ring"></span>
+          <span class="case-studies-hero__accent case-studies-hero__accent--square"></span>
+          <span class="case-studies-hero__accent case-studies-hero__accent--dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-studies-hero__scroll mt-10 flex justify-center sm:mt-12 lg:mt-14">
+      <a
+        href="#case-studies-listing"
+        class="inline-flex flex-col items-center gap-2 text-[0.65rem] font-semibold tracking-[0.18em] text-white/45 uppercase transition hover:text-highlight"
+      >
+        Scroll
+        <span class="case-studies-hero__scroll-line inline-flex h-10 w-6 items-start justify-center rounded-full border border-white/15 pt-1.5">
+          <span class="case-studies-hero__scroll-dot h-1.5 w-1.5 rounded-full bg-highlight"></span>
+        </span>
+      </a>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .case-studies-hero__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.25rem;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .case-studies-hero__layout {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .case-studies-hero__layout {
+      gap: 3.25rem;
+    }
+  }
+
+  .case-studies-hero__visual {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .case-studies-hero__stage {
+    position: relative;
+    min-height: 18.5rem;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .case-studies-hero__stage {
+      min-height: 22rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .case-studies-hero__stage {
+      min-height: 24rem;
+    }
+  }
+
+  .case-studies-hero__glow {
+    position: absolute;
+    inset: 12% 8% 8% 12%;
+    border-radius: 2rem;
+    background: radial-gradient(circle at 55% 40%, rgb(222 243 77 / 0.16), transparent 62%);
+    filter: blur(18px);
+  }
+
+  .case-studies-hero__frame {
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: 1.15rem;
+    background: rgb(13 18 12 / 0.88);
+    box-shadow: 0 22px 50px rgb(0 0 0 / 0.35);
+  }
+
+  .case-studies-hero__frame--back {
+    top: 6%;
+    left: 2%;
+    width: 68%;
+    transform: rotate(-5deg);
+    opacity: 0.72;
+  }
+
+  .case-studies-hero__frame--mid {
+    top: 18%;
+    right: 0;
+    width: 70%;
+    transform: rotate(4deg);
+    opacity: 0.88;
+  }
+
+  .case-studies-hero__frame--front {
+    bottom: 0;
+    left: 12%;
+    width: 76%;
+    transform: rotate(-1.5deg);
+  }
+
+  .case-studies-hero__chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    background: rgb(255 255 255 / 0.03);
+    padding: 0.55rem 0.75rem;
+  }
+
+  .case-studies-hero__dot {
+    height: 0.4rem;
+    width: 0.4rem;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.22);
+  }
+
+  .case-studies-hero__dot:first-child {
+    background: rgb(222 243 77 / 0.75);
+  }
+
+  .case-studies-hero__chip {
+    margin-left: auto;
+    border: 1px solid rgb(222 243 77 / 0.28);
+    border-radius: 9999px;
+    background: rgb(222 243 77 / 0.08);
+    padding: 0.15rem 0.55rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #def34d;
+  }
+
+  .case-studies-hero__screen {
+    position: relative;
+    height: 7.5rem;
+    overflow: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .case-studies-hero__screen {
+      height: 9.25rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .case-studies-hero__screen {
+      height: 10rem;
+    }
+  }
+
+  .case-studies-hero__texture {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    opacity: 0.42;
+    filter: saturate(0.7) brightness(0.78);
+  }
+
+  .case-studies-hero__veil {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(160deg, rgb(13 18 12 / 0.15), rgb(13 18 12 / 0.78)),
+      radial-gradient(circle at 70% 20%, rgb(222 243 77 / 0.16), transparent 55%);
+  }
+
+  .case-studies-hero__ui {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.55rem;
+    padding: 0.85rem 0.9rem 1rem;
+  }
+
+  .case-studies-hero__ui-line {
+    display: block;
+    height: 0.35rem;
+    width: 42%;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.18);
+  }
+
+  .case-studies-hero__ui-line--wide {
+    width: 62%;
+    background: rgb(222 243 77 / 0.35);
+  }
+
+  .case-studies-hero__bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.35rem;
+    height: 2.75rem;
+  }
+
+  .case-studies-hero__bar {
+    flex: 1;
+    height: var(--bar-h, 50%);
+    border-radius: 0.3rem 0.3rem 0.15rem 0.15rem;
+    background: linear-gradient(180deg, rgb(222 243 77 / 0.55), rgb(222 243 77 / 0.08));
+  }
+
+  .case-studies-hero__accent {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .case-studies-hero__accent--ring {
+    top: 2%;
+    right: 8%;
+    width: 3.5rem;
+    height: 3.5rem;
+    border: 1.5px solid rgb(222 243 77 / 0.35);
+    border-radius: 9999px;
+  }
+
+  .case-studies-hero__accent--square {
+    bottom: 12%;
+    left: 2%;
+    width: 2rem;
+    height: 2rem;
+    border: 1.5px solid rgb(222 243 77 / 0.3);
+    border-radius: 0.45rem;
+    transform: rotate(18deg);
+  }
+
+  .case-studies-hero__accent--dot {
+    top: 46%;
+    right: 2%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .case-studies-hero__eyebrow,
+    .case-studies-hero__title,
+    .case-studies-hero__lede,
+    .case-studies-hero__actions,
+    .case-studies-hero__scroll {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: case-studies-hero-rise 0.7s ease forwards;
+    }
+
+    .case-studies-hero__eyebrow {
+      animation-delay: 40ms;
+    }
+
+    .case-studies-hero__title {
+      animation-delay: 100ms;
+    }
+
+    .case-studies-hero__lede {
+      animation-delay: 160ms;
+    }
+
+    .case-studies-hero__actions {
+      animation-delay: 220ms;
+    }
+
+    .case-studies-hero__scroll {
+      animation-delay: 360ms;
+    }
+
+    .case-studies-hero__frame--back {
+      animation: case-studies-hero-float-a 9s ease-in-out infinite;
+    }
+
+    .case-studies-hero__frame--mid {
+      animation: case-studies-hero-float-b 10s ease-in-out infinite;
+    }
+
+    .case-studies-hero__frame--front {
+      animation: case-studies-hero-float-c 8s ease-in-out infinite;
+    }
+
+    .case-studies-hero__accent--ring {
+      animation: case-studies-hero-drift 14s ease-in-out infinite;
+    }
+
+    .case-studies-hero__accent--square {
+      animation: case-studies-hero-drift 12s ease-in-out infinite reverse;
+    }
+
+    .case-studies-hero__scroll-dot {
+      animation: case-studies-hero-scroll 1.6s ease-in-out infinite;
+    }
+  }
+
+  @keyframes case-studies-hero-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes case-studies-hero-float-a {
+    0%,
+    100% {
+      transform: rotate(-5deg) translate3d(0, 0, 0);
+    }
+    50% {
+      transform: rotate(-5deg) translate3d(0, -8px, 0);
+    }
+  }
+
+  @keyframes case-studies-hero-float-b {
+    0%,
+    100% {
+      transform: rotate(4deg) translate3d(0, 0, 0);
+    }
+    50% {
+      transform: rotate(4deg) translate3d(0, 10px, 0);
+    }
+  }
+
+  @keyframes case-studies-hero-float-c {
+    0%,
+    100% {
+      transform: rotate(-1.5deg) translate3d(0, 0, 0);
+    }
+    50% {
+      transform: rotate(-1.5deg) translate3d(0, -6px, 0);
+    }
+  }
+
+  @keyframes case-studies-hero-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(6px, -8px, 0);
+    }
+  }
+
+  @keyframes case-studies-hero-scroll {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(10px);
+      opacity: 0.35;
+    }
+  }
+</style>

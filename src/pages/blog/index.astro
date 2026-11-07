@@ -1,0 +1,9 @@
+---
+import BlogListing from '../../components/blog/BlogListing.astro';
+import { BLOG_PAGE_SIZE, getCategories, getPostsPage } from '../../lib/wordpress/client';
+
+const result = await getPostsPage(1, BLOG_PAGE_SIZE);
+const categories = await getCategories();
+---
+
+<BlogListing result={result} categories={categories} page={1} />

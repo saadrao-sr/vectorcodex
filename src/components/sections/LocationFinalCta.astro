@@ -1,0 +1,189 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import type { LocationOffice } from '../../config/locations';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+
+interface Props {
+  location: LocationOffice;
+}
+
+const { location } = Astro.props;
+const eyebrowLocation = location.locationLabel.toUpperCase();
+---
+
+<section
+  id="location-final-cta"
+  class="location-final-cta relative isolate overflow-hidden border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="location-final-cta-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="location-final-cta__glow absolute top-1/2 left-1/2 h-[22rem] w-[22rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.16),transparent_68%)] blur-2xl sm:h-[28rem] sm:w-[28rem]"
+    >
+    </div>
+    <div
+      class="location-final-cta__orb absolute top-[12%] left-[7%] h-24 w-24 rounded-full border border-highlight/15 bg-highlight/5"
+    >
+    </div>
+    <div
+      class="location-final-cta__orb location-final-cta__orb--delay absolute right-[8%] bottom-[14%] h-20 w-20 rotate-12 rounded-[1.25rem] border border-lime/20 bg-gradient-to-br from-lime/10 to-gold/5"
+    >
+    </div>
+    <div class="location-final-cta__arc absolute top-[18%] right-[14%] h-44 w-44 rounded-full border border-highlight/10"></div>
+    <div
+      class="location-final-cta__arc location-final-cta__arc--inner absolute top-[24%] right-[18%] h-28 w-28 rounded-full border border-dashed border-highlight/15"
+    >
+    </div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/40 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-highlight/25 to-transparent"></div>
+
+    <svg
+      class="location-final-cta__nodes absolute top-1/2 left-1/2 h-[18rem] w-[18rem] -translate-x-1/2 -translate-y-1/2 opacity-[0.18] sm:h-[24rem] sm:w-[24rem]"
+      viewBox="0 0 320 320"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <circle cx="160" cy="160" r="78" stroke="rgb(222 243 77)" stroke-width="1" opacity="0.35"></circle>
+      <circle cx="160" cy="160" r="118" stroke="rgb(222 243 77)" stroke-width="0.8" opacity="0.2" stroke-dasharray="4 8"></circle>
+      <path d="M70 210 L120 150 L165 185 L220 100 L260 70" stroke="rgb(222 243 77)" stroke-width="1.2"></path>
+      <path d="M85 240 L140 175 L195 205 L245 135" stroke="rgb(222 243 77)" stroke-width="0.8" opacity="0.55"></path>
+      <circle cx="70" cy="210" r="4" fill="rgb(222 243 77)"></circle>
+      <circle cx="120" cy="150" r="5" fill="rgb(222 243 77)"></circle>
+      <circle cx="165" cy="185" r="4" fill="rgb(222 243 77)"></circle>
+      <circle cx="220" cy="100" r="6" fill="rgb(222 243 77)"></circle>
+      <circle cx="260" cy="70" r="5" fill="rgb(222 243 77)"></circle>
+      <circle cx="140" cy="175" r="3.5" fill="rgb(222 243 77)" opacity="0.7"></circle>
+      <circle cx="195" cy="205" r="3.5" fill="rgb(222 243 77)" opacity="0.7"></circle>
+      <circle cx="245" cy="135" r="3.5" fill="rgb(222 243 77)" opacity="0.7"></circle>
+    </svg>
+  </div>
+
+  <Container class="relative">
+    <div
+      class="location-final-cta__panel relative mx-auto w-full max-w-5xl overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.03] px-5 py-8 text-center sm:rounded-[1.75rem] sm:px-8 sm:py-10 lg:px-12 lg:py-11"
+    >
+      <div
+        class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/12 via-transparent to-transparent"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute -top-24 left-1/2 h-52 w-52 -translate-x-1/2 rounded-full bg-highlight/10 blur-3xl"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-highlight/35 to-transparent"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="relative">
+        <p class:list={[eyebrowClass, 'location-final-cta__eyebrow mx-auto w-fit max-w-full']}>
+          Ready to Grow in {eyebrowLocation}?
+        </p>
+
+        <h2
+          id="location-final-cta-heading"
+          class="location-final-cta__title mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.45rem] lg:leading-[1.08]"
+        >
+          Let&apos;s Build Something That Moves Your
+          <span class="text-highlight"> Business Forward.</span>
+        </h2>
+
+        <p
+          class="location-final-cta__copy mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8"
+        >
+          Whether you need better search visibility, a high-performing website or a complete digital marketing strategy,
+          VectorCodex is ready to help you take the next step.
+        </p>
+
+        <div class="location-final-cta__actions mt-6 flex items-center justify-center sm:mt-7">
+          <button
+            type="button"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'group w-full px-7 shadow-[0_16px_48px_rgb(197_246_61_/0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_56px_rgb(197_246_61_/0.28)] motion-reduce:transform-none sm:w-auto',
+            ]}
+            data-booking-open
+          >
+            Book a Free Consultation
+            <ArrowUpRight
+              size={16}
+              aria-hidden="true"
+              className="transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .location-final-cta__panel {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: location-final-cta-rise 0.75s ease forwards;
+    }
+
+    .location-final-cta__glow {
+      animation: location-final-cta-pulse 7s ease-in-out infinite;
+    }
+
+    .location-final-cta__orb {
+      animation: location-final-cta-float 9s ease-in-out infinite;
+    }
+
+    .location-final-cta__orb--delay {
+      animation-delay: -3.5s;
+    }
+
+    .location-final-cta__arc--inner {
+      animation: location-final-cta-spin 28s linear infinite;
+    }
+
+    .location-final-cta__nodes {
+      animation: location-final-cta-pulse 8s ease-in-out infinite;
+    }
+  }
+
+  @keyframes location-final-cta-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes location-final-cta-pulse {
+    0%,
+    100% {
+      opacity: 0.7;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+  }
+
+  @keyframes location-final-cta-float {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -10px, 0);
+    }
+  }
+
+  @keyframes location-final-cta-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

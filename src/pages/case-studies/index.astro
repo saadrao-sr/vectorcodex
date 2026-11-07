@@ -1,0 +1,25 @@
+---
+import { breadcrumbSchema, webPageSchema } from '../../lib/schema/jsonld';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageCrumbBand from '../../components/sections/PageCrumbBand.astro';
+import CaseStudiesHero from '../../components/sections/CaseStudiesHero.astro';
+import CaseStudiesExplore from '../../components/sections/CaseStudiesExplore.astro';
+import CaseStudiesFinalCta from '../../components/sections/CaseStudiesFinalCta.astro';
+import QuoteModal from '../../components/interactive/QuoteModal';
+
+const title = 'Case studies';
+const description = 'VectorCodex case studies are published only when an engagement can be described accurately. Current entries are structural placeholders.';
+const path = '/case-studies/';
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Case studies', href: path },
+];
+---
+
+<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <PageCrumbBand title="Case Studies" crumbs={crumbs} />
+  <CaseStudiesHero />
+  <CaseStudiesExplore />
+  <CaseStudiesFinalCta />
+</BaseLayout>

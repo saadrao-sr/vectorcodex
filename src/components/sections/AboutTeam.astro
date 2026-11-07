@@ -1,0 +1,236 @@
+---
+import { talentProfiles } from '../../config/team-talent';
+import AboutTeamCarousel from '../interactive/AboutTeamCarousel';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+---
+
+<section
+  id="meet-the-team"
+  class="about-team relative isolate scroll-mt-28 overflow-x-clip border-t border-white/10 bg-[#0D120C] py-6 sm:py-8 lg:py-9"
+  aria-labelledby="meet-the-team-heading"
+>
+  <div class="about-team__bg pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute top-10 right-[12%] h-40 w-40 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.06),transparent_70%)] blur-3xl"></div>
+    <div class="absolute bottom-8 left-[8%] h-36 w-36 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.04),transparent_70%)] blur-3xl"></div>
+    <span class="about-team__shape about-team__shape--ring"></span>
+    <span class="about-team__shape about-team__shape--orb"></span>
+    <span class="about-team__shape about-team__shape--square"></span>
+    <span class="about-team__shape about-team__shape--line"></span>
+    <span class="about-team__shape about-team__shape--dot"></span>
+  </div>
+
+  <Container class="relative">
+    <header class="about-team__intro mx-auto max-w-2xl text-center">
+      <p class:list={[eyebrowClass, 'w-fit max-w-full']}>The People Behind VectorCodex</p>
+      <h2
+        id="meet-the-team-heading"
+        class="mt-2.5 font-display text-[1.6rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[1.85rem] md:text-[2rem] lg:text-[2.25rem] lg:leading-[1.08]"
+      >
+        Great Work Starts With
+        <span class="text-highlight"> Great People.</span>
+      </h2>
+      <p class="mx-auto mt-2.5 max-w-xl text-sm leading-6 text-white/65 sm:mt-3 sm:text-[0.95rem] sm:leading-7">
+        Behind every successful digital project is a team of creative thinkers, technical experts, and strategic professionals. We bring different skills together to turn business challenges into meaningful digital experiences.
+      </p>
+      <p class="mt-2 text-[0.7rem] tracking-wide text-white/40 sm:text-xs">
+        Profiles are editable placeholders until verified team biographies are published.
+      </p>
+    </header>
+
+    <div class="about-team__stage mt-5 sm:mt-6">
+      <AboutTeamCarousel client:visible items={talentProfiles} />
+    </div>
+
+    <p class="about-team__closer mt-5 text-center font-display text-sm font-semibold tracking-tight text-white sm:mt-6 sm:text-base">
+      Different Skills. One Shared Vision.
+      <span class="text-highlight"> Better Digital Outcomes.</span>
+    </p>
+  </Container>
+</section>
+
+<style>
+  .about-team__shape {
+    position: absolute;
+    opacity: 0.2;
+    will-change: transform;
+  }
+
+  .about-team__shape--ring {
+    top: 12%;
+    left: 4%;
+    width: 5.5rem;
+    height: 5.5rem;
+    border: 1.5px solid rgb(222 243 77 / 0.45);
+    border-radius: 9999px;
+  }
+
+  .about-team__shape--orb {
+    top: 16%;
+    right: 5%;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(222 243 77 / 0.2);
+    background: radial-gradient(circle at 35% 30%, rgb(222 243 77 / 0.28), transparent 68%);
+  }
+
+  .about-team__shape--square {
+    --shape-rot: 14deg;
+    bottom: 16%;
+    left: 8%;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1.5px solid rgb(222 243 77 / 0.4);
+    border-radius: 0.55rem;
+    transform: rotate(var(--shape-rot));
+  }
+
+  .about-team__shape--line {
+    bottom: 24%;
+    right: 12%;
+    width: 3.75rem;
+    height: 1.5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgb(222 243 77 / 0.48), transparent);
+  }
+
+  .about-team__shape--dot {
+    top: 42%;
+    left: 12%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.28;
+  }
+
+  @media (max-width: 639px) {
+    .about-team__shape--ring {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .about-team__shape--orb {
+      width: 2.85rem;
+      height: 2.85rem;
+    }
+
+    .about-team__shape--square {
+      opacity: 0.14;
+    }
+  }
+
+  .about-team__closer {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-bottom: 0.35rem;
+  }
+
+  .about-team__closer::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 4.25rem;
+    height: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #def34d, transparent);
+    transform: translateX(-50%);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-team__intro,
+    .about-team__stage,
+    .about-team__closer {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: about-team-rise 0.7s ease forwards;
+    }
+
+    .about-team__intro {
+      animation-delay: 40ms;
+    }
+
+    .about-team__stage {
+      animation-delay: 120ms;
+    }
+
+    .about-team__closer {
+      animation-delay: 220ms;
+    }
+
+    :global(.about-team-slide) {
+      animation: about-team-fade 0.35s ease;
+    }
+
+    .about-team__shape--ring {
+      animation: about-team-drift-a 16s ease-in-out infinite;
+    }
+
+    .about-team__shape--orb {
+      animation: about-team-drift-b 18s ease-in-out infinite;
+    }
+
+    .about-team__shape--square {
+      animation: about-team-drift-c 14s ease-in-out infinite;
+    }
+
+    .about-team__shape--line {
+      animation: about-team-drift-a 20s ease-in-out infinite reverse;
+    }
+
+    .about-team__shape--dot {
+      animation: about-team-drift-b 12s ease-in-out infinite;
+    }
+  }
+
+  @keyframes about-team-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes about-team-fade {
+    from {
+      opacity: 0.55;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes about-team-drift-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(10px, -14px, 0);
+    }
+  }
+
+  @keyframes about-team-drift-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-12px, 10px, 0);
+    }
+  }
+
+  @keyframes about-team-drift-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--shape-rot, 0deg));
+    }
+    50% {
+      transform: translate3d(8px, -8px, 0) rotate(calc(var(--shape-rot, 0deg) + 8deg));
+    }
+  }
+</style>

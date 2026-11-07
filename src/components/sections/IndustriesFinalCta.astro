@@ -1,0 +1,180 @@
+---
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+---
+
+<section
+  id="industry-final-cta"
+  class="industries-final-cta relative isolate overflow-hidden border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="industry-final-cta-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="industries-final-cta__glow absolute top-1/2 left-1/2 h-[22rem] w-[22rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.15),transparent_68%)] blur-2xl sm:h-[26rem] sm:w-[26rem]"
+    >
+    </div>
+    <div
+      class="industries-final-cta__orb absolute top-[12%] left-[7%] h-24 w-24 rounded-full border border-highlight/15 bg-highlight/5"
+    >
+    </div>
+    <div
+      class="industries-final-cta__orb industries-final-cta__orb--delay absolute right-[9%] bottom-[14%] h-20 w-20 rotate-12 rounded-[1.25rem] border border-lime/20 bg-gradient-to-br from-lime/10 to-gold/5"
+    >
+    </div>
+    <div class="industries-final-cta__arc absolute top-[20%] right-[16%] h-44 w-44 rounded-full border border-highlight/10"></div>
+    <div
+      class="industries-final-cta__arc industries-final-cta__arc--inner absolute top-[26%] right-[20%] h-28 w-28 rounded-full border border-dashed border-highlight/15"
+    >
+    </div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/40 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-highlight/25 to-transparent"></div>
+    <svg class="absolute inset-0 h-full w-full opacity-[0.05]" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <pattern id="industries-final-cta-grid" width="52" height="52" patternUnits="userSpaceOnUse">
+          <path d="M52 0H0V52" fill="none" stroke="rgb(222 243 77)" stroke-width="0.6"></path>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#industries-final-cta-grid)"></rect>
+    </svg>
+  </div>
+
+  <Container class="relative">
+    <div
+      class="industries-final-cta__panel relative mx-auto w-full max-w-6xl overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.03] px-5 py-7 text-center sm:rounded-[1.75rem] sm:px-10 sm:py-8 lg:px-14 lg:py-9"
+    >
+      <div
+        class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/12 via-transparent to-transparent"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-highlight/10 blur-3xl"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-highlight/35 to-transparent"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="relative">
+        <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>Let's Build Something Great</p>
+
+        <h2
+          id="industry-final-cta-heading"
+          class="industries-final-cta__title mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.45rem] lg:leading-[1.08]"
+        >
+          Ready to Grow Your Business in
+          <span class="text-highlight"> Your Industry?</span>
+        </h2>
+
+        <p
+          class="industries-final-cta__copy mx-auto mt-3 max-w-3xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8"
+        >
+          Every industry has its own challenges. Let's create a digital strategy tailored to your business, helping you
+          reach the right audience, strengthen your online presence, and drive meaningful growth.
+        </p>
+
+        <div
+          class="industries-final-cta__actions mt-5 flex flex-col items-center justify-center gap-3 sm:mt-6 sm:flex-row sm:gap-4"
+        >
+          <button
+            type="button"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'group w-full px-7 shadow-[0_16px_48px_rgb(197_246_61_/0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_56px_rgb(197_246_61_/0.28)] motion-reduce:transform-none sm:w-auto',
+            ]}
+            data-quote-open
+          >
+            Discuss Your Project
+            <ArrowRight
+              size={16}
+              aria-hidden="true"
+              className="transition duration-300 group-hover:translate-x-0.5"
+            />
+          </button>
+          <a
+            href="/services/"
+            class:list={[
+              buttonClass.base,
+              buttonClass.ghost,
+              'group w-full border-white/25 transition hover:border-highlight/50 sm:w-auto',
+            ]}
+          >
+            Explore Our Services
+            <ArrowUpRight
+              size={16}
+              aria-hidden="true"
+              className="transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .industries-final-cta__panel {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: industries-final-cta-rise 0.75s ease forwards;
+      animation-delay: 60ms;
+    }
+
+    .industries-final-cta__glow {
+      animation: industries-final-cta-pulse 7s ease-in-out infinite;
+    }
+
+    .industries-final-cta__orb {
+      animation: industries-final-cta-float 9s ease-in-out infinite;
+    }
+
+    .industries-final-cta__orb--delay {
+      animation-delay: -3.5s;
+    }
+
+    .industries-final-cta__arc--inner {
+      animation: industries-final-cta-spin 28s linear infinite;
+    }
+  }
+
+  @keyframes industries-final-cta-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes industries-final-cta-pulse {
+    0%,
+    100% {
+      opacity: 0.7;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+  }
+
+  @keyframes industries-final-cta-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes industries-final-cta-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

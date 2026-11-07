@@ -1,0 +1,15 @@
+---
+import { buttonClass } from './styles';
+
+interface Props {
+  href: string;
+  variant?: 'gradient' | 'cta' | 'ghost';
+  class?: string;
+}
+
+const { href, variant = 'gradient', class: className } = Astro.props;
+---
+
+<a href={href} class:list={[buttonClass.base, buttonClass[variant], className]}>
+  <slot />
+</a>

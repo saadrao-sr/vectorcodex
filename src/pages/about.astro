@@ -1,0 +1,34 @@
+---
+import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AboutHero from '../components/sections/AboutHero.astro';
+import ClientLogoSlider from '../components/sections/ClientLogoSlider.astro';
+import AboutExpertise from '../components/sections/AboutExpertise.astro';
+import AboutMission from '../components/sections/AboutMission.astro';
+import AboutApproach from '../components/sections/AboutApproach.astro';
+import AboutTeam from '../components/sections/AboutTeam.astro';
+import AboutTestimonials from '../components/sections/AboutTestimonials.astro';
+import AboutFinalCta from '../components/sections/AboutFinalCta.astro';
+import QuoteModal from '../components/interactive/QuoteModal';
+
+const title = 'About';
+const description =
+  'About VectorCodex — a UK digital growth partner combining SEO, web development, and marketing to help businesses grow online.';
+const path = '/about/';
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: path },
+];
+---
+
+<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <AboutHero crumbs={crumbs} />
+  <ClientLogoSlider />
+  <AboutExpertise />
+  <AboutMission />
+  <AboutApproach />
+  <AboutTeam />
+  <AboutTestimonials />
+  <AboutFinalCta />
+</BaseLayout>

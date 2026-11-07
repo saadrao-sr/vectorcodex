@@ -1,0 +1,313 @@
+---
+/**
+ * Illustrative local-search dashboard for Local SEO hero.
+ * All metrics and listings are fictional UI chrome — not client results.
+ */
+---
+
+<div class="local-hero-visual" aria-hidden="true">
+  <div class="local-hero-visual__panel">
+    <div class="local-hero-visual__chrome">
+      <span class="local-hero-visual__dot"></span>
+      <span class="local-hero-visual__dot"></span>
+      <span class="local-hero-visual__dot"></span>
+      <span class="local-hero-visual__chrome-label">Local search overview · Illustrative</span>
+    </div>
+
+    <div class="local-hero-visual__body">
+      <div class="local-hero-visual__map">
+        <div class="local-hero-visual__grid"></div>
+        <span class="local-hero-visual__road local-hero-visual__road--h"></span>
+        <span class="local-hero-visual__road local-hero-visual__road--v"></span>
+        <span class="local-hero-visual__pin local-hero-visual__pin--a"></span>
+        <span class="local-hero-visual__pin local-hero-visual__pin--b"></span>
+        <span class="local-hero-visual__pin local-hero-visual__pin--c"></span>
+        <span class="local-hero-visual__pulse"></span>
+        <p class="local-hero-visual__map-tag">City map · sample</p>
+      </div>
+
+      <div class="local-hero-visual__side">
+        <div class="local-hero-visual__search">
+          <span class="local-hero-visual__search-label">near me</span>
+          <span class="local-hero-visual__search-q">plumber near High Street</span>
+        </div>
+        <ul class="local-hero-visual__listings">
+          <li class="local-hero-visual__listing local-hero-visual__listing--active">
+            <span class="local-hero-visual__rank">1</span>
+            <div>
+              <p class="local-hero-visual__biz">Northside Studio</p>
+              <p class="local-hero-visual__meta">Open · Sample listing</p>
+            </div>
+          </li>
+          <li class="local-hero-visual__listing">
+            <span class="local-hero-visual__rank">2</span>
+            <div>
+              <p class="local-hero-visual__biz">Harbour Works</p>
+              <p class="local-hero-visual__meta">Illustrative only</p>
+            </div>
+          </li>
+          <li class="local-hero-visual__listing">
+            <span class="local-hero-visual__rank">3</span>
+            <div>
+              <p class="local-hero-visual__biz">Cedar & Co</p>
+              <p class="local-hero-visual__meta">Illustrative only</p>
+            </div>
+          </li>
+        </ul>
+        <p class="local-hero-visual__footnote">Not real rankings or client data</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .local-hero-visual {
+    min-width: 0;
+  }
+
+  .local-hero-visual__panel {
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.25rem;
+    background:
+      linear-gradient(160deg, rgb(222 243 77 / 0.06), transparent 42%),
+      rgb(255 255 255 / 0.03);
+    box-shadow: 0 20px 60px rgb(0 0 0 / 0.35);
+  }
+
+  .local-hero-visual__chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    padding: 0.75rem 1rem;
+  }
+
+  .local-hero-visual__dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.2);
+  }
+
+  .local-hero-visual__chrome-label {
+    margin-left: 0.5rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.4);
+  }
+
+  .local-hero-visual__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+    padding: 0.9rem;
+  }
+
+  @media (min-width: 520px) {
+    .local-hero-visual__body {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    }
+  }
+
+  .local-hero-visual__map {
+    position: relative;
+    min-height: 12.5rem;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 1rem;
+    background:
+      radial-gradient(circle at 30% 40%, rgb(222 243 77 / 0.12), transparent 45%),
+      linear-gradient(145deg, #121812, #0a0f0a);
+  }
+
+  .local-hero-visual__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.7;
+  }
+
+  .local-hero-visual__road {
+    position: absolute;
+    background: rgb(255 255 255 / 0.08);
+  }
+
+  .local-hero-visual__road--h {
+    top: 58%;
+    left: 8%;
+    right: 8%;
+    height: 3px;
+  }
+
+  .local-hero-visual__road--v {
+    top: 12%;
+    bottom: 12%;
+    left: 42%;
+    width: 3px;
+  }
+
+  .local-hero-visual__pin {
+    position: absolute;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 9999px 9999px 9999px 0.15rem;
+    background: #def34d;
+    transform: rotate(-45deg);
+    box-shadow: 0 0 0 4px rgb(222 243 77 / 0.15);
+  }
+
+  .local-hero-visual__pin--a {
+    top: 28%;
+    left: 34%;
+  }
+
+  .local-hero-visual__pin--b {
+    top: 48%;
+    left: 62%;
+    opacity: 0.55;
+  }
+
+  .local-hero-visual__pin--c {
+    top: 68%;
+    left: 48%;
+    opacity: 0.4;
+  }
+
+  .local-hero-visual__pulse {
+    position: absolute;
+    top: 24%;
+    left: 30%;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 1px solid rgb(222 243 77 / 0.35);
+    border-radius: 9999px;
+  }
+
+  .local-hero-visual__map-tag {
+    position: absolute;
+    right: 0.65rem;
+    bottom: 0.55rem;
+    margin: 0;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.35);
+  }
+
+  .local-hero-visual__side {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .local-hero-visual__search {
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 0.85rem;
+    background: rgb(0 0 0 / 0.28);
+    padding: 0.65rem 0.75rem;
+  }
+
+  .local-hero-visual__search-label {
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #def34d;
+  }
+
+  .local-hero-visual__search-q {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .local-hero-visual__listings {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .local-hero-visual__listing {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    border-radius: 0.75rem;
+    background: rgb(255 255 255 / 0.02);
+    padding: 0.55rem 0.65rem;
+  }
+
+  .local-hero-visual__listing--active {
+    border-color: rgb(222 243 77 / 0.3);
+    background: rgb(222 243 77 / 0.06);
+  }
+
+  .local-hero-visual__rank {
+    display: grid;
+    width: 1.35rem;
+    height: 1.35rem;
+    place-items: center;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.08);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  .local-hero-visual__listing--active .local-hero-visual__rank {
+    background: #def34d;
+    color: #0d120c;
+  }
+
+  .local-hero-visual__biz {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .local-hero-visual__meta {
+    margin: 0.1rem 0 0;
+    font-size: 0.65rem;
+    color: rgb(255 255 255 / 0.4);
+  }
+
+  .local-hero-visual__footnote {
+    margin: 0;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.32);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .local-hero-visual__pulse {
+      animation: local-hero-pulse 2.8s ease-in-out infinite;
+    }
+  }
+
+  @keyframes local-hero-pulse {
+    0%,
+    100% {
+      transform: scale(0.85);
+      opacity: 0.35;
+    }
+    50% {
+      transform: scale(1.15);
+      opacity: 0.8;
+    }
+  }
+</style>

@@ -1,0 +1,178 @@
+---
+import {
+  LineChart,
+  MessageSquare,
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
+  type LucideIcon,
+} from 'lucide-react';
+import AmbientBackdrop from '../ui/AmbientBackdrop.astro';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+
+type Feature = {
+  title: string;
+  text: string;
+  Icon: LucideIcon;
+  span: string;
+  accent: string;
+};
+
+const features: Feature[] = [
+  {
+    title: 'We Understand Your Goals',
+    text: 'We understand your business, audience, and objectives before building a strategy around your vision.',
+    Icon: Target,
+    span: 'md:col-span-6 lg:col-span-7 lg:row-span-2',
+    accent: 'from-highlight/20 via-transparent to-transparent',
+  },
+  {
+    title: 'Strategy Backed by Data',
+    text: 'Research, analytics, and market insights guide our decisions—not guesswork.',
+    Icon: LineChart,
+    span: 'md:col-span-3 lg:col-span-5',
+    accent: 'from-lime/18 via-transparent to-transparent',
+  },
+  {
+    title: 'One Team, Multiple Expertise',
+    text: 'SEO, web development, social media, and paid advertising under one team.',
+    Icon: Users,
+    span: 'md:col-span-3 lg:col-span-5',
+    accent: 'from-gold/18 via-transparent to-transparent',
+  },
+  {
+    title: 'Built for Performance',
+    text: 'Fast, responsive, user-friendly digital experiences focused on engagement and conversions.',
+    Icon: Zap,
+    span: 'md:col-span-2 lg:col-span-4',
+    accent: 'from-highlight/14 via-transparent to-transparent',
+  },
+  {
+    title: 'Transparent Communication',
+    text: 'Clear communication, meaningful reporting, and visibility throughout the project.',
+    Icon: MessageSquare,
+    span: 'md:col-span-2 lg:col-span-4',
+    accent: 'from-lime/14 via-transparent to-transparent',
+  },
+  {
+    title: 'Focused on Long-Term Growth',
+    text: 'Sustainable digital foundations and continuous improvement as your business evolves.',
+    Icon: TrendingUp,
+    span: 'md:col-span-2 lg:col-span-4',
+    accent: 'from-cta/16 via-transparent to-transparent',
+  },
+];
+---
+
+<section id="why-choose" class="relative isolate overflow-hidden border-t border-white/10 bg-bg py-12 sm:py-14 lg:py-16" aria-labelledby="why-choose-heading">
+  <AmbientBackdrop variant="orbs" />
+  <Container class="relative">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class={eyebrowClass}>Why Choose VectorCodex</p>
+      <h2
+        id="why-choose-heading"
+        class="mt-3 font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.75rem]"
+      >
+        <span class="text-white">Your Vision. </span>
+        <span class="text-highlight">Our Digital Excellence.</span>
+      </h2>
+      <p class="mt-3 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
+        We combine strategy, creativity, technology, and performance to help businesses strengthen their digital presence and achieve meaningful growth.
+      </p>
+    </div>
+
+    <ul class="why-bento mt-8 grid grid-cols-1 gap-3 sm:mt-10 md:grid-cols-6 lg:grid-cols-12 lg:gap-4">
+      {
+        features.map((feature, index) => {
+          const Icon = feature.Icon;
+          const featured = index === 0;
+          return (
+            <li
+              class:list={[
+                'why-bento__card group relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:border-highlight/40 hover:bg-white/[0.05] sm:p-5',
+                feature.span,
+                featured && 'lg:flex lg:min-h-[14.5rem] lg:flex-col lg:justify-between lg:p-6',
+              ]}
+              style={`--why-delay: ${index * 70}ms`}
+            >
+              <div
+                class:list={[
+                  'pointer-events-none absolute inset-0 bg-gradient-to-br opacity-90 transition duration-300 group-hover:opacity-100',
+                  feature.accent,
+                ]}
+                aria-hidden="true"
+              />
+              <div
+                class="pointer-events-none absolute -top-14 -right-14 h-32 w-32 rounded-full bg-highlight/10 blur-3xl transition duration-500 group-hover:bg-highlight/20"
+                aria-hidden="true"
+              />
+
+              <div class="relative">
+                <div class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-highlight/25 bg-highlight/10 text-highlight shadow-[0_0_30px_rgb(222_243_77_/0.12)] transition duration-300 group-hover:border-highlight/45 group-hover:shadow-[0_0_40px_rgb(222_243_77_/0.2)]">
+                  <Icon size={18} aria-hidden="true" />
+                </div>
+                <h3
+                  class:list={[
+                    'mt-3.5 font-display font-semibold tracking-tight text-white',
+                    featured ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl',
+                  ]}
+                >
+                  {feature.title}
+                </h3>
+                <p
+                  class:list={[
+                    'mt-2 leading-6 text-white/68',
+                    featured ? 'max-w-xl text-sm sm:text-base sm:leading-7' : 'text-sm',
+                  ]}
+                >
+                  {feature.text}
+                </p>
+              </div>
+
+              {
+                featured && (
+                  <div class="relative mt-5 hidden items-center gap-3 lg:flex">
+                    <span class="h-px flex-1 bg-gradient-to-r from-highlight/50 to-transparent" />
+                    <span class={eyebrowClass}>Clarity first</span>
+                  </div>
+                )
+              }
+            </li>
+          );
+        })
+      }
+    </ul>
+  </Container>
+</section>
+
+<style>
+  @supports (animation-timeline: view()) {
+    .why-bento__card {
+      animation: why-bento-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: var(--why-delay, 0ms);
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+
+  @keyframes why-bento-reveal {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 1.25rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .why-bento__card {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>

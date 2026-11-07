@@ -1,0 +1,95 @@
+---
+import { breadcrumbSchema, webPageSchema } from '../../lib/schema/jsonld';
+import { blogPlaceholders } from '../../config/blog-placeholders';
+import { getAllPosts } from '../../lib/wordpress/client';
+import type { BlogListResult, BlogPost, BlogTerm } from '../../types/content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogHero from '../sections/BlogHero.astro';
+import QuoteModal from '../interactive/QuoteModal';
+import Container from '../ui/Container.astro';
+import Pagination from './Pagination.astro';
+import PostCard from './PostCard.astro';
+
+interface Props {
+  result: BlogListResult;
+  categories: BlogTerm[];
+  page: number;
+}
+
+const { result, page } = Astro.props;
+const path = page === 1 ? '/blog/' : `/blog/page/${page}/`;
+const title = page === 1 ? 'Blog' : `Blog, page ${page}`;
+const description = 'Articles on SEO, websites, and digital marketing from VectorCodex. Posts are published from WordPress.';
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Blog', href: '/blog/' },
+  ...(page > 1 ? [{ name: `Page ${page}`, href: path }] : []),
+];
+const prev = page > 1 ? (page === 2 ? '/blog/' : `/blog/page/${page - 1}/`) : undefined;
+const next = result.ok && page < result.totalPages ? `/blog/page/${page + 1}/` : undefined;
+
+const hasLivePosts = result.ok && result.posts.length > 0;
+const listingPosts: BlogPost[] = hasLivePosts ? result.posts : blogPlaceholders;
+const usingPlaceholders = !hasLivePosts;
+
+let searchablePosts: BlogPost[] = listingPosts;
+if (hasLivePosts) {
+  try {
+    const all = await getAllPosts();
+    if (all.length > 0) searchablePosts = all;
+  } catch {
+    searchablePosts = result.posts;
+  }
+}
+
+const searchIndex = searchablePosts.map((post) => ({
+  id: post.id,
+  slug: post.slug,
+  title: post.title,
+  excerpt: post.excerpt,
+  publishedAt: post.publishedAt,
+  image: post.image,
+  categories: post.categories,
+}));
+
+---
+
+<BaseLayout title={title} description={description} path={path} prev={prev} next={next} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <BlogHero
+    crumbs={crumbs}
+    page={page}
+    posts={searchIndex}
+    placeholderPosts={usingPlaceholders}
+  />
+  <section
+    id="blog-articles"
+    class="scroll-mt-28 border-t border-white/10 py-12 sm:py-14 lg:py-16"
+    aria-labelledby="articles-heading"
+  >
+    <Container>
+      <div class="mb-8 max-w-2xl sm:mb-10">
+        <h2
+          id="articles-heading"
+          class="font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl"
+        >
+          Latest
+          <span class="text-highlight"> Articles</span>
+        </h2>
+        <p class="mt-2 text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
+          {
+            usingPlaceholders
+              ? 'Placeholder articles for layout preview — published WordPress posts will replace these automatically.'
+              : 'Fresh perspectives from the VectorCodex team — published from WordPress and built into this site.'
+          }
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {listingPosts.map((post) => <PostCard post={post} placeholder={usingPlaceholders} />)}
+      </div>
+
+      {hasLivePosts && <Pagination page={page} totalPages={result.totalPages} />}
+    </Container>
+  </section>
+</BaseLayout>

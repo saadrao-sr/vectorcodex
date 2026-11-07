@@ -1,0 +1,138 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import type { IndustryLanding } from '../../../config/industries';
+import AmbientBackdrop from '../../ui/AmbientBackdrop.astro';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  industry: IndustryLanding;
+}
+
+const { industry } = Astro.props;
+const { services } = industry;
+---
+
+<section
+  id="industry-services"
+  class="industry-services relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby="industry-services-heading"
+>
+  <AmbientBackdrop variant="drift" />
+
+  <Container class="relative">
+    <header class="mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{services.eyebrow}</p>
+      <h2
+        id="industry-services-heading"
+        class="mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.25rem] lg:text-[2.55rem] lg:leading-[1.06]"
+      >
+        {services.titleBefore}
+        <span class="text-highlight"> {services.titleHighlight}</span>
+      </h2>
+      <p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-8">
+        {services.intro}
+      </p>
+    </header>
+
+    <ul class="industry-services__board">
+      {
+        services.items.map((item, index) => (
+          <li style={`--i: ${index}`}>
+            <a href={item.href} class="industry-services__link group">
+              <span class="industry-services__number font-display">{String(index + 1).padStart(2, '0')}</span>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+                    {item.label}
+                  </h3>
+                  <ArrowUpRight
+                    size={16}
+                    aria-hidden="true"
+                    className="mt-1 shrink-0 text-white/35 transition group-hover:text-highlight"
+                  />
+                </div>
+                <p class="mt-2 text-sm leading-6 text-white/60">{item.description}</p>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Container>
+</section>
+
+<style>
+  .industry-services__board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    margin: 3rem 0 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.5rem;
+    background: rgb(255 255 255 / 0.02);
+  }
+
+  @media (min-width: 640px) {
+    .industry-services__board {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 3.5rem;
+    }
+  }
+
+  .industry-services__link {
+    display: flex;
+    gap: 0.9rem;
+    align-items: start;
+    height: 100%;
+    padding: 1.2rem 1.15rem 1.25rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    transition: background-color 0.25s ease;
+  }
+
+  @media (min-width: 640px) {
+    .industry-services__link {
+      border-right: 1px solid rgb(255 255 255 / 0.08);
+      padding: 1.35rem 1.3rem 1.4rem;
+    }
+
+    .industry-services__board > li:nth-child(2n) .industry-services__link {
+      border-right: 0;
+    }
+
+    .industry-services__board > li:nth-last-child(-n + 2) .industry-services__link {
+      border-bottom: 0;
+    }
+  }
+
+  .industry-services__link:hover {
+    background: rgb(222 243 77 / 0.05);
+  }
+
+  .industry-services__number {
+    font-size: 1.65rem;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: rgb(222 243 77 / 0.4);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .industry-services__board > li {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: industry-services-rise 0.6s ease forwards;
+      animation-delay: calc(100ms + var(--i, 0) * 55ms);
+    }
+  }
+
+  @keyframes industry-services-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

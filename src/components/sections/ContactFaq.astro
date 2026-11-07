@@ -1,0 +1,222 @@
+---
+import { ArrowUpRight, Mail, MapPin, Phone } from 'lucide-react';
+import { locations } from '../../config/locations';
+import { site } from '../../config/site';
+import InquiryForm from '../interactive/InquiryForm';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+
+const serviceOptions = [
+  { value: 'SEO', label: 'SEO' },
+  { value: 'Web Development', label: 'Web Development' },
+  { value: 'Social Media Marketing', label: 'Social Media Marketing' },
+  { value: 'PPC Management', label: 'PPC Management' },
+];
+
+const budgetOptions = [
+  { value: 'Under £500', label: 'Under £500' },
+  { value: '£500–£1,000', label: '£500–£1,000' },
+  { value: '£1,000–£3,000', label: '£1,000–£3,000' },
+  { value: '£3,000–£5,000', label: '£3,000–£5,000' },
+  { value: '£5,000+', label: '£5,000+' },
+];
+
+const whatsappNumber = '923185730513';
+const whatsappHref = `https://wa.me/${whatsappNumber}`;
+const whatsappDisplay = '+92 318 5730513';
+
+const addressLine = site.address
+  ? [site.address.street, site.address.locality, site.address.region, site.address.postalCode, site.address.country]
+      .filter(Boolean)
+      .join(', ')
+  : '';
+
+/** Temporary city-level map — replace via PUBLIC_MAP_EMBED_URL when the final address is confirmed. */
+const rawalpindiMapEmbed =
+  'https://www.google.com/maps?q=Rawalpindi%2C%20Pakistan&z=12&hl=en&output=embed';
+
+const mapEmbedSrc = import.meta.env.PUBLIC_MAP_EMBED_URL?.trim() || rawalpindiMapEmbed;
+const mapTitle = import.meta.env.PUBLIC_MAP_EMBED_URL ? `Map showing ${site.name}` : 'Map showing Rawalpindi, Pakistan';
+
+const contactCardClass =
+  'flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5 transition hover:border-highlight/40 hover:bg-white/[0.05]';
+
+const iconWrapClass =
+  'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-highlight/30 bg-highlight/10 text-highlight';
+
+const iconMutedClass =
+  'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/55';
+---
+
+<section
+  id="contact"
+  class="relative isolate overflow-hidden border-t border-white/10 bg-bg py-12 sm:py-14 lg:py-16"
+  aria-labelledby="contact-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="absolute top-24 left-[8%] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-2xl"></div>
+    <div class="absolute right-[6%] bottom-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-2xl"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="mx-auto max-w-3xl text-center lg:mx-0 lg:max-w-xl lg:text-left">
+      <p class={eyebrowClass}>Contact</p>
+      <h2
+        id="contact-heading"
+        class="mt-3 font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.6rem]"
+      >
+        <span class="text-white">Let's Talk About Your </span>
+        <span class="text-highlight">Project</span>
+      </h2>
+      <p class="mt-3 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
+        Share your goals, audience, and constraints. We will reply with a scoped next step — not a generic pitch.
+      </p>
+    </div>
+
+    <div class="mt-8 grid items-stretch gap-5 sm:mt-10 lg:grid-cols-2 lg:gap-6">
+      <div class="flex min-h-0 min-w-0 flex-col gap-4 rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5 sm:gap-5 sm:p-6 lg:p-7">
+        <ul class="flex flex-col gap-3">
+          {
+            site.telephone ? (
+              <li>
+                <a href={`tel:${site.telephone.replace(/\s+/g, '')}`} class={`group ${contactCardClass}`}>
+                  <span class={iconWrapClass}>
+                    <Phone size={16} aria-hidden="true" />
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">Phone</span>
+                    <span class="mt-1 block truncate text-sm font-medium text-white transition group-hover:text-highlight">
+                      {site.telephone}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ) : (
+              <li>
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class={`group ${contactCardClass}`}>
+                  <span class={iconWrapClass}>
+                    <Phone size={16} aria-hidden="true" />
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">WhatsApp</span>
+                    <span class="mt-1 block truncate text-sm font-medium text-white transition group-hover:text-highlight">
+                      {whatsappDisplay}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            )
+          }
+
+          {
+            site.email ? (
+              <li>
+                <a href={`mailto:${site.email}`} class={`group ${contactCardClass}`}>
+                  <span class={iconWrapClass}>
+                    <Mail size={16} aria-hidden="true" />
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">Email</span>
+                    <span class="mt-1 block truncate text-sm font-medium text-white transition group-hover:text-highlight">
+                      {site.email}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ) : (
+              <li class={contactCardClass}>
+                <span class={iconMutedClass}>
+                  <Mail size={16} aria-hidden="true" />
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">Email</span>
+                  <span class="mt-1 block text-sm leading-6 text-white/55">A public email will appear here when confirmed.</span>
+                </span>
+              </li>
+            )
+          }
+
+          {
+            addressLine ? (
+              <li class={contactCardClass}>
+                <span class={iconWrapClass}>
+                  <MapPin size={16} aria-hidden="true" />
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">Address</span>
+                  <span class="mt-1 block text-sm leading-6 text-white/80">{addressLine}</span>
+                </span>
+              </li>
+            ) : (
+              <li class={contactCardClass}>
+                <span class={iconMutedClass}>
+                  <MapPin size={16} aria-hidden="true" />
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">Address</span>
+                  <span class="mt-1 block text-sm leading-6 text-white/55">
+                    A registered office address will appear here when confirmed.
+                  </span>
+                </span>
+              </li>
+            )
+          }
+        </ul>
+
+        <div class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+          <p class="text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">Other locations</p>
+          <ul class="mt-3 space-y-2.5">
+            {
+              locations.map((office) => (
+                <li>
+                  <a
+                    href={office.path}
+                    class="group flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-3 transition hover:border-highlight/40 hover:bg-white/[0.05]"
+                  >
+                    <span class="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-highlight/30 bg-highlight/10 text-highlight">
+                      <MapPin size={14} aria-hidden="true" />
+                    </span>
+                    <span class="min-w-0 flex-1">
+                      <span class="flex items-center gap-2">
+                        <span class="font-display text-sm font-semibold text-white transition group-hover:text-highlight">
+                          {office.name}
+                        </span>
+                        <ArrowUpRight
+                          size={14}
+                          aria-hidden="true"
+                          className="text-white/30 transition group-hover:text-highlight"
+                        />
+                      </span>
+                      <span class="mt-1 block text-sm leading-5 text-white/60">{office.address}</span>
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="mt-auto min-h-[14rem] flex-1 overflow-hidden rounded-2xl border border-white/10 bg-surface">
+          <iframe
+            title={mapTitle}
+            src={mapEmbedSrc}
+            class="h-full min-h-[14rem] w-full border-0 lg:min-h-full"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          />
+        </div>
+      </div>
+
+      <div class="w-full min-w-0">
+        <InquiryForm
+          client:visible
+          className="block h-full w-full max-w-none"
+          serviceOptions={serviceOptions}
+          budgetOptions={budgetOptions}
+          endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT}
+        />
+      </div>
+    </div>
+  </Container>
+</section>

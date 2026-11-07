@@ -1,0 +1,34 @@
+---
+interface Props {
+  page: number;
+  totalPages: number;
+}
+
+const { page, totalPages } = Astro.props;
+const prev = page > 1 ? (page === 2 ? '/blog/' : `/blog/page/${page - 1}/`) : undefined;
+const next = page < totalPages ? `/blog/page/${page + 1}/` : undefined;
+---
+
+{
+  totalPages > 1 && (
+    <nav aria-label="Pagination" class="mt-12 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+      {prev ? (
+        <a href={prev} rel="prev" class="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 text-sm font-semibold hover:border-highlight">
+          Previous
+        </a>
+      ) : (
+        <span class="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 text-sm text-white/35">Previous</span>
+      )}
+      <p class="text-center text-sm text-white/60">
+        Page {page} of {totalPages}
+      </p>
+      {next ? (
+        <a href={next} rel="next" class="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 text-sm font-semibold hover:border-highlight">
+          Next
+        </a>
+      ) : (
+        <span class="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 text-sm text-white/35">Next</span>
+      )}
+    </nav>
+  )
+}

@@ -1,0 +1,39 @@
+---
+import type { ChildServiceLanding } from '../../../config/service-children';
+import AmbientBackdrop from '../../ui/AmbientBackdrop.astro';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+import LocalSearchEcosystem from './visuals/LocalSearchEcosystem.astro';
+
+interface Props {
+  service: ChildServiceLanding;
+}
+
+const { service } = Astro.props;
+const { framework } = service;
+---
+
+<section
+  id={`${service.slug}-framework`}
+  class="relative isolate scroll-mt-28 overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby={`${service.slug}-framework-heading`}
+>
+  <AmbientBackdrop variant="drift" class="opacity-50" />
+  <Container class="relative">
+    <header class="mx-auto max-w-2xl text-center">
+      <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>{framework.eyebrow}</p>
+      <h2
+        id={`${service.slug}-framework-heading`}
+        class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]"
+      >
+        {framework.titleBefore}
+        <span class="text-highlight"> {framework.titleHighlight}</span>
+      </h2>
+      <p class="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">{framework.intro}</p>
+    </header>
+
+    <div class="mt-8 sm:mt-10">
+      <LocalSearchEcosystem hubLabel={framework.hubLabel} hubText={framework.hubText} nodes={framework.nodes} />
+    </div>
+  </Container>
+</section>

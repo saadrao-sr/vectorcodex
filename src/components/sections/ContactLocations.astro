@@ -1,0 +1,127 @@
+---
+import { ArrowUpRight, Mail, MapPin, Phone } from 'lucide-react';
+import { locations } from '../../config/locations';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+---
+
+<section
+  id="our-locations"
+  class="contact-locations relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-12 sm:py-14 lg:py-16"
+  aria-labelledby="our-locations-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="absolute top-16 right-[12%] h-52 w-52 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.07),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute bottom-12 left-[8%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"
+    >
+    </div>
+  </div>
+
+  <Container class="relative">
+    <header class="mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>Our Locations</p>
+      <h2
+        id="our-locations-heading"
+        class="mt-4 font-display text-[1.75rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-4xl lg:text-[2.65rem] lg:leading-[1.08]"
+      >
+        Find Us Across
+        <span class="text-highlight"> Key Markets.</span>
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">
+        Connect with VectorCodex through our regional presence. Select a country to open its location page. Details below
+        are placeholders until verified office information is published.
+      </p>
+    </header>
+
+    <ul class="mt-10 grid grid-cols-1 gap-4 sm:mt-12 md:grid-cols-3 md:gap-5">
+      {
+        locations.map((office, index) => (
+          <li style={`--loc-i: ${index}`}>
+            <article class="contact-locations__card group relative flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.03] p-5 transition duration-300 hover:border-highlight/35 sm:p-6">
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/10 via-transparent to-transparent opacity-80 transition duration-300 group-hover:opacity-100"
+                aria-hidden="true"
+              />
+
+              <a href={office.path} class="absolute inset-0 z-0" aria-label={`Open ${office.name} location page`}>
+                <span class="sr-only">View {office.name} location page</span>
+              </a>
+
+              <div class="relative z-10 pointer-events-none">
+                <div class="flex items-center gap-3">
+                  <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-highlight/30 bg-highlight/10 text-highlight">
+                    <MapPin size={20} aria-hidden="true" />
+                  </span>
+                  <div>
+                    <p class="text-[0.65rem] font-semibold tracking-[0.14em] text-highlight uppercase">Location</p>
+                    <h3 class="mt-0.5 font-display text-xl font-semibold tracking-tight text-white">{office.name}</h3>
+                  </div>
+                </div>
+
+                <dl class="mt-6 space-y-4">
+                  <div>
+                    <dt class="text-[0.65rem] font-semibold tracking-[0.14em] text-white/40 uppercase">Address</dt>
+                    <dd class="mt-1.5 text-sm leading-6 text-white/70">{office.address}</dd>
+                  </div>
+
+                  <div>
+                    <dt class="text-[0.65rem] font-semibold tracking-[0.14em] text-white/40 uppercase">Phone</dt>
+                    <dd class="mt-1.5">
+                      <a
+                        href={`tel:${office.phone.replace(/\s+/g, '')}`}
+                        class="pointer-events-auto inline-flex items-center gap-2 text-sm font-semibold text-white transition hover:text-highlight"
+                      >
+                        <Phone size={15} aria-hidden="true" className="text-highlight" />
+                        {office.phone}
+                      </a>
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt class="text-[0.65rem] font-semibold tracking-[0.14em] text-white/40 uppercase">Email</dt>
+                    <dd class="mt-1.5">
+                      <a
+                        href={`mailto:${office.email}`}
+                        class="pointer-events-auto inline-flex items-center gap-2 text-sm font-semibold text-white transition hover:text-highlight"
+                      >
+                        <Mail size={15} aria-hidden="true" className="text-highlight" />
+                        {office.email}
+                      </a>
+                    </dd>
+                  </div>
+                </dl>
+
+                <p class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-highlight">
+                  View location page
+                  <ArrowUpRight size={15} aria-hidden="true" />
+                </p>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </Container>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .contact-locations__card {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: contact-locations-rise 0.65s ease forwards;
+      animation-delay: calc(80ms + var(--loc-i, 0) * 80ms);
+    }
+  }
+
+  @keyframes contact-locations-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

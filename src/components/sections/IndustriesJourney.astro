@@ -1,0 +1,295 @@
+---
+import { ArrowRight } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+
+type Stage = {
+  index: string;
+  title: string;
+  text: string;
+  focus: string;
+};
+
+const stages: Stage[] = [
+  {
+    index: '01',
+    title: 'Read the market',
+    text: 'We pin down who is searching, where trust is won, and which constraints the sector cannot ignore — before any channel plan is written.',
+    focus: 'Audience & demand',
+  },
+  {
+    index: '02',
+    title: 'Shape the presence',
+    text: 'Sites, content, and campaigns get a sector-clear structure so services, proof, and locations read the way buyers in that market expect.',
+    focus: 'Structure & message',
+  },
+  {
+    index: '03',
+    title: 'Open the next step',
+    text: 'Interest is routed into the right enquiry, booking, or call path, then reviewed against real sector behaviour — not vanity metrics.',
+    focus: 'Action & review',
+  },
+];
+---
+
+<section
+  id="industry-journey"
+  class="industries-journey relative isolate overflow-x-clip border-t border-white/10 bg-[#0A0F09] py-12 sm:py-14 lg:py-16"
+  aria-labelledby="industry-journey-heading"
+>
+  <div class="industries-journey__bg pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div
+      class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-highlight/25 to-transparent"
+    >
+    </div>
+    <div
+      class="absolute top-1/4 left-1/2 h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.05),transparent_68%)] blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute right-[10%] bottom-8 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <span class="industries-journey__shape industries-journey__shape--ring"></span>
+    <span class="industries-journey__shape industries-journey__shape--orb"></span>
+    <span class="industries-journey__shape industries-journey__shape--square"></span>
+    <span class="industries-journey__shape industries-journey__shape--diamond"></span>
+    <span class="industries-journey__shape industries-journey__shape--line"></span>
+    <span class="industries-journey__shape industries-journey__shape--dot"></span>
+  </div>
+
+  <Container class="relative">
+    <header
+      class="industries-journey__intro grid gap-6 border-b border-white/10 pb-8 sm:gap-8 sm:pb-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-end lg:gap-12"
+    >
+      <div>
+        <p class:list={[eyebrowClass, 'w-fit max-w-full']}>How sector work starts</p>
+        <h2
+          id="industry-journey-heading"
+          class="mt-4 font-display text-[1.85rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-4xl sm:leading-[1.08] md:text-[2.35rem] lg:text-[2.55rem] lg:leading-[1.06]"
+        >
+          Sector context first.
+          <span class="text-highlight"> Tactics after.</span>
+        </h2>
+      </div>
+
+      <div class="flex flex-col gap-5 sm:gap-6 lg:pb-1">
+        <p class="text-sm leading-7 text-white/60 sm:text-base sm:leading-7">
+          Buyers, proof, and booking habits differ by industry. We frame SEO, websites, and campaigns around that reality — not a recycled channel list.
+        </p>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button
+            type="button"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'w-full shadow-[0_12px_36px_rgb(197_246_61_/0.16)] sm:w-auto',
+            ]}
+            data-quote-open
+          >
+            Talk through your market
+          </button>
+          <a
+            href="/services/"
+            class="inline-flex items-center justify-center gap-2 text-sm font-semibold text-white/55 transition hover:text-highlight sm:justify-start"
+          >
+            Browse services
+            <ArrowRight size={15} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <ol class="industries-journey__stages relative m-0 mt-8 grid list-none gap-0 p-0 sm:mt-10 md:grid-cols-3 md:gap-0">
+      {
+        stages.map((stage, index) => (
+          <li
+            class="industries-journey__stage relative border-b border-white/10 py-6 last:border-b-0 md:border-b-0 md:border-r md:border-white/10 md:px-6 md:py-0 md:first:pl-0 md:last:border-r-0 md:last:pr-0"
+            style={`--journey-i: ${index}`}
+          >
+            <div class="mb-4 flex items-center gap-3">
+              <span class="industries-journey__index font-display text-2xl font-semibold tracking-tight text-highlight/90 sm:text-[1.75rem]">
+                {stage.index}
+              </span>
+              <span class="h-px flex-1 bg-gradient-to-r from-highlight/35 to-transparent md:hidden" aria-hidden="true" />
+              <span class="hidden text-[0.65rem] tracking-[0.14em] text-white/35 uppercase md:inline">
+                {stage.focus}
+              </span>
+            </div>
+            <span class="mb-2 block text-[0.65rem] tracking-[0.14em] text-white/35 uppercase md:hidden">
+              {stage.focus}
+            </span>
+            <h3 class="font-display text-xl font-semibold tracking-tight text-white sm:text-[1.3rem]">
+              {stage.title}
+            </h3>
+            <p class="mt-2 text-sm leading-6 text-white/58 sm:leading-7">{stage.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+</section>
+
+<style>
+  .industries-journey__shape {
+    position: absolute;
+    opacity: 0.22;
+    will-change: transform;
+  }
+
+  .industries-journey__shape--ring {
+    top: 12%;
+    left: 4%;
+    width: 5.75rem;
+    height: 5.75rem;
+    border: 1.5px solid rgb(222 243 77 / 0.5);
+    border-radius: 9999px;
+  }
+
+  .industries-journey__shape--orb {
+    top: 16%;
+    right: 6%;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(222 243 77 / 0.22);
+    background: radial-gradient(circle at 35% 30%, rgb(222 243 77 / 0.28), transparent 68%);
+  }
+
+  .industries-journey__shape--square {
+    --shape-rot: 16deg;
+    bottom: 22%;
+    left: 9%;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1.5px solid rgb(222 243 77 / 0.4);
+    border-radius: 0.55rem;
+    transform: rotate(var(--shape-rot));
+  }
+
+  .industries-journey__shape--diamond {
+    --shape-rot: 45deg;
+    top: 42%;
+    right: 11%;
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 1.5px solid rgb(222 243 77 / 0.35);
+    border-radius: 0.35rem;
+    transform: rotate(var(--shape-rot));
+  }
+
+  .industries-journey__shape--line {
+    top: 58%;
+    left: 18%;
+    width: 4rem;
+    height: 1.5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgb(222 243 77 / 0.5), transparent);
+  }
+
+  .industries-journey__shape--dot {
+    bottom: 18%;
+    right: 24%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.28;
+  }
+
+  @media (max-width: 639px) {
+    .industries-journey__shape--ring {
+      width: 3.75rem;
+      height: 3.75rem;
+      left: 2%;
+    }
+
+    .industries-journey__shape--orb {
+      width: 3rem;
+      height: 3rem;
+      right: 3%;
+    }
+
+    .industries-journey__shape--square,
+    .industries-journey__shape--diamond {
+      opacity: 0.14;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .industries-journey__intro {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: industries-journey-rise 0.7s ease forwards;
+      animation-delay: 40ms;
+    }
+
+    .industries-journey__stage {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: industries-journey-rise 0.65s ease forwards;
+      animation-delay: calc(160ms + var(--journey-i, 0) * 90ms);
+    }
+
+    .industries-journey__shape--ring {
+      animation: industries-journey-drift-a 16s ease-in-out infinite;
+    }
+
+    .industries-journey__shape--orb {
+      animation: industries-journey-drift-b 18s ease-in-out infinite;
+    }
+
+    .industries-journey__shape--square {
+      animation: industries-journey-drift-c 14s ease-in-out infinite;
+    }
+
+    .industries-journey__shape--diamond {
+      animation: industries-journey-drift-c 17s ease-in-out infinite reverse;
+    }
+
+    .industries-journey__shape--line {
+      animation: industries-journey-drift-a 20s ease-in-out infinite reverse;
+    }
+
+    .industries-journey__shape--dot {
+      animation: industries-journey-drift-b 12s ease-in-out infinite;
+    }
+  }
+
+  @keyframes industries-journey-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes industries-journey-drift-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(10px, -14px, 0);
+    }
+  }
+
+  @keyframes industries-journey-drift-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-12px, 10px, 0);
+    }
+  }
+
+  @keyframes industries-journey-drift-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--shape-rot, 0deg));
+    }
+    50% {
+      transform: translate3d(8px, -8px, 0) rotate(calc(var(--shape-rot, 0deg) + 7deg));
+    }
+  }
+</style>

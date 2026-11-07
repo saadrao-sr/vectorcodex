@@ -1,0 +1,7 @@
+import type { APIRoute } from 'astro';
+import { renderLlms } from '../lib/seo/llms';
+
+export const GET: APIRoute = () =>
+  new Response(renderLlms(), {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });

@@ -1,0 +1,106 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import type { ParentServiceLanding } from '../../../../config/service-parents';
+import { site } from '../../../../config/site';
+import Container from '../../../ui/Container.astro';
+import { buttonClass } from '../../../ui/styles';
+
+interface Props {
+  service: ParentServiceLanding;
+  tone?: 'band' | 'rail';
+}
+
+const { service, tone = 'band' } = Astro.props;
+const { midCta, enquiryValue } = service;
+const whatsappHref = site.whatsapp
+  ? `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(`Hi VectorCodex — I'd like to talk about ${enquiryValue}.`)}`
+  : '';
+---
+
+<section
+  class:list={[
+    'service-parent-mid-cta relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-8 sm:py-10',
+    tone === 'rail' && 'service-parent-mid-cta--rail',
+  ]}
+  aria-label={midCta.primaryLabel}
+>
+  <Container class="relative">
+    <div
+      class:list={[
+        'service-parent-mid-cta__panel',
+        tone === 'rail' ? 'service-parent-mid-cta__panel--rail' : 'service-parent-mid-cta__panel--band',
+      ]}
+    >
+      <div class="min-w-0">
+        <h2 class="font-display text-xl font-semibold tracking-tight text-white sm:text-2xl">
+          {midCta.titleBefore}
+          <span class="text-highlight"> {midCta.titleHighlight}</span>
+        </h2>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-white/65 sm:text-[0.95rem] sm:leading-7">{midCta.text}</p>
+      </div>
+      <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <button
+          type="button"
+          class:list={[buttonClass.base, buttonClass.gradient, 'w-full shadow-[0_12px_32px_rgb(197_246_61_/0.16)] sm:w-auto']}
+          data-quote-open
+          data-service={enquiryValue}
+        >
+          {midCta.primaryLabel}
+          <ArrowUpRight size={16} aria-hidden="true" />
+        </button>
+        {
+          whatsappHref ? (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}
+            >
+              {midCta.secondaryLabel}
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+          ) : (
+            <button
+              type="button"
+              class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}
+              data-booking-open
+              data-service={enquiryValue}
+            >
+              {midCta.secondaryLabel}
+            </button>
+          )
+        }
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .service-parent-mid-cta__panel {
+    display: grid;
+    gap: 1.25rem;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 1.35rem;
+    padding: 1.25rem;
+  }
+
+  .service-parent-mid-cta__panel--band {
+    background:
+      radial-gradient(circle at 0% 50%, rgb(222 243 77 / 0.12), transparent 45%),
+      rgb(255 255 255 / 0.03);
+  }
+
+  .service-parent-mid-cta__panel--rail {
+    border-color: rgb(222 243 77 / 0.28);
+    background: linear-gradient(120deg, rgb(222 243 77 / 0.1), transparent 40%), rgb(255 255 255 / 0.03);
+  }
+
+  @media (min-width: 900px) {
+    .service-parent-mid-cta__panel {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.4rem 1.5rem;
+    }
+  }
+</style>

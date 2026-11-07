@@ -1,0 +1,618 @@
+---
+import {
+  ChartColumnIncreasing,
+  Map,
+  Rocket,
+  Search,
+  TrendingUp,
+  type LucideIcon,
+} from 'lucide-react';
+import Container from '../ui/Container.astro';
+import { eyebrowClass } from '../ui/styles';
+
+type Stage = {
+  number: string;
+  title: string;
+  text: string;
+  Icon: LucideIcon;
+};
+
+const stages: Stage[] = [
+  {
+    number: '01',
+    title: 'Understand',
+    text: 'We start by understanding your business, audience, goals, challenges, and expectations.',
+    Icon: Search,
+  },
+  {
+    number: '02',
+    title: 'Research',
+    text: 'We analyze your market, competitors, opportunities, and existing digital presence to identify where improvements can make an impact.',
+    Icon: ChartColumnIncreasing,
+  },
+  {
+    number: '03',
+    title: 'Strategize',
+    text: 'We develop a tailored roadmap that connects the right services, technology, and resources to your business objectives.',
+    Icon: Map,
+  },
+  {
+    number: '04',
+    title: 'Execute',
+    text: 'Our team turns the strategy into action through SEO, web development, and digital marketing solutions.',
+    Icon: Rocket,
+  },
+  {
+    number: '05',
+    title: 'Improve & Grow',
+    text: 'We monitor performance, analyze results, and continuously refine our work to support long-term growth.',
+    Icon: TrendingUp,
+  },
+];
+---
+
+<section
+  id="our-approach"
+  class="about-approach relative isolate scroll-mt-28 overflow-x-clip border-t border-white/10 bg-[#0D120C] py-8 sm:py-10 lg:py-11"
+  aria-labelledby="our-approach-heading"
+  data-about-approach
+>
+  <div class="about-approach__bg pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute top-24 left-[8%] h-52 w-52 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.07),transparent_70%)] blur-3xl"></div>
+    <div class="absolute right-[10%] bottom-20 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"></div>
+    <span class="about-approach__shape about-approach__shape--ring"></span>
+    <span class="about-approach__shape about-approach__shape--orb"></span>
+    <span class="about-approach__shape about-approach__shape--diamond"></span>
+    <span class="about-approach__shape about-approach__shape--line"></span>
+    <span class="about-approach__shape about-approach__shape--dot"></span>
+    <span class="about-approach__shape about-approach__shape--pill"></span>
+  </div>
+
+  <Container class="relative">
+    <header class="about-approach__intro mx-auto max-w-3xl text-center">
+      <p class:list={[eyebrowClass, 'w-fit max-w-full']}>How We Think. How We Work.</p>
+      <h2
+        id="our-approach-heading"
+        class="mt-4 font-display text-[1.75rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-3xl md:text-[2.25rem] lg:text-[2.65rem] lg:leading-[1.08]"
+      >
+        A Smarter Approach to
+        <span class="text-highlight"> Building Digital Growth.</span>
+      </h2>
+      <p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/65 sm:mt-4 sm:text-base sm:leading-7 lg:text-[1.0625rem] lg:leading-8">
+        Every business has different goals and challenges. That's why we don't believe in one-size-fits-all solutions. We combine research, strategy, creativity, and technology to deliver digital solutions aligned with your business objectives.
+      </p>
+    </header>
+
+    <div class="about-approach__journey relative mt-7 sm:mt-8 lg:mt-9">
+      <div class="about-approach__nexus" aria-hidden="true">
+        <span class="about-approach__nexus-ring about-approach__nexus-ring--outer"></span>
+        <span class="about-approach__nexus-ring about-approach__nexus-ring--mid"></span>
+        <span class="about-approach__nexus-core"></span>
+      </div>
+
+      <ol class="about-approach__track relative">
+        <div class="about-approach__path" aria-hidden="true">
+          <span class="about-approach__path-fill"></span>
+        </div>
+
+        {
+          stages.map((stage, index) => {
+            const Icon = stage.Icon;
+            const offset = index % 2 === 0 ? 'about-approach__stage--up' : 'about-approach__stage--down';
+            return (
+              <li
+                class:list={['about-approach__stage group', offset]}
+                style={`--stage-i: ${index}`}
+              >
+                <div class="about-approach__node">
+                  <span class="about-approach__pulse" aria-hidden="true"></span>
+                  <span class="about-approach__number">{stage.number}</span>
+                </div>
+
+                <article class="about-approach__card">
+                  <div
+                    class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/10 via-transparent to-transparent opacity-80 transition duration-300 group-hover:opacity-100"
+                    aria-hidden="true"
+                  ></div>
+                  <div class="relative">
+                    <div class="about-approach__icon inline-flex h-10 w-10 items-center justify-center rounded-xl border border-highlight/25 bg-highlight/10 text-highlight">
+                      <Icon size={18} aria-hidden="true" />
+                    </div>
+                    <h3 class="mt-3 font-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+                      {stage.title}
+                    </h3>
+                    <p class="mt-2 text-sm leading-6 text-white/65">{stage.text}</p>
+                  </div>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+  </Container>
+</section>
+
+<script>
+  const section = document.querySelector<HTMLElement>('[data-about-approach]');
+  if (section) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      section.classList.add('is-inview');
+    } else {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              section.classList.add('is-inview');
+              observer.disconnect();
+            }
+          }
+        },
+        { threshold: 0.22, rootMargin: '0px 0px -8% 0px' },
+      );
+      observer.observe(section);
+    }
+  }
+</script>
+
+<style>
+  .about-approach__shape {
+    position: absolute;
+    opacity: 0.2;
+    will-change: transform;
+  }
+
+  .about-approach__shape--ring {
+    top: 8%;
+    right: 6%;
+    width: 6rem;
+    height: 6rem;
+    border: 1.5px solid rgb(222 243 77 / 0.48);
+    border-radius: 9999px;
+  }
+
+  .about-approach__shape--orb {
+    top: 22%;
+    left: 5%;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(222 243 77 / 0.2);
+    background: radial-gradient(circle at 35% 30%, rgb(222 243 77 / 0.3), transparent 68%);
+  }
+
+  .about-approach__shape--diamond {
+    --shape-rot: 45deg;
+    bottom: 18%;
+    right: 10%;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1.5px solid rgb(222 243 77 / 0.4);
+    border-radius: 0.45rem;
+    transform: rotate(var(--shape-rot));
+  }
+
+  .about-approach__shape--line {
+    top: 55%;
+    left: 8%;
+    width: 4rem;
+    height: 1.5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, transparent, rgb(222 243 77 / 0.5));
+  }
+
+  .about-approach__shape--dot {
+    top: 38%;
+    right: 18%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.28;
+  }
+
+  .about-approach__shape--pill {
+    --shape-rot: -14deg;
+    bottom: 12%;
+    left: 14%;
+    width: 3.5rem;
+    height: 1.2rem;
+    border: 1px solid rgb(222 243 77 / 0.38);
+    border-radius: 9999px;
+    transform: rotate(var(--shape-rot));
+  }
+
+  @media (max-width: 639px) {
+    .about-approach__shape--ring {
+      width: 4.25rem;
+      height: 4.25rem;
+    }
+
+    .about-approach__shape--orb {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .about-approach__shape--diamond,
+    .about-approach__shape--pill {
+      opacity: 0.14;
+    }
+  }
+
+  .about-approach__nexus {
+    display: none;
+  }
+
+  .about-approach__track {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .about-approach__path {
+    display: none;
+  }
+
+  .about-approach__stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .about-approach__stage:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 2.85rem;
+    left: 1.35rem;
+    width: 2px;
+    height: calc(100% - 0.35rem);
+    border-radius: 9999px;
+    background: linear-gradient(180deg, rgb(197 246 61 / 0.55), rgb(246 239 92 / 0.18));
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.7s ease;
+    transition-delay: calc(var(--stage-i) * 90ms + 120ms);
+  }
+
+  .about-approach.is-inview .about-approach__stage:not(:last-child)::before {
+    transform: scaleY(1);
+  }
+
+  .about-approach__node {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid rgb(222 243 77 / 0.4);
+    background: #0d120c;
+    box-shadow:
+      0 0 0 6px rgb(13 18 12 / 0.95),
+      0 0 26px rgb(222 243 77 / 0.16);
+    transition:
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .about-approach__pulse {
+    position: absolute;
+    inset: -6px;
+    border-radius: 9999px;
+    border: 1px solid rgb(222 243 77 / 0.2);
+    opacity: 0;
+  }
+
+  .about-approach__number {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #def34d;
+  }
+
+  .about-approach__card {
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 1.35rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background: rgb(13 18 12 / 0.92);
+    padding: 0.9rem 1rem;
+    transition:
+      border-color 0.25s ease,
+      background-color 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .about-approach__icon {
+    transition:
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .about-approach__stage:hover .about-approach__node {
+    border-color: rgb(222 243 77 / 0.75);
+    box-shadow:
+      0 0 0 6px rgb(13 18 12 / 0.95),
+      0 0 34px rgb(222 243 77 / 0.28);
+    transform: translateY(-1px);
+  }
+
+  .about-approach__stage:hover .about-approach__card {
+    border-color: rgb(222 243 77 / 0.38);
+    background: rgb(16 22 15 / 0.98);
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.28);
+    transform: translateY(-2px);
+  }
+
+  .about-approach__stage:hover .about-approach__icon {
+    border-color: rgb(222 243 77 / 0.5);
+    box-shadow: 0 0 24px rgb(222 243 77 / 0.18);
+    transform: translateY(-1px);
+  }
+
+  @media (min-width: 1024px) {
+    .about-approach__journey {
+      padding-top: 0.75rem;
+      padding-bottom: 0.25rem;
+    }
+
+    .about-approach__nexus {
+      display: grid;
+      place-items: center;
+      position: absolute;
+      top: 56%;
+      left: 50%;
+      z-index: 0;
+      width: 7.5rem;
+      height: 7.5rem;
+      translate: -50% -50%;
+      pointer-events: none;
+      opacity: 0.18;
+    }
+
+    .about-approach__nexus-ring {
+      position: absolute;
+      border-radius: 9999px;
+      border: 1px solid rgb(222 243 77 / 0.22);
+    }
+
+    .about-approach__nexus-ring--outer {
+      inset: 0;
+    }
+
+    .about-approach__nexus-ring--mid {
+      inset: 22%;
+      border-style: dashed;
+      border-color: rgb(222 243 77 / 0.28);
+    }
+
+    .about-approach__nexus-core {
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 35% 30%, #f6ef5c, #c5f63d 55%, transparent 70%);
+      opacity: 0.4;
+      filter: blur(2px);
+    }
+
+    .about-approach__track {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.75rem;
+      align-items: start;
+      padding-top: 2.25rem;
+    }
+
+    .about-approach__path {
+      display: block;
+      position: absolute;
+      top: 3.35rem;
+      left: 6%;
+      right: 6%;
+      height: 2px;
+      border-radius: 9999px;
+      background: rgb(255 255 255 / 0.08);
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .about-approach__path-fill {
+      display: block;
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #c5f63d, #def34d 45%, #f6ef5c);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .about-approach.is-inview .about-approach__path-fill {
+      transform: scaleX(1);
+    }
+
+    .about-approach__stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      text-align: center;
+    }
+
+    .about-approach__stage:not(:last-child)::before {
+      display: none;
+    }
+
+    .about-approach__stage--up {
+      margin-top: 0;
+    }
+
+    .about-approach__stage--down {
+      margin-top: 1.75rem;
+    }
+
+    .about-approach__stage--down .about-approach__card {
+      order: -1;
+    }
+
+    .about-approach__stage--down .about-approach__node {
+      margin-top: 0.1rem;
+    }
+
+    .about-approach__card {
+      width: 100%;
+      min-height: 0;
+      border-radius: 1.35rem;
+      padding: 0.95rem 0.9rem 1.05rem;
+      text-align: left;
+    }
+
+    .about-approach__stage--up .about-approach__card,
+    .about-approach__stage--down .about-approach__card {
+      text-align: left;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .about-approach__track {
+      gap: 0.9rem;
+    }
+
+    .about-approach__card {
+      padding: 1rem 1rem 1.1rem;
+    }
+
+    .about-approach__stage--down {
+      margin-top: 2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-approach__intro,
+    .about-approach__stage {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .about-approach.is-inview .about-approach__intro {
+      animation: about-approach-rise 0.7s ease forwards;
+    }
+
+    .about-approach.is-inview .about-approach__stage {
+      animation: about-approach-rise 0.7s ease forwards;
+      animation-delay: calc(var(--stage-i) * 110ms + 180ms);
+    }
+
+    .about-approach.is-inview .about-approach__pulse {
+      animation: about-approach-pulse 2.4s ease-out infinite;
+      animation-delay: calc(var(--stage-i) * 120ms + 900ms);
+    }
+
+    .about-approach__nexus-ring--mid {
+      animation: about-approach-spin 36s linear infinite;
+    }
+
+    .about-approach__shape--ring {
+      animation: about-approach-drift-a 17s ease-in-out infinite;
+    }
+
+    .about-approach__shape--orb {
+      animation: about-approach-drift-b 19s ease-in-out infinite;
+    }
+
+    .about-approach__shape--diamond {
+      animation: about-approach-drift-c 15s ease-in-out infinite;
+    }
+
+    .about-approach__shape--line {
+      animation: about-approach-drift-a 21s ease-in-out infinite reverse;
+    }
+
+    .about-approach__shape--dot {
+      animation: about-approach-drift-b 13s ease-in-out infinite;
+    }
+
+    .about-approach__shape--pill {
+      animation: about-approach-drift-c 18s ease-in-out infinite reverse;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about-approach__intro,
+    .about-approach__stage,
+    .about-approach__path-fill {
+      opacity: 1;
+      transform: none;
+    }
+
+    .about-approach__stage:not(:last-child)::before {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes about-approach-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes about-approach-pulse {
+    0% {
+      opacity: 0.55;
+      transform: scale(0.92);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.45);
+    }
+  }
+
+  @keyframes about-approach-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes about-approach-drift-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(14px, -14px, 0);
+    }
+  }
+
+  @keyframes about-approach-drift-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-12px, 12px, 0);
+    }
+  }
+
+  @keyframes about-approach-drift-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--shape-rot, 0deg));
+    }
+    50% {
+      transform: translate3d(8px, -12px, 0) rotate(calc(var(--shape-rot, 0deg) + 10deg));
+    }
+  }
+</style>

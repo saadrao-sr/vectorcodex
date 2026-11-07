@@ -1,0 +1,37 @@
+---
+import type { ChildServiceLanding as ChildServiceLandingConfig } from '../../../config/service-children';
+import ChildServiceAudience from './ChildServiceAudience.astro';
+import ChildServiceCaseStudies from './ChildServiceCaseStudies.astro';
+import ChildServiceDeliverables from './ChildServiceDeliverables.astro';
+import ChildServiceFaq from './ChildServiceFaq.astro';
+import ChildServiceFinalCta from './ChildServiceFinalCta.astro';
+import ChildServiceFramework from './ChildServiceFramework.astro';
+import ChildServiceHero from './ChildServiceHero.astro';
+import ChildServiceIncludes from './ChildServiceIncludes.astro';
+import ChildServiceOutcomes from './ChildServiceOutcomes.astro';
+import ChildServiceProblems from './ChildServiceProblems.astro';
+import ChildServiceProcess from './ChildServiceProcess.astro';
+import ChildServiceRelated from './ChildServiceRelated.astro';
+
+interface Props {
+  service: ChildServiceLandingConfig;
+}
+
+const { service } = Astro.props;
+const sections = new Set(service.sectionOrder);
+---
+
+<div class="child-service-landing text-white">
+  {sections.has('hero') ? <ChildServiceHero service={service} /> : null}
+  {sections.has('problems') ? <ChildServiceProblems service={service} /> : null}
+  {sections.has('outcomes') ? <ChildServiceOutcomes service={service} /> : null}
+  {sections.has('includes') ? <ChildServiceIncludes service={service} /> : null}
+  {sections.has('framework') ? <ChildServiceFramework service={service} /> : null}
+  {sections.has('deliverables') ? <ChildServiceDeliverables service={service} /> : null}
+  {sections.has('audience') ? <ChildServiceAudience service={service} /> : null}
+  {sections.has('process') ? <ChildServiceProcess service={service} /> : null}
+  {sections.has('caseStudies') ? <ChildServiceCaseStudies service={service} /> : null}
+  {sections.has('faqs') ? <ChildServiceFaq service={service} /> : null}
+  {sections.has('related') ? <ChildServiceRelated service={service} /> : null}
+  {sections.has('finalCta') ? <ChildServiceFinalCta service={service} /> : null}
+</div>

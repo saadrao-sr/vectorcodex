@@ -1,0 +1,172 @@
+---
+import { ArrowRight } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+---
+
+<section
+  id="case-studies-final-cta"
+  class="case-studies-final-cta relative isolate overflow-hidden border-t border-white/10 bg-[#0D120C] py-8 sm:py-9 lg:py-10"
+  aria-labelledby="case-studies-final-cta-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="case-studies-final-cta__glow absolute top-1/2 left-1/2 h-[16rem] w-[16rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.16),transparent_68%)] blur-2xl sm:h-[20rem] sm:w-[20rem]"
+    >
+    </div>
+    <div
+      class="case-studies-final-cta__orb absolute top-[14%] left-[8%] h-24 w-24 rounded-full border border-highlight/15 bg-highlight/5"
+    >
+    </div>
+    <div
+      class="case-studies-final-cta__orb case-studies-final-cta__orb--delay absolute right-[10%] bottom-[16%] h-20 w-20 rotate-12 rounded-[1.25rem] border border-lime/20 bg-gradient-to-br from-lime/10 to-gold/5"
+    >
+    </div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/40 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-highlight/25 to-transparent"></div>
+
+    <svg
+      class="case-studies-final-cta__nodes absolute top-1/2 left-1/2 h-[16rem] w-[16rem] -translate-x-1/2 -translate-y-1/2 opacity-[0.16] sm:h-[20rem] sm:w-[20rem]"
+      viewBox="0 0 320 320"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M60 250 L120 180 L170 210 L230 110 L270 70" stroke="rgb(222 243 77)" stroke-width="1.2"></path>
+      <path d="M90 270 L140 200 L200 230 L250 150" stroke="rgb(222 243 77)" stroke-width="0.8" opacity="0.55"></path>
+      <circle cx="60" cy="250" r="4" fill="rgb(222 243 77)"></circle>
+      <circle cx="120" cy="180" r="5" fill="rgb(222 243 77)"></circle>
+      <circle cx="170" cy="210" r="4" fill="rgb(222 243 77)"></circle>
+      <circle cx="230" cy="110" r="6" fill="rgb(222 243 77)"></circle>
+      <circle cx="270" cy="70" r="5" fill="rgb(222 243 77)"></circle>
+      <circle cx="140" cy="200" r="3.5" fill="rgb(222 243 77)" opacity="0.7"></circle>
+      <circle cx="200" cy="230" r="3.5" fill="rgb(222 243 77)" opacity="0.7"></circle>
+      <circle cx="250" cy="150" r="3.5" fill="rgb(222 243 77)" opacity="0.7"></circle>
+    </svg>
+  </div>
+
+  <Container class="relative">
+    <div
+      class="case-studies-final-cta__panel relative mx-auto w-full max-w-5xl overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.03] px-5 py-7 text-center sm:rounded-[1.75rem] sm:px-8 sm:py-8 lg:max-w-[58rem] lg:px-10 lg:py-9"
+    >
+      <div
+        class="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/12 via-transparent to-transparent"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute -top-24 left-1/2 h-52 w-52 -translate-x-1/2 rounded-full bg-highlight/10 blur-3xl"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-highlight/35 to-transparent"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="relative">
+        <p class:list={[eyebrowClass, 'mx-auto w-fit max-w-full']}>Your Next Success Story Starts Here</p>
+
+        <h2
+          id="case-studies-final-cta-heading"
+          class="case-studies-final-cta__title mt-3 font-display text-[1.6rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-3xl lg:text-[2.25rem] lg:leading-[1.08]"
+        >
+          Ready to Make Your Business the
+          <span class="text-highlight"> Next Success Story?</span>
+        </h2>
+
+        <p
+          class="case-studies-final-cta__copy mx-auto mt-3 max-w-2xl text-sm leading-6 text-white/65 sm:leading-7"
+        >
+          We've explored what's possible through strategy, technology, and digital marketing. Now let's put the right
+          strategy behind your business and create results that move you forward.
+        </p>
+
+        <div class="case-studies-final-cta__actions mt-5 flex justify-center sm:mt-6">
+          <button
+            type="button"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'group w-full px-7 shadow-[0_16px_48px_rgb(197_246_61_/0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_56px_rgb(197_246_61_/0.28)] motion-reduce:transform-none sm:w-auto',
+            ]}
+            data-quote-open
+          >
+            Start Your Project
+            <ArrowRight
+              size={16}
+              aria-hidden="true"
+              className="transition duration-300 group-hover:translate-x-0.5"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .case-studies-final-cta__panel {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: case-studies-final-cta-rise 0.75s ease forwards;
+      animation-delay: 60ms;
+    }
+
+    .case-studies-final-cta__glow {
+      animation: case-studies-final-cta-pulse 7s ease-in-out infinite;
+    }
+
+    .case-studies-final-cta__orb {
+      animation: case-studies-final-cta-float 9s ease-in-out infinite;
+    }
+
+    .case-studies-final-cta__orb--delay {
+      animation-delay: -3.5s;
+    }
+
+    .case-studies-final-cta__nodes {
+      animation: case-studies-final-cta-drift 14s ease-in-out infinite;
+    }
+  }
+
+  @keyframes case-studies-final-cta-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes case-studies-final-cta-pulse {
+    0%,
+    100% {
+      opacity: 0.7;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+  }
+
+  @keyframes case-studies-final-cta-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes case-studies-final-cta-drift {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) translateY(0);
+    }
+    50% {
+      transform: translate(-50%, -50%) translateY(-8px);
+    }
+  }
+</style>

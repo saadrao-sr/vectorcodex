@@ -1,0 +1,119 @@
+---
+import type { ChildServiceLanding } from '../../../config/service-children';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  service: ChildServiceLanding;
+}
+
+const { service } = Astro.props;
+const { deliverables } = service;
+---
+
+<section
+  class="relative isolate border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+  aria-labelledby={`${service.slug}-deliverables-heading`}
+>
+  <Container class="relative">
+    <div class="child-deliverables">
+      <header class="child-deliverables__intro">
+        <p class:list={[eyebrowClass, 'w-fit max-w-full']}>{deliverables.eyebrow}</p>
+        <h2
+          id={`${service.slug}-deliverables-heading`}
+          class="mt-3 font-display text-[1.65rem] font-semibold tracking-tight text-balance sm:text-[2.1rem]"
+        >
+          {deliverables.titleBefore}
+          <span class="text-highlight"> {deliverables.titleHighlight}</span>
+        </h2>
+        <p class="mt-3 max-w-md text-sm leading-7 text-white/65 sm:text-base sm:leading-8">{deliverables.intro}</p>
+        <p class="mt-4 max-w-md rounded-xl border border-highlight/25 bg-highlight/5 px-3.5 py-3 text-xs leading-6 text-white/70">
+          {deliverables.scopeNote}
+        </p>
+      </header>
+
+      <ol class="child-deliverables__sheet">
+        {
+          deliverables.items.map((item, index) => (
+            <li>
+              <span class="child-deliverables__idx font-display" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3 class="font-display text-[0.95rem] font-semibold tracking-tight text-white">{item.title}</h3>
+              <p class="mt-1.5 text-sm leading-6 text-white/58">{item.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .child-deliverables {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 960px) {
+    .child-deliverables {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    .child-deliverables__intro {
+      position: sticky;
+      top: 6.5rem;
+    }
+  }
+
+  .child-deliverables__sheet {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .child-deliverables__sheet > li {
+    border: 1px solid rgb(255 255 255 / 0.11);
+    border-radius: 1rem;
+    background:
+      linear-gradient(165deg, rgb(255 255 255 / 0.04), transparent 40%),
+      rgb(13 18 12 / 0.4);
+    padding: 0.95rem 1rem 1rem;
+    transition:
+      border-color 0.22s ease,
+      background-color 0.22s ease,
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+
+  .child-deliverables__sheet > li:hover {
+    border-color: rgb(222 243 77 / 0.42);
+    background:
+      linear-gradient(165deg, rgb(222 243 77 / 0.08), transparent 42%),
+      rgb(255 255 255 / 0.04);
+    box-shadow: 0 14px 36px rgb(0 0 0 / 0.26);
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .child-deliverables__sheet > li,
+    .child-deliverables__sheet > li:hover {
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+      transform: none;
+    }
+  }
+
+  .child-deliverables__idx {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgb(222 243 77 / 0.75);
+  }
+</style>

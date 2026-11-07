@@ -1,0 +1,139 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import type { LocationOffice } from '../../config/locations';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+import LocationAmbientBg from './LocationAmbientBg.astro';
+import LocationMapVisual from './LocationMapVisual.astro';
+
+interface Props {
+  location: LocationOffice;
+}
+
+const { location } = Astro.props;
+
+const eyebrowLocation = location.locationLabel.toUpperCase();
+---
+
+<section
+  id="location-hero"
+  class="location-hero relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] pt-6 pb-10 sm:pt-8 sm:pb-12 lg:pt-10 lg:pb-14"
+  aria-labelledby="location-hero-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <LocationAmbientBg variant="a" />
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/30 to-transparent"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="location-hero__layout">
+      <div class="location-hero__copy min-w-0">
+        <p class:list={[eyebrowClass, 'location-hero__eyebrow w-fit max-w-full']}>
+          Digital Growth in {eyebrowLocation}
+        </p>
+
+        <h1
+          id="location-hero-heading"
+          class="location-hero__title mt-3 font-display text-[1.7rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.15rem] sm:leading-[1.08] md:text-[2.35rem] lg:text-[2.55rem] lg:leading-[1.05]"
+        >
+          Helping Businesses in
+          <span class="text-highlight"> {location.locationLabel} </span>
+          Grow Through Digital Excellence.
+        </h1>
+
+        <p class="location-hero__lede mt-3 text-sm leading-7 text-white/65 sm:mt-4 sm:text-[0.95rem] sm:leading-7">
+          {location.heroDescription}
+        </p>
+
+        <div class="location-hero__actions mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <button
+            type="button"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto',
+            ]}
+            data-quote-open
+          >
+            Discuss Your Project
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </button>
+          <a href="/services/" class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}>
+            Explore Our Services
+          </a>
+        </div>
+      </div>
+
+      <div class="location-hero__visual min-w-0">
+        <LocationMapVisual mapId={location.mapId} visualLabel={location.visualLabel} />
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .location-hero__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.35rem;
+    align-items: center;
+  }
+
+  @media (min-width: 960px) {
+    .location-hero__layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+      gap: 1.75rem;
+      align-items: center;
+    }
+
+    .location-hero__copy {
+      max-width: 34rem;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .location-hero__layout {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .location-hero__eyebrow,
+    .location-hero__title,
+    .location-hero__lede,
+    .location-hero__actions,
+    .location-hero__visual {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: location-hero-rise 0.7s ease forwards;
+    }
+
+    .location-hero__eyebrow {
+      animation-delay: 40ms;
+    }
+
+    .location-hero__title {
+      animation-delay: 100ms;
+    }
+
+    .location-hero__lede {
+      animation-delay: 160ms;
+    }
+
+    .location-hero__actions {
+      animation-delay: 210ms;
+    }
+
+    .location-hero__visual {
+      animation-delay: 140ms;
+    }
+  }
+
+  @keyframes location-hero-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

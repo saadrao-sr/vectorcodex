@@ -1,0 +1,536 @@
+---
+import { ArrowDown, ArrowUpRight, Clock3, Mail } from 'lucide-react';
+import { site } from '../../config/site';
+import Container from '../ui/Container.astro';
+import { buttonClass, eyebrowClass } from '../ui/styles';
+
+const highlights = [
+  site.email
+    ? {
+        label: 'Email',
+        value: site.email,
+        href: `mailto:${site.email}`,
+        Icon: Mail,
+      }
+    : null,
+  {
+    label: 'Availability',
+    value: "Let's discuss your next project",
+    href: null,
+    Icon: Clock3,
+  },
+].filter(Boolean) as {
+  label: string;
+  value: string;
+  href: string | null;
+  Icon: typeof Mail;
+}[];
+---
+
+<section
+  id="contact-hero"
+  class="contact-hero relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] pt-8 pb-12 sm:pt-10 sm:pb-14 lg:pt-12 lg:pb-16"
+  aria-labelledby="contact-hero-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div
+      class="absolute top-10 left-[8%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.1),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute right-[4%] bottom-8 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.07),transparent_70%)] blur-3xl"
+    >
+    </div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/30 to-transparent"></div>
+  </div>
+
+  <Container class="relative">
+    <div class="contact-hero__layout">
+      <div class="contact-hero__copy min-w-0">
+        <p class:list={[eyebrowClass, 'contact-hero__eyebrow w-fit max-w-full']}>Let's Start a Conversation</p>
+
+        <h1
+          id="contact-hero-heading"
+          class="contact-hero__title mt-4 max-w-xl font-display text-[1.85rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-4xl sm:leading-[1.08] md:text-[2.45rem] lg:text-[3rem] lg:leading-[1.05]"
+        >
+          Let's Talk About
+          <span class="block text-highlight">Growing Your Business.</span>
+        </h1>
+
+        <p
+          class="contact-hero__lede mt-4 max-w-lg text-sm leading-7 text-white/65 sm:mt-5 sm:text-base sm:leading-7 lg:text-[1.0625rem] lg:leading-8"
+        >
+          Have a project in mind, looking for a digital partner, or simply exploring new opportunities? We'd love to hear
+          from you. Tell us about your goals, and let's find the right way to move your business forward.
+        </p>
+
+        <div class="contact-hero__actions mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:flex-wrap">
+          <a
+            href="#contact-form"
+            class:list={[
+              buttonClass.base,
+              buttonClass.gradient,
+              'w-full shadow-[0_14px_40px_rgb(197_246_61_/0.18)] sm:w-auto',
+            ]}
+          >
+            Start a Conversation
+            <ArrowDown size={16} aria-hidden="true" />
+          </a>
+          <a
+            href="/services/"
+            class:list={[buttonClass.base, buttonClass.ghost, 'w-full sm:w-auto']}
+          >
+            Explore Our Services
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+        </div>
+
+        {
+          highlights.length > 0 && (
+            <ul class="contact-hero__highlights mt-8 grid gap-3 sm:mt-9 sm:grid-cols-2">
+              {highlights.map((item, index) => {
+                const Icon = item.Icon;
+                const Tag = item.href ? 'a' : 'div';
+                return (
+                  <li style={`--contact-i: ${index}`}>
+                    <Tag
+                      href={item.href ?? undefined}
+                      class="group flex h-full items-start gap-3 rounded-[1.25rem] border border-white/12 bg-white/[0.03] p-4 transition duration-300 hover:border-highlight/35"
+                    >
+                      <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-highlight/25 bg-highlight/10 text-highlight">
+                        <Icon size={18} aria-hidden="true" />
+                      </span>
+                      <span class="min-w-0">
+                        <span class="block text-[0.65rem] font-semibold tracking-[0.14em] text-white/40 uppercase">
+                          {item.label}
+                        </span>
+                        <span class="mt-1 block text-sm leading-6 font-semibold text-white transition group-hover:text-highlight">
+                          {item.value}
+                        </span>
+                      </span>
+                    </Tag>
+                  </li>
+                );
+              })}
+            </ul>
+          )
+        }
+      </div>
+
+      <div class="contact-hero__visual" aria-hidden="true">
+        <div class="contact-hero__stage">
+          <div class="contact-hero__glow"></div>
+
+          <article class="contact-hero__card contact-hero__card--back">
+            <div class="contact-hero__card-top">
+              <span class="contact-hero__dot"></span>
+              <span class="contact-hero__dot"></span>
+              <span class="contact-hero__dot"></span>
+              <span class="contact-hero__chip">Enquiry</span>
+            </div>
+            <div class="contact-hero__card-body">
+              <span class="contact-hero__line contact-hero__line--wide"></span>
+              <span class="contact-hero__line"></span>
+              <span class="contact-hero__line contact-hero__line--short"></span>
+              <span class="contact-hero__field"></span>
+              <span class="contact-hero__field contact-hero__field--tall"></span>
+            </div>
+          </article>
+
+          <article class="contact-hero__card contact-hero__card--mid">
+            <div class="contact-hero__msg">
+              <span class="contact-hero__avatar"></span>
+              <span class="contact-hero__bubble">
+                <span class="contact-hero__line contact-hero__line--wide"></span>
+                <span class="contact-hero__line contact-hero__line--short"></span>
+              </span>
+            </div>
+            <div class="contact-hero__msg contact-hero__msg--reply">
+              <span class="contact-hero__bubble contact-hero__bubble--reply">
+                <span class="contact-hero__line contact-hero__line--wide"></span>
+                <span class="contact-hero__line"></span>
+              </span>
+              <span class="contact-hero__avatar contact-hero__avatar--lime"></span>
+            </div>
+          </article>
+
+          <article class="contact-hero__card contact-hero__card--front">
+            <div class="contact-hero__card-top">
+              <span class="contact-hero__chip">New message</span>
+            </div>
+            <p class="contact-hero__preview-title">Project enquiry</p>
+            <p class="contact-hero__preview-text">Share your goals and we'll outline the next step.</p>
+            <span class="contact-hero__cta-bar"></span>
+          </article>
+
+          <span class="contact-hero__accent contact-hero__accent--ring"></span>
+          <span class="contact-hero__accent contact-hero__accent--square"></span>
+          <span class="contact-hero__accent contact-hero__accent--dot"></span>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .contact-hero__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.25rem;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .contact-hero__layout {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .contact-hero__layout {
+      gap: 3.25rem;
+    }
+  }
+
+  .contact-hero__visual {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .contact-hero__stage {
+    position: relative;
+    min-height: 19rem;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .contact-hero__stage {
+      min-height: 22rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .contact-hero__stage {
+      min-height: 24rem;
+    }
+  }
+
+  .contact-hero__glow {
+    position: absolute;
+    inset: 10% 8% 8% 12%;
+    border-radius: 2rem;
+    background: radial-gradient(circle at 55% 40%, rgb(222 243 77 / 0.16), transparent 62%);
+    filter: blur(18px);
+  }
+
+  .contact-hero__card {
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: 1.15rem;
+    background: rgb(13 18 12 / 0.9);
+    box-shadow: 0 22px 50px rgb(0 0 0 / 0.35);
+  }
+
+  .contact-hero__card--back {
+    top: 4%;
+    left: 0;
+    width: 72%;
+    transform: rotate(-4deg);
+    opacity: 0.72;
+  }
+
+  .contact-hero__card--mid {
+    top: 22%;
+    right: 0;
+    width: 68%;
+    padding: 1rem;
+    transform: rotate(3.5deg);
+    opacity: 0.9;
+  }
+
+  .contact-hero__card--front {
+    right: 10%;
+    bottom: 0;
+    width: 74%;
+    padding: 1rem 1.1rem 1.15rem;
+    transform: rotate(-1deg);
+  }
+
+  .contact-hero__card-top {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    background: rgb(255 255 255 / 0.03);
+    padding: 0.55rem 0.75rem;
+  }
+
+  .contact-hero__card--front .contact-hero__card-top {
+    border-bottom: 0;
+    background: transparent;
+    padding: 0 0 0.65rem;
+  }
+
+  .contact-hero__dot {
+    height: 0.4rem;
+    width: 0.4rem;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.22);
+  }
+
+  .contact-hero__dot:first-child {
+    background: rgb(222 243 77 / 0.75);
+  }
+
+  .contact-hero__chip {
+    margin-left: auto;
+    border: 1px solid rgb(222 243 77 / 0.28);
+    border-radius: 9999px;
+    background: rgb(222 243 77 / 0.08);
+    padding: 0.15rem 0.55rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #def34d;
+  }
+
+  .contact-hero__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.9rem;
+  }
+
+  .contact-hero__line {
+    display: block;
+    height: 0.35rem;
+    width: 48%;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.16);
+  }
+
+  .contact-hero__line--wide {
+    width: 72%;
+    background: rgb(222 243 77 / 0.35);
+  }
+
+  .contact-hero__line--short {
+    width: 34%;
+  }
+
+  .contact-hero__field {
+    display: block;
+    height: 1.6rem;
+    width: 100%;
+    border-radius: 0.55rem;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: rgb(255 255 255 / 0.03);
+  }
+
+  .contact-hero__field--tall {
+    height: 3.2rem;
+  }
+
+  .contact-hero__msg {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+  }
+
+  .contact-hero__msg + .contact-hero__msg {
+    margin-top: 0.75rem;
+  }
+
+  .contact-hero__msg--reply {
+    justify-content: flex-end;
+  }
+
+  .contact-hero__avatar {
+    height: 1.7rem;
+    width: 1.7rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    background: rgb(255 255 255 / 0.08);
+  }
+
+  .contact-hero__avatar--lime {
+    border-color: rgb(222 243 77 / 0.35);
+    background: rgb(222 243 77 / 0.2);
+  }
+
+  .contact-hero__bubble {
+    min-width: 0;
+    flex: 1;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 0.9rem;
+    background: rgb(255 255 255 / 0.04);
+    padding: 0.65rem 0.75rem;
+  }
+
+  .contact-hero__bubble--reply {
+    flex: 0 1 78%;
+    border-color: rgb(222 243 77 / 0.22);
+    background: rgb(222 243 77 / 0.08);
+  }
+
+  .contact-hero__preview-title {
+    margin: 0;
+    font-family: var(--font-display, inherit);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .contact-hero__preview-text {
+    margin: 0.45rem 0 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  .contact-hero__cta-bar {
+    display: block;
+    margin-top: 0.9rem;
+    height: 2.2rem;
+    width: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #c5f63d, #f6ef5c);
+  }
+
+  .contact-hero__accent {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .contact-hero__accent--ring {
+    top: 2%;
+    right: 8%;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1.5px solid rgb(222 243 77 / 0.35);
+    border-radius: 9999px;
+  }
+
+  .contact-hero__accent--square {
+    bottom: 14%;
+    left: 2%;
+    width: 1.9rem;
+    height: 1.9rem;
+    border: 1.5px solid rgb(222 243 77 / 0.3);
+    border-radius: 0.45rem;
+    transform: rotate(18deg);
+  }
+
+  .contact-hero__accent--dot {
+    top: 48%;
+    right: 3%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: #def34d;
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .contact-hero__eyebrow,
+    .contact-hero__title,
+    .contact-hero__lede,
+    .contact-hero__actions,
+    .contact-hero__highlights > li {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: contact-hero-rise 0.7s ease forwards;
+    }
+
+    .contact-hero__eyebrow {
+      animation-delay: 40ms;
+    }
+
+    .contact-hero__title {
+      animation-delay: 100ms;
+    }
+
+    .contact-hero__lede {
+      animation-delay: 160ms;
+    }
+
+    .contact-hero__actions {
+      animation-delay: 220ms;
+    }
+
+    .contact-hero__highlights > li {
+      animation-delay: calc(280ms + var(--contact-i, 0) * 70ms);
+    }
+
+    .contact-hero__card--back {
+      animation: contact-hero-float-a 9s ease-in-out infinite;
+    }
+
+    .contact-hero__card--mid {
+      animation: contact-hero-float-b 10s ease-in-out infinite;
+    }
+
+    .contact-hero__card--front {
+      animation: contact-hero-float-c 8s ease-in-out infinite;
+    }
+
+    .contact-hero__accent--ring {
+      animation: contact-hero-drift 14s ease-in-out infinite;
+    }
+
+    .contact-hero__accent--square {
+      animation: contact-hero-drift 12s ease-in-out infinite reverse;
+    }
+  }
+
+  @keyframes contact-hero-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes contact-hero-float-a {
+    0%,
+    100% {
+      transform: rotate(-4deg) translate3d(0, 0, 0);
+    }
+    50% {
+      transform: rotate(-4deg) translate3d(0, -8px, 0);
+    }
+  }
+
+  @keyframes contact-hero-float-b {
+    0%,
+    100% {
+      transform: rotate(3.5deg) translate3d(0, 0, 0);
+    }
+    50% {
+      transform: rotate(3.5deg) translate3d(0, 10px, 0);
+    }
+  }
+
+  @keyframes contact-hero-float-c {
+    0%,
+    100% {
+      transform: rotate(-1deg) translate3d(0, 0, 0);
+    }
+    50% {
+      transform: rotate(-1deg) translate3d(0, -6px, 0);
+    }
+  }
+
+  @keyframes contact-hero-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(6px, -8px, 0);
+    }
+  }
+</style>

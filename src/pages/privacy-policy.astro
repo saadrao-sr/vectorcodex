@@ -1,0 +1,495 @@
+---
+import LegalToc from '../components/interactive/LegalToc';
+import PageCrumbBand from '../components/sections/PageCrumbBand.astro';
+import Container from '../components/ui/Container.astro';
+import { eyebrowClass } from '../components/ui/styles';
+import { legalPlaceholders, privacyPolicyMeta, privacyPolicyToc } from '../config/legal';
+import { site } from '../config/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
+
+const title = privacyPolicyMeta.seoTitle;
+const description = privacyPolicyMeta.seoDescription;
+const path = privacyPolicyMeta.path;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Privacy Policy', href: path },
+];
+
+const sectionClass = 'privacy-section scroll-mt-32 border-t border-white/10 pt-8 sm:pt-10';
+const headingClass = 'font-display text-xl font-semibold tracking-tight text-white sm:text-2xl';
+const bodyClass = 'mt-3 text-sm leading-7 text-white/70 sm:text-[0.95rem] sm:leading-8';
+const listClass = 'mt-4 list-disc space-y-2 pl-5 text-sm leading-7 text-white/70 sm:text-[0.95rem] sm:leading-8';
+const placeholderClass = 'rounded-md bg-white/[0.04] px-1.5 py-0.5 font-medium text-white/80';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  modifiedAt={privacyPolicyMeta.lastUpdatedIso}
+  schema={[
+    webPageSchema({ title, description, path }),
+    breadcrumbSchema(crumbs),
+  ]}
+>
+  <PageCrumbBand title="Privacy Policy" crumbs={crumbs} />
+
+  <section class="relative isolate overflow-x-clip border-b border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14" aria-labelledby="privacy-hero-heading">
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div class="absolute top-16 left-[12%] h-52 w-52 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-3xl"></div>
+      <div class="absolute right-[10%] bottom-8 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"></div>
+    </div>
+    <Container class="relative">
+      <p class:list={[eyebrowClass, 'w-fit max-w-full']}>Legal Information</p>
+      <h1
+        id="privacy-hero-heading"
+        class="mt-3 max-w-3xl font-display text-[1.85rem] leading-[1.1] font-semibold tracking-tight text-balance text-white sm:text-[2.5rem] lg:text-[3rem] lg:leading-[1.06]"
+      >
+        Privacy Policy
+      </h1>
+      <p class="mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base sm:leading-8">
+        This Privacy Policy explains how VectorCodex collects, uses, stores, and protects personal information when you
+        browse this website, submit an enquiry, or otherwise contact us through the channels published here.
+      </p>
+      <p class="mt-5 inline-flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-white/55">
+        <span class="rounded-full border border-white/12 bg-white/[0.03] px-3 py-1.5">
+          Last updated:
+          <time class="ml-1 font-medium text-highlight" datetime={privacyPolicyMeta.lastUpdatedIso}>
+            {privacyPolicyMeta.lastUpdatedDisplay}
+          </time>
+        </span>
+      </p>
+    </Container>
+  </section>
+
+  <section class="relative isolate overflow-x-clip bg-[#0D120C] py-10 sm:py-12 lg:py-14">
+    <Container>
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,15.5rem)_minmax(0,1fr)] lg:gap-12 xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]">
+        <aside class="privacy-toc-shell lg:sticky lg:top-28 lg:self-start">
+          <div class="rounded-[1.35rem] border border-white/12 bg-white/[0.03] p-4 sm:p-5">
+            <LegalToc client:load items={privacyPolicyToc} />
+          </div>
+          <a
+            href="#main"
+            class="mt-4 hidden text-sm font-medium text-white/55 transition hover:text-highlight lg:inline-flex"
+          >
+            Back to top
+          </a>
+        </aside>
+
+        <article class="min-w-0" aria-label="Privacy policy">
+          <section id="introduction" class:list={[sectionClass, 'border-t-0 pt-0 sm:pt-0']}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">01 · Introduction</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Introduction</h2>
+            <p class={bodyClass}>
+              VectorCodex respects your privacy. This notice describes the personal data we process in connection with
+              the VectorCodex website and the enquiries submitted through it. It is written with UK GDPR and the Data
+              Protection Act 2018 in mind for a UK-facing audience.
+            </p>
+            <p class={bodyClass}>
+              This policy covers website browsing, forms, and ordinary hosting logs. It does not replace a separate client
+              contract, proposal, or data processing agreement that may apply once a project is agreed in writing.
+            </p>
+            <p class={bodyClass}>
+              Where this page uses clearly marked placeholders, VectorCodex has not yet published a confirmed company
+              registration detail, registered office, dedicated privacy mailbox, or formal jurisdiction statement. Until
+              those details are confirmed, use the <a href={privacyPolicyMeta.contactPath} class="text-highlight underline-offset-4 hover:underline">contact page</a>
+              {
+                site.email ? (
+                  <span>
+                    {' '}
+                    or{' '}
+                    <a href={`mailto:${site.email}`} class="text-highlight underline-offset-4 hover:underline">
+                      {site.email}
+                    </a>
+                  </span>
+                ) : (
+                  <span> or the published enquiry channels</span>
+                )
+              }
+              {' '}for privacy questions.
+            </p>
+          </section>
+
+          <section id="who-we-are" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">02 · Who We Are</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Who We Are</h2>
+            <p class={bodyClass}>
+              This website is operated by <strong class="font-semibold text-white">VectorCodex</strong>, a UK-focused
+              digital agency offering SEO, web development, social media marketing, and related digital services.
+            </p>
+            <p class={bodyClass}>For data protection purposes, the intended data controller is:</p>
+            <ul class={listClass}>
+              <li>
+                Legal entity:
+                <span class={placeholderClass}>{legalPlaceholders.legalEntityName.value}</span>
+              </li>
+              <li>
+                Company number:
+                <span class={placeholderClass}>{legalPlaceholders.companyNumber.value}</span>
+              </li>
+              <li>
+                Registered office:
+                <span class={placeholderClass}>{legalPlaceholders.registeredOffice.value}</span>
+              </li>
+              <li>
+                ICO registration:
+                <span class={placeholderClass}>{legalPlaceholders.icoRegistration.value}</span>
+              </li>
+            </ul>
+            <p class={bodyClass}>
+              Until those controller details are confirmed and published, treat VectorCodex as the operator of this
+              website and send privacy requests through the channels listed in
+              <a href="#contact-us" class="text-highlight underline-offset-4 hover:underline"> Contact Us</a>.
+            </p>
+          </section>
+
+          <section id="information-we-collect" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">03 · Information We Collect</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Information We Collect</h2>
+            <p class={bodyClass}>
+              We collect personal information that you choose to provide, mainly when you submit a form or start a
+              conversation with us. Depending on the form used, that may include:
+            </p>
+            <ul class={listClass}>
+              <li>Name</li>
+              <li>Email address</li>
+              <li>Phone number</li>
+              <li>Company or organisation name</li>
+              <li>Website URL, where you provide one</li>
+              <li>Service interest, budget range, timeline, or project details</li>
+              <li>Message content and any other information you include in an enquiry</li>
+            </ul>
+            <p class={bodyClass}>
+              We only ask for details needed to understand your request and respond. You do not have to provide optional
+              fields. If you contact us by email or WhatsApp using the details published on this site, we will process
+              the information you send through that channel as well.
+            </p>
+          </section>
+
+          <section id="automatically-collected" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">04 · Automatically Collected Information</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Automatically Collected Information</h2>
+            <p class={bodyClass}>
+              When you visit the website, our hosting environment may automatically process technical data needed to
+              deliver pages securely. That can include:
+            </p>
+            <ul class={listClass}>
+              <li>IP address</li>
+              <li>Browser type and version</li>
+              <li>Device and operating-system information</li>
+              <li>Date and time of the request</li>
+              <li>Pages or files requested, and basic server response information</li>
+              <li>Referring URL, where provided by your browser</li>
+            </ul>
+            <p class={bodyClass}>
+              This technical information is used for availability, security, troubleshooting, and ordinary website
+              operation. It is not used in this build to create advertising profiles.
+            </p>
+          </section>
+
+          <section id="how-we-use" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">05 · How We Use Your Information</p>
+            <h2 class:list={[headingClass, 'mt-2']}>How We Use Your Information</h2>
+            <p class={bodyClass}>We use personal information to:</p>
+            <ul class={listClass}>
+              <li>Respond to enquiries and schedule follow-up conversations</li>
+              <li>Understand project needs and prepare proposals or scoped next steps</li>
+              <li>Deliver services once an engagement is agreed</li>
+              <li>Operate, maintain, and improve the website</li>
+              <li>Protect the site against misuse, spam, and security incidents</li>
+              <li>
+                Send service-related messages about your enquiry or project
+              </li>
+              <li>
+                Send marketing communications only where the law allows and, where required, you have given consent or
+                have a clear opportunity to opt out
+              </li>
+              <li>Meet legal, accounting, or regulatory obligations that apply to us</li>
+            </ul>
+            <p class={bodyClass}>
+              We do not sell your personal information. We do not use enquiry details to make automated decisions that
+              produce legal or similarly significant effects about you.
+            </p>
+          </section>
+
+          <section id="lawful-bases" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">06 · Lawful Bases for Processing</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Lawful Bases for Processing</h2>
+            <p class={bodyClass}>
+              Under UK GDPR, we process personal data only where a lawful basis applies. Depending on the activity, that
+              may include:
+            </p>
+            <ul class={listClass}>
+              <li>
+                <strong class="font-semibold text-white">Consent</strong> — for example, where you opt in to optional
+                marketing, or where a non-essential cookie would require consent if introduced later.
+              </li>
+              <li>
+                <strong class="font-semibold text-white">Contractual necessity / steps prior to a contract</strong> —
+                handling an enquiry, preparing a proposal, or delivering agreed services.
+              </li>
+              <li>
+                <strong class="font-semibold text-white">Legitimate interests</strong> — operating a secure website,
+                responding to business enquiries, keeping a reasonable record of conversations, and improving the site,
+                balanced against your rights and expectations.
+              </li>
+              <li>
+                <strong class="font-semibold text-white">Legal obligation</strong> — retaining or disclosing information
+                where the law requires it.
+              </li>
+            </ul>
+            <p class={bodyClass}>
+              Consent is not required for every processing activity. Where we rely on legitimate interests, you can
+              object in the circumstances described under Your Privacy Rights. Where we rely on consent, you can withdraw
+              it at any time without affecting processing that already took place lawfully.
+            </p>
+          </section>
+
+          <section id="cookies" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">07 · Cookies and Tracking Technologies</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Cookies and Tracking Technologies</h2>
+            <p class={bodyClass}>
+              Cookies and similar technologies can be essential to run a site, or used for analytics and marketing. On
+              this website today:
+            </p>
+            <ul class={listClass}>
+              <li>
+                <strong class="font-semibold text-white">Essential / technical storage</strong> — the site may rely on
+                storage required for secure delivery, basic functionality, or form anti-spam checks. These are limited to
+                what is needed to operate the page.
+              </li>
+              <li>
+                <strong class="font-semibold text-white">Analytics cookies</strong> — not used in the current build. We do
+                not currently load Google Analytics or similar analytics tags on this website.
+              </li>
+              <li>
+                <strong class="font-semibold text-white">Marketing / advertising cookies</strong> — not used in the
+                current build. We do not currently load Meta Pixel or similar advertising pixels on this website.
+              </li>
+            </ul>
+            <p class={bodyClass}>
+              Cookie preferences are separate from your broader privacy rights. Because non-essential analytics and
+              marketing cookies are not active in this build, there is currently no cookie-preference banner for optional
+              tracking categories. If that changes, we will update this Privacy Policy before introducing those
+              technologies, and obtain consent where required.
+            </p>
+            <p class={bodyClass}>
+              Your browser settings can also block or delete cookies. Blocking essential storage may affect how some
+              parts of the site work.
+            </p>
+          </section>
+
+          <section id="sharing" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">08 · Sharing Your Information</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Sharing Your Information</h2>
+            <p class={bodyClass}>
+              We share personal information only where needed to run the website, respond to you, or meet a legal duty.
+              Recipients may include:
+            </p>
+            <ul class={listClass}>
+              <li>
+                Website hosting and infrastructure providers that deliver the site and related server logs
+              </li>
+              <li>
+                Form or inbox endpoint providers, if a contact form is connected to an external submission endpoint
+              </li>
+              <li>
+                Professional advisers, such as legal or accounting advisers, where reasonably required
+              </li>
+              <li>
+                Authorities or other parties where disclosure is required by law
+              </li>
+            </ul>
+            <p class={bodyClass}>
+              We do not claim use of a named CRM, email marketing platform, analytics suite, or advertising pixel unless
+              and until that tool is actually configured on this website. If a processor is added later, this section
+              will be updated with the relevant categories of recipient.
+            </p>
+            <p class={bodyClass}>
+              Service providers who process personal data for us are expected to do so on our instructions and with
+              appropriate confidentiality and security obligations.
+            </p>
+          </section>
+
+          <section id="international-transfers" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">09 · International Data Transfers</p>
+            <h2 class:list={[headingClass, 'mt-2']}>International Data Transfers</h2>
+            <p class={bodyClass}>
+              VectorCodex serves UK and international audiences, and some infrastructure providers may process data in
+              more than one country. Where personal data is transferred outside the UK, we take steps to ensure an
+              appropriate safeguard is in place — for example, a UK adequacy decision, or a transfer tool recognised under
+              UK data protection law such as the UK International Data Transfer Agreement or Addendum, where required.
+            </p>
+            <p class={bodyClass}>
+              The exact hosting locations and transfer mechanisms depend on the production host and any connected form
+              endpoint. Those details will be confirmed when the production stack is finalised.
+            </p>
+          </section>
+
+          <section id="retention" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">10 · Data Retention</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Data Retention</h2>
+            <p class={bodyClass}>
+              We keep personal information only for as long as needed for the purpose it was collected, including any
+              legal, accounting, or dispute-resolution requirements.
+            </p>
+            <ul class={listClass}>
+              <li>
+                Enquiry and proposal correspondence is kept while we respond and for a reasonable follow-up period
+                afterwards.
+              </li>
+              <li>
+                Client project records are retained according to the engagement and applicable legal retention needs.
+              </li>
+              <li>
+                Server and security logs are typically kept for a short operational period set by the host, unless a
+                longer period is needed to investigate an incident.
+              </li>
+            </ul>
+            <p class={bodyClass}>
+              Exact retention periods for each category will be confirmed with the contracting entity. When information
+              is no longer required, we delete it or irreversibly anonymise it where practicable.
+            </p>
+          </section>
+
+          <section id="security" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">11 · Data Security</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Data Security</h2>
+            <p class={bodyClass}>
+              We use reasonable technical and organisational measures appropriate to the nature of the information we
+              process. Depending on the systems in use, that may include HTTPS transport, access controls, hosting
+              provider security features, and internal handling practices for enquiry data.
+            </p>
+            <p class={bodyClass}>
+              No method of transmission or storage is completely secure. We cannot guarantee absolute security of
+              information sent over the internet. Please use care when sharing sensitive details by email or form.
+            </p>
+          </section>
+
+          <section id="your-rights" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">12 · Your Privacy Rights</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Your Privacy Rights</h2>
+            <p class={bodyClass}>
+              If UK GDPR applies to you, you may have the following rights in relation to your personal data:
+            </p>
+            <ul class={listClass}>
+              <li><strong class="font-semibold text-white">Access</strong> — request a copy of personal data we hold about you</li>
+              <li><strong class="font-semibold text-white">Rectification</strong> — ask us to correct inaccurate or incomplete data</li>
+              <li><strong class="font-semibold text-white">Erasure</strong> — ask us to delete personal data in certain circumstances</li>
+              <li><strong class="font-semibold text-white">Restriction</strong> — ask us to limit how we use your data in certain circumstances</li>
+              <li><strong class="font-semibold text-white">Objection</strong> — object to processing based on legitimate interests, and to direct marketing</li>
+              <li><strong class="font-semibold text-white">Portability</strong> — receive certain data in a structured, commonly used format where the right applies</li>
+              <li><strong class="font-semibold text-white">Withdraw consent</strong> — where processing is based on consent, withdraw it at any time</li>
+            </ul>
+            <p class={bodyClass}>
+              These privacy rights are distinct from browser cookie controls. Cookie settings manage optional tracking
+              technologies in your browser; privacy rights relate to personal data we process as a controller.
+            </p>
+            <p class={bodyClass}>
+              To exercise a right, contact us using the details in
+              <a href="#contact-us" class="text-highlight underline-offset-4 hover:underline"> Contact Us</a>. We may need
+              to verify your identity before responding. You also have the right to complain to the
+              <a href="https://ico.org.uk/" target="_blank" rel="noopener noreferrer" class="text-highlight underline-offset-4 hover:underline"> Information Commissioner’s Office (ICO)</a>.
+            </p>
+          </section>
+
+          <section id="third-party-websites" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">13 · Third-Party Websites</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Third-Party Websites</h2>
+            <p class={bodyClass}>
+              This website may link to external sites, including social platforms or partner resources. Those websites
+              are outside our control and have their own privacy practices. This Privacy Policy does not cover how
+              third parties handle your information. Review their policies before providing personal data to them.
+            </p>
+          </section>
+
+          <section id="children" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">14 · Children&apos;s Privacy</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Children&apos;s Privacy</h2>
+            <p class={bodyClass}>
+              The VectorCodex website and services are directed at businesses and professional contacts. We do not
+              knowingly collect personal data from children. If you believe a child has provided personal information to
+              us, please contact us so we can delete it where appropriate.
+            </p>
+          </section>
+
+          <section id="changes" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">15 · Changes to This Privacy Policy</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Changes to This Privacy Policy</h2>
+            <p class={bodyClass}>
+              We may update this Privacy Policy when our practices, tools, or legal requirements change. The
+              “Last updated” date at the top of this page shows the latest revision. Material changes will be published
+              on this page. Continued use of the website after an update means you should review the revised notice.
+            </p>
+          </section>
+
+          <section id="contact-us" class={sectionClass}>
+            <p class="text-[0.65rem] font-semibold tracking-[0.16em] text-highlight uppercase">16 · Contact Us</p>
+            <h2 class:list={[headingClass, 'mt-2']}>Contact Us</h2>
+            <p class={bodyClass}>
+              For privacy-related questions, requests to exercise your rights, or concerns about how we handle personal
+              information, contact VectorCodex using:
+            </p>
+            <ul class={listClass}>
+              <li>
+                Contact page:
+                <a href={privacyPolicyMeta.contactPath} class="text-highlight underline-offset-4 hover:underline">
+                  {privacyPolicyMeta.contactPath}
+                </a>
+              </li>
+              {
+                site.email && (
+                  <li>
+                    Public enquiry email:
+                    <a href={`mailto:${site.email}`} class="text-highlight underline-offset-4 hover:underline">
+                      {site.email}
+                    </a>
+                  </li>
+                )
+              }
+              <li>
+                Dedicated privacy email:
+                <span class={placeholderClass}>{legalPlaceholders.privacyEmail.value}</span>
+              </li>
+              <li>
+                Postal / registered address:
+                <span class={placeholderClass}>{legalPlaceholders.registeredOffice.value}</span>
+              </li>
+            </ul>
+            <p class={bodyClass}>
+              Governing law / jurisdiction for this notice:
+              <span class={placeholderClass}>{legalPlaceholders.governingLaw.value}</span>. Until confirmed, this website
+              is operated for a UK-facing audience and privacy requests should be handled under UK data protection
+              standards as far as practicable.
+            </p>
+          </section>
+
+          <div class="mt-10 flex flex-wrap items-center gap-4 border-t border-white/10 pt-8">
+            <a
+              href="#main"
+              class="inline-flex items-center rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-sm font-medium text-white/80 transition hover:border-highlight/40 hover:text-highlight"
+            >
+              Back to top
+            </a>
+            <a
+              href={privacyPolicyMeta.contactPath}
+              class="inline-flex items-center rounded-full border border-highlight/35 bg-highlight/10 px-4 py-2 text-sm font-medium text-highlight transition hover:border-highlight/55 hover:bg-highlight/15"
+            >
+              Contact VectorCodex
+            </a>
+          </div>
+        </article>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>
+
+<style>
+  @media (max-width: 1023px) {
+    .privacy-toc-shell {
+      position: relative;
+    }
+  }
+</style>
