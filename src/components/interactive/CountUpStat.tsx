@@ -50,17 +50,10 @@ export default function CountUpStat({ value, suffix = '', className = '' }: Prop
     return () => observer.disconnect();
   }, [value]);
 
-  const finalLabel = `${value}${suffix}`;
-
   return (
-    <span ref={ref} className={`inline-grid tabular-nums ${className}`.trim()}>
-      <span className="invisible col-start-1 row-start-1" aria-hidden="true">
-        {finalLabel}
-      </span>
-      <span className="col-start-1 row-start-1">
-        {display}
-        {suffix}
-      </span>
+    <span ref={ref} className={className}>
+      {display}
+      {suffix}
     </span>
   );
 }

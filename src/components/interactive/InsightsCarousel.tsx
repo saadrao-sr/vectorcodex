@@ -22,6 +22,20 @@ interface Props {
   items: InsightSlide[];
 }
 
+function usePerView() {
+  const [perView, setPerView] = useState(2);
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 640px)');
+    const update = () => setPerView(media.matches ? 2 : 1);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  return perView;
+}
+
 const navBtnClass =
   'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/[0.04] text-white transition-colors duration-200 hover:border-highlight/50 hover:bg-highlight/10 hover:text-highlight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-highlight disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:border-white/20 disabled:hover:bg-white/[0.04] disabled:hover:text-white';
 
@@ -109,14 +123,11 @@ function InsightCard({ item }: { item: InsightSlide }) {
 export default function InsightsCarousel({ items }: Props) {
   const labelId = useId();
   const statusId = useId();
+  const perView = usePerView();
   const [index, setIndex] = useState(0);
-  const [perView, setPerView] = useState(2);
-  const [stepPx, setStepPx] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const regionRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLUListElement>(null);
-  const slideRef = useRef<HTMLLIElement>(null);
   const count = items.length;
   const maxIndex = Math.max(0, count - perView);
   const pageCount = maxIndex + 1;
@@ -134,14 +145,6 @@ export default function InsightsCarousel({ items }: Props) {
   );
 
   useEffect(() => {
-    const media = window.matchMedia('(min-width: 640px)');
-    const sync = () => setPerView(media.matches ? 2 : 1);
-    sync();
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
-  }, []);
-
-  useEffect(() => {
     setIndex((current) => Math.min(current, maxIndex));
   }, [maxIndex]);
 
@@ -152,21 +155,6 @@ export default function InsightsCarousel({ items }: Props) {
     media.addEventListener('change', update);
     return () => media.removeEventListener('change', update);
   }, []);
-
-  useEffect(() => {
-    const measure = () => {
-      const slide = slideRef.current;
-      const track = trackRef.current;
-      if (!slide || !track) return;
-      const styles = window.getComputedStyle(track);
-      const gap = Number.parseFloat(styles.columnGap || styles.gap || '0') || 0;
-      setStepPx(slide.getBoundingClientRect().width + gap);
-    };
-
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [count, perView]);
 
   useEffect(() => {
     const node = regionRef.current;
@@ -191,7 +179,8 @@ export default function InsightsCarousel({ items }: Props) {
 
   const visible = items.slice(index, index + perView);
   const statusTitles = visible.map((item) => item.title).join(', ');
-  const canNavigate = count > 1;
+  const gapPx = 24;
+  const slideBasis = `calc((100% - ${(perView - 1) * gapPx}px) / ${perView})`;
 
   return (
     <div className="mt-5 sm:mt-6">
@@ -201,7 +190,7 @@ export default function InsightsCarousel({ items }: Props) {
           className={`${navBtnClass} hidden sm:inline-flex`}
           aria-label="Previous insights"
           onClick={() => go(-1)}
-          disabled={!canNavigate || count <= perView}
+          disabled={count <= perView}
         >
           <ChevronLeft size={18} aria-hidden="true" />
         </button>
@@ -236,11 +225,11 @@ export default function InsightsCarousel({ items }: Props) {
 
           <div className="overflow-hidden">
             <ul
-              ref={trackRef}
-              className="flex gap-6"
+              className="flex"
               style={{
-                transform: stepPx ? `translateX(-${index * stepPx}px)` : undefined,
-                transition: reducedMotion || !stepPx ? undefined : 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
+                gap: `${gapPx}px`,
+                transform: `translateX(calc(-${index} * (${slideBasis} + ${gapPx}px)))`,
+                transition: reducedMotion ? undefined : 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
               }}
             >
               {items.map((item, itemIndex) => {
@@ -248,8 +237,8 @@ export default function InsightsCarousel({ items }: Props) {
                 return (
                   <li
                     key={item.id}
-                    ref={itemIndex === 0 ? slideRef : undefined}
-                    className="w-full min-w-0 shrink-0 sm:w-[calc((100%-1.5rem)/2)]"
+                    className="min-w-0 shrink-0"
+                    style={{ flexBasis: slideBasis, width: slideBasis }}
                     aria-hidden={!inView}
                   >
                     <InsightCard item={item} />
@@ -265,7 +254,7 @@ export default function InsightsCarousel({ items }: Props) {
           className={`${navBtnClass} hidden sm:inline-flex`}
           aria-label="Next insights"
           onClick={() => go(1)}
-          disabled={!canNavigate || count <= perView}
+          disabled={count <= perView}
         >
           <ChevronRight size={18} aria-hidden="true" />
         </button>
@@ -277,7 +266,7 @@ export default function InsightsCarousel({ items }: Props) {
           className={`${navBtnClass} sm:hidden`}
           aria-label="Previous insights"
           onClick={() => go(-1)}
-          disabled={!canNavigate || count <= perView}
+          disabled={count <= perView}
         >
           <ChevronLeft size={18} aria-hidden="true" />
         </button>
@@ -309,7 +298,7 @@ export default function InsightsCarousel({ items }: Props) {
           className={`${navBtnClass} sm:hidden`}
           aria-label="Next insights"
           onClick={() => go(1)}
-          disabled={!canNavigate || count <= perView}
+          disabled={count <= perView}
         >
           <ChevronRight size={18} aria-hidden="true" />
         </button>
