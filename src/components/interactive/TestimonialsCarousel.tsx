@@ -25,20 +25,6 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function useDesktopCarousel() {
-  const [desktop, setDesktop] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia('(min-width: 1024px)');
-    const sync = () => setDesktop(media.matches);
-    sync();
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
-  }, []);
-
-  return desktop;
-}
-
 function Avatar({ item }: { item: Testimonial }) {
   if (item.logoSrc) {
     return (
@@ -79,9 +65,8 @@ function TestimonialCard({
         'group relative flex h-full min-h-[18.5rem] flex-col overflow-hidden rounded-[1.75rem] border bg-white/[0.03] p-5 sm:p-6',
         reducedMotion ? '' : 'transition duration-300',
         featured
-          ? 'border-highlight/45 bg-white/[0.05] shadow-[0_20px_60px_rgb(0_0_0_/0.35),0_0_40px_rgb(222_243_77_/0.08)] lg:scale-[1.03]'
+          ? 'border-highlight/45 bg-white/[0.05] shadow-[0_20px_60px_rgb(0_0_0_/0.35),0_0_40px_rgb(222_243_77_/0.08)]'
           : 'border-white/10 hover:border-highlight/40 hover:bg-white/[0.05]',
-        !reducedMotion && featured ? 'lg:transition-transform' : '',
       ].join(' ')}
     >
       <div
@@ -144,14 +129,14 @@ function TestimonialCard({
 export default function TestimonialsCarousel({ items }: Props) {
   const labelId = useId();
   const statusId = useId();
-  const desktop = useDesktopCarousel();
   const reducedMotion = usePrefersReducedMotion();
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const regionRef = useRef<HTMLDivElement>(null);
 
   const count = items.length;
-  const visibleCount = desktop ? Math.min(3, count) : 1;
+  /** Always reserve up to 3 slots so SSR and desktop hydration share the same grid (avoids CLS). */
+  const visibleCount = Math.min(3, count);
 
   const go = useCallback(
     (direction: -1 | 1) => {
@@ -160,12 +145,11 @@ export default function TestimonialsCarousel({ items }: Props) {
     [count],
   );
 
-  const visibleIndexes =
+  const visibleIndexes = Array.from({ length: visibleCount }, (_, offset) =>
     visibleCount === 1
-      ? [index]
-      : Array.from({ length: visibleCount }, (_, offset) =>
-          wrapIndex(index - Math.floor(visibleCount / 2) + offset, count),
-        );
+      ? index
+      : wrapIndex(index - Math.floor(visibleCount / 2) + offset, count),
+  );
 
   useEffect(() => {
     const node = regionRef.current;
@@ -221,13 +205,21 @@ export default function TestimonialsCarousel({ items }: Props) {
           {activeItem ? `: ${activeItem.name}, ${activeItem.company}` : ''}
         </p>
 
-        <div className={['grid gap-4 lg:gap-5', visibleCount === 3 ? 'lg:grid-cols-3' : 'grid-cols-1'].join(' ')}>
+        <div
+          className={[
+            'grid grid-cols-1 gap-4 lg:gap-5',
+            visibleCount >= 3 ? 'lg:grid-cols-3' : visibleCount === 2 ? 'lg:grid-cols-2' : '',
+          ].join(' ')}
+        >
           {visibleIndexes.map((itemIndex, position) => {
             const item = items[itemIndex];
             if (!item) return null;
-            const featured = visibleCount === 3 ? position === 1 : true;
+            const featured = visibleCount >= 3 ? position === 1 : true;
             return (
-              <div key={`${item.id}-${itemIndex}-${position}`}>
+              <div
+                key={`${item.id}-${itemIndex}-${position}`}
+                className={position > 0 ? 'hidden lg:block' : undefined}
+              >
                 <TestimonialCard item={item} featured={featured} reducedMotion={reducedMotion} />
               </div>
             );
