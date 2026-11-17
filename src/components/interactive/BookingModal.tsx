@@ -347,18 +347,18 @@ export default function BookingModal({ endpoint = '' }: Props) {
               transition={{ duration: reduced ? 0 : 0.2 }}
               className="relative z-10 flex max-h-[100svh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border border-white/12 bg-bg shadow-[0_30px_80px_rgb(0_0_0_/0.55)] sm:max-h-[90svh] sm:rounded-3xl"
             >
-              <div className="relative overflow-hidden border-b border-white/10 px-5 py-5 sm:px-7 sm:py-6">
+              <div className="relative shrink-0 border-b border-white/10 px-5 pt-5 pb-5 sm:px-7 sm:pt-6 sm:pb-6">
                 <div
                   className="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/15 via-transparent to-transparent"
                   aria-hidden="true"
                 />
                 <div className="relative flex items-start justify-between gap-4">
-                  <div>
+                  <div className="min-w-0 pr-1">
                     <p className="text-xs font-semibold tracking-[0.16em] text-highlight uppercase">Consultation</p>
                     <h2 id={titleId} className="mt-2 font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                       Book a Consultation
                     </h2>
-                    <p className="mt-2 max-w-md text-sm leading-6 text-white/60">
+                    <p className="mt-2 max-w-md text-sm leading-6 text-white/65">
                       Tell us about the work. We will reply with a scoped next step.
                     </p>
                   </div>
@@ -375,7 +375,7 @@ export default function BookingModal({ endpoint = '' }: Props) {
               </div>
 
               <form
-                className="overflow-y-auto px-5 py-5 sm:px-7 sm:py-6"
+                className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7 sm:py-6"
                 method="post"
                 action={endpoint || undefined}
                 onSubmit={onSubmit}

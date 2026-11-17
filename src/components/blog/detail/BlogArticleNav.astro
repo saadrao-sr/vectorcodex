@@ -1,0 +1,342 @@
+---
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import type { BlogPost } from '../../../types/content';
+
+interface Props {
+  previous: BlogPost | null;
+  next: BlogPost | null;
+}
+
+const { previous, next } = Astro.props;
+
+const cards = [
+  previous
+    ? { post: previous, direction: 'previous' as const, href: `/blog/${previous.slug}/` }
+    : null,
+  next ? { post: next, direction: 'next' as const, href: `/blog/${next.slug}/` } : null,
+].filter(Boolean) as Array<{
+  post: BlogPost;
+  direction: 'previous' | 'next';
+  href: string;
+}>;
+---
+
+{
+  cards.length > 0 && (
+    <nav class="blog-article-nav" aria-label="Article navigation">
+      <div class="blog-article-nav__rule" aria-hidden="true">
+        <span class="blog-article-nav__rule-line" />
+        <span class="blog-article-nav__rule-label">Keep reading</span>
+        <span class="blog-article-nav__rule-line" />
+      </div>
+
+      <div class:list={['blog-article-nav__grid', cards.length === 1 && 'blog-article-nav__grid--single']}>
+        {cards.map(({ post, direction, href }) => {
+          const isNext = direction === 'next';
+          return (
+            <a href={href} class:list={['blog-article-nav__card group', isNext && 'is-next']}>
+              <span class="blog-article-nav__glow" aria-hidden="true" />
+
+              {post.image ? (
+                <span class="blog-article-nav__media">
+                  <img
+                    src={post.image.src}
+                    alt=""
+                    width={160}
+                    height={160}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              ) : (
+                <span class="blog-article-nav__media blog-article-nav__media--empty" aria-hidden="true" />
+              )}
+
+              <span class="blog-article-nav__body">
+                <span class="blog-article-nav__meta">
+                  <span class="blog-article-nav__dir">
+                    {isNext ? (
+                      <>
+                        Next
+                        <span class="blog-article-nav__arrow" aria-hidden="true">
+                          <ArrowRight size={13} />
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span class="blog-article-nav__arrow" aria-hidden="true">
+                          <ArrowLeft size={13} />
+                        </span>
+                        Previous
+                      </>
+                    )}
+                  </span>
+                  {post.categories[0] && (
+                    <span class="blog-article-nav__category">{post.categories[0].name}</span>
+                  )}
+                </span>
+
+                <span class="blog-article-nav__title">{post.title}</span>
+              </span>
+            </a>
+          );
+        })}
+      </div>
+    </nav>
+  )
+}
+
+<style>
+  .blog-article-nav {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+  }
+
+  @media (min-width: 640px) {
+    .blog-article-nav {
+      margin-top: 2.5rem;
+      padding-top: 1.75rem;
+    }
+  }
+
+  .blog-article-nav__rule {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .blog-article-nav__rule-line {
+    height: 1px;
+    flex: 1 1 auto;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.16), transparent);
+  }
+
+  .blog-article-nav__rule-label {
+    flex: 0 0 auto;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(222 243 77 / 0.9);
+    line-height: 1;
+  }
+
+  .blog-article-nav__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 640px) {
+    .blog-article-nav__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    .blog-article-nav__grid--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .blog-article-nav__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 5.5rem;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 1.15rem;
+    background: rgb(255 255 255 / 0.03);
+    padding: 0.65rem;
+    text-decoration: none;
+    transition:
+      border-color 0.25s ease,
+      background-color 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .blog-article-nav__card.is-next {
+    direction: rtl;
+  }
+
+  .blog-article-nav__card.is-next > * {
+    direction: ltr;
+  }
+
+  .blog-article-nav__card.is-next .blog-article-nav__body {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .blog-article-nav__card.is-next .blog-article-nav__meta {
+    justify-content: flex-end;
+  }
+
+  .blog-article-nav__card:hover {
+    border-color: rgb(222 243 77 / 0.4);
+    background: rgb(255 255 255 / 0.05);
+    transform: translateY(-1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blog-article-nav__card,
+    .blog-article-nav__arrow,
+    .blog-article-nav__media img {
+      transition: none;
+    }
+
+    .blog-article-nav__card:hover {
+      transform: none;
+    }
+  }
+
+  .blog-article-nav__glow {
+    pointer-events: none;
+    position: absolute;
+    inset: auto -15% -45% 35%;
+    height: 6rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgb(222 243 77 / 0.12), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .blog-article-nav__card.is-next .blog-article-nav__glow {
+    inset: auto 35% -45% -15%;
+  }
+
+  .blog-article-nav__card:hover .blog-article-nav__glow {
+    opacity: 1;
+  }
+
+  .blog-article-nav__media {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 4.75rem;
+    height: 4.75rem;
+    overflow: hidden;
+    border-radius: 0.8rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background: #151c14;
+  }
+
+  .blog-article-nav__media--empty {
+    background:
+      linear-gradient(135deg, rgb(222 243 77 / 0.12), transparent 60%),
+      #151c14;
+  }
+
+  .blog-article-nav__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .blog-article-nav__card:hover .blog-article-nav__media img {
+    transform: scale(1.05);
+  }
+
+  .blog-article-nav__body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding-inline: 0.1rem;
+  }
+
+  .blog-article-nav__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.55rem;
+  }
+
+  .blog-article-nav__dir {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: #def34d;
+  }
+
+  .blog-article-nav__arrow {
+    display: inline-flex;
+    transition: transform 0.25s ease;
+  }
+
+  .blog-article-nav__card:not(.is-next):hover .blog-article-nav__arrow {
+    transform: translateX(-2px);
+  }
+
+  .blog-article-nav__card.is-next:hover .blog-article-nav__arrow {
+    transform: translateX(2px);
+  }
+
+  .blog-article-nav__category {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 9999px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  .blog-article-nav__title {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: #fff;
+    transition: color 0.2s ease;
+  }
+
+  .blog-article-nav__card:hover .blog-article-nav__title {
+    color: #def34d;
+  }
+
+  @media (min-width: 640px) {
+    .blog-article-nav__card {
+      grid-template-columns: 5.25rem minmax(0, 1fr);
+      gap: 0.95rem;
+      min-height: 5.85rem;
+      border-radius: 1.25rem;
+      padding: 0.7rem;
+    }
+
+    .blog-article-nav__media {
+      width: 5.25rem;
+      height: 5.25rem;
+      border-radius: 0.9rem;
+    }
+
+    .blog-article-nav__title {
+      font-size: 1rem;
+    }
+  }
+</style>

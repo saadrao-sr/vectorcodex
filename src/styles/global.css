@@ -17,7 +17,8 @@
 }
 
 :root {
-  --header-height: 5.25rem;
+  /* Fixed header: top offset + capsule row. Keep in sync with Header.astro. */
+  --header-height: 6.5rem;
   color-scheme: dark;
 }
 
@@ -127,7 +128,7 @@ summary::-webkit-details-marker {
   margin-top: 0.4em;
 }
 
-.prose-vc blockquote {
+.prose-vc blockquote:not(.vc-citation-quote) {
   border-left: 3px solid #def34d;
   padding-left: 1rem;
   color: white;

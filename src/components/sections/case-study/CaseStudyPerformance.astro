@@ -1,0 +1,53 @@
+---
+import type { CaseStudy } from '../../../types/content';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  study: CaseStudy;
+}
+
+const { study } = Astro.props;
+const performance = study.performance;
+---
+
+{
+  performance && (
+    <section
+      id="results-performance"
+      class="relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+      aria-labelledby="performance-heading"
+    >
+      <Container>
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-12">
+          <div>
+            <p class={eyebrowClass}>Results & Performance</p>
+            <h2
+              id="performance-heading"
+              class="mt-3 font-display text-2xl font-semibold tracking-tight text-balance text-white sm:text-3xl"
+            >
+              Evidence over assumptions
+            </h2>
+            <p class="mt-4 text-sm leading-7 text-white/70 sm:text-base sm:leading-8">{performance.body}</p>
+          </div>
+
+          {performance.metrics && performance.metrics.length > 0 && (
+            <ul class="space-y-3">
+              {performance.metrics.map((metric) => (
+                <li class="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
+                  <p class="font-display text-xl font-semibold tracking-tight text-highlight">{metric.value}</p>
+                  <h3 class="mt-1 text-sm font-semibold text-white">{metric.label}</h3>
+                  {metric.placeholder && (
+                    <p class="mt-2 text-[0.65rem] font-semibold tracking-[0.12em] text-white/40 uppercase">
+                      Awaiting verification
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </Container>
+    </section>
+  )
+}

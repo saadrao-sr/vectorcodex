@@ -223,29 +223,31 @@ export default function FreeAuditModal({ endpoint = '' }: Props) {
                 <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-2xl" />
               </div>
 
-              <div className="relative flex items-start justify-between gap-4 border-b border-white/10 px-5 py-5 sm:px-7 sm:py-6">
-                <div>
-                  <p className="text-[0.65rem] font-semibold tracking-[0.16em] text-cta uppercase">Free Digital Audit</p>
-                  <h2 id={titleId} className="mt-2 font-display text-2xl font-semibold tracking-tight text-white sm:text-[1.75rem]">
-                    Get a Free Audit of Your Website
-                  </h2>
-                  <p className="mt-2 max-w-md text-sm leading-6 text-white/60">
-                    Tell us about your site and goals. We will review visibility, structure, and opportunities — then share clear next steps.
-                  </p>
+              <div className="relative shrink-0 border-b border-white/10 px-5 pt-5 pb-5 sm:px-7 sm:pt-6 sm:pb-6">
+                <div className="relative flex items-start justify-between gap-4">
+                  <div className="min-w-0 pr-1">
+                    <p className="text-[0.65rem] font-semibold tracking-[0.16em] text-cta uppercase">Free Digital Audit</p>
+                    <h2 id={titleId} className="mt-2 font-display text-2xl font-semibold tracking-tight text-white sm:text-[1.75rem]">
+                      Get a Free Audit of Your Website
+                    </h2>
+                    <p className="mt-2 max-w-md text-sm leading-6 text-white/65">
+                      Tell us about your site and goals. We will review visibility, structure, and opportunities — then share clear next steps.
+                    </p>
+                  </div>
+                  <button
+                    ref={closeRef}
+                    type="button"
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white transition hover:border-highlight/45 hover:text-highlight"
+                    aria-label="Close free audit form"
+                    onClick={() => setOpen(false)}
+                  >
+                    <X size={18} aria-hidden="true" />
+                  </button>
                 </div>
-                <button
-                  ref={closeRef}
-                  type="button"
-                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white transition hover:border-highlight/45 hover:text-highlight"
-                  aria-label="Close free audit form"
-                  onClick={() => setOpen(false)}
-                >
-                  <X size={18} aria-hidden="true" />
-                </button>
               </div>
 
               <form
-                className="relative overflow-y-auto px-5 py-5 sm:px-7 sm:py-6"
+                className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7 sm:py-6"
                 onSubmit={onSubmit}
                 noValidate
               >

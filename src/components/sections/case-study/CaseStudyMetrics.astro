@@ -1,0 +1,72 @@
+---
+import type { CaseStudy, CaseStudyMetric } from '../../../types/content';
+import CountUpStat from '../../interactive/CountUpStat';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  study: CaseStudy;
+}
+
+const { study } = Astro.props;
+const metrics: CaseStudyMetric[] =
+  study.metrics?.length
+    ? study.metrics
+    : (study.results ?? []).map((item) => ({
+        value: item.value,
+        label: item.label,
+        placeholder: item.placeholder,
+      }));
+---
+
+{
+  metrics.length > 0 && (
+    <section
+      id="results-at-a-glance"
+      class="relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14"
+      aria-labelledby="results-glance-heading"
+    >
+      <Container>
+        <div class="mx-auto max-w-2xl text-center">
+          <p class={eyebrowClass}>Results at a Glance</p>
+          <h2
+            id="results-glance-heading"
+            class="mt-3 font-display text-2xl font-semibold tracking-tight text-balance text-white sm:text-3xl"
+          >
+            Performance signals from the engagement
+          </h2>
+          <p class="mt-3 text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
+            Metrics appear here only when they are approved and sourced. Placeholder values are labelled clearly.
+          </p>
+        </div>
+
+        <ul class="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
+          {metrics.map((metric) => (
+            <li class="rounded-[1.5rem] border border-white/10 bg-white/[0.03] px-5 py-6 text-center">
+              <p class="font-display text-3xl font-semibold tracking-tight text-highlight sm:text-[2rem]">
+                {metric.numericValue != null && !metric.placeholder ? (
+                  <CountUpStat
+                    client:visible
+                    value={metric.numericValue}
+                    suffix={metric.suffix ?? ''}
+                  />
+                ) : (
+                  metric.value
+                )}
+              </p>
+              <h3 class="mt-2 text-sm font-semibold tracking-tight text-white">{metric.label}</h3>
+              {metric.placeholder && (
+                <p class="mt-2 text-[0.65rem] font-semibold tracking-[0.12em] text-white/40 uppercase">
+                  Awaiting verification
+                </p>
+              )}
+              {metric.sourceNote && !metric.placeholder && (
+                <p class="mt-2 text-xs leading-5 text-white/45">{metric.sourceNote}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </Container>
+    </section>
+  )
+}

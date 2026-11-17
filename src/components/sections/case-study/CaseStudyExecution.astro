@@ -1,0 +1,129 @@
+---
+import type { CaseStudy } from '../../../types/content';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  study: CaseStudy;
+}
+
+const { study } = Astro.props;
+const execution = study.execution;
+const stageCount = execution?.stages.length ?? 0;
+---
+
+{
+  execution && stageCount > 0 && (
+    <section
+      id="execution"
+      class="cs-execution relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-8 sm:py-10 lg:py-12"
+      aria-labelledby="execution-heading"
+    >
+      <Container>
+        <header class="mx-auto max-w-2xl text-center">
+          <p class:list={[eyebrowClass, 'mx-auto w-fit']}>Execution</p>
+          <h2
+            id="execution-heading"
+            class="mt-2.5 font-display text-xl font-semibold tracking-tight text-balance text-white sm:mt-3 sm:text-2xl lg:text-[1.75rem]"
+          >
+            How the work was delivered
+          </h2>
+          {execution.body && (
+            <p class="mt-2.5 text-sm leading-6 text-white/60 sm:text-[0.95rem] sm:leading-7">{execution.body}</p>
+          )}
+        </header>
+
+        <ol class="cs-execution__list mt-6 sm:mt-8">
+          {execution.stages.map((stage, index) => {
+            const scale = stageCount <= 1 ? 1 : index / (stageCount - 1);
+            const maxWidth = `${72 + scale * 28}%`;
+            return (
+              <li class="cs-execution__stage" style={`--stage-max: ${maxWidth};`}>
+                <article class="cs-execution__card overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+                  <div class:list={['cs-execution__row', stage.image ? 'cs-execution__row--media' : '']}>
+                    {stage.image && (
+                      <div class="cs-execution__media overflow-hidden bg-surface">
+                        <img
+                          src={stage.image.src}
+                          alt={stage.image.alt}
+                          width={stage.image.width ?? 960}
+                          height={stage.image.height ?? 720}
+                          loading="lazy"
+                          decoding="async"
+                          class="h-full w-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div class="cs-execution__copy flex flex-col justify-center">
+                      <span class="font-display text-xs font-semibold tracking-[0.14em] text-highlight">
+                        {stage.number}
+                      </span>
+                      <h3 class="mt-1.5 font-display text-base font-semibold tracking-tight text-white sm:text-lg">
+                        {stage.title}
+                      </h3>
+                      <p class="mt-2 text-sm leading-6 text-white/70">{stage.body}</p>
+                    </div>
+                  </div>
+                </article>
+              </li>
+            );
+          })}
+        </ol>
+      </Container>
+    </section>
+  )
+}
+
+<style>
+  .cs-execution__list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .cs-execution__stage {
+    width: 100%;
+    max-width: var(--stage-max, 100%);
+  }
+
+  .cs-execution__row {
+    display: grid;
+    gap: 0;
+  }
+
+  .cs-execution__copy {
+    padding: 1rem 1.1rem;
+  }
+
+  .cs-execution__media {
+    aspect-ratio: 16 / 9;
+  }
+
+  @media (min-width: 640px) {
+    .cs-execution__list {
+      gap: 1rem;
+    }
+
+    .cs-execution__copy {
+      padding: 1.15rem 1.25rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .cs-execution__row--media {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: stretch;
+    }
+
+    .cs-execution__media {
+      aspect-ratio: auto;
+      min-height: 100%;
+      max-height: 11.5rem;
+    }
+
+    .cs-execution__media img {
+      max-height: 11.5rem;
+    }
+  }
+</style>

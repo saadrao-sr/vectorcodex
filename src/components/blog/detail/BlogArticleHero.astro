@@ -1,0 +1,185 @@
+---
+import type { BlogPost, Crumb } from '../../../types/content';
+import { formatDate } from '../../../lib/seo/format';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  post: BlogPost;
+  crumbs: Crumb[];
+  readingMinutes: number;
+}
+
+const { post, crumbs, readingMinutes } = Astro.props;
+const published = formatDate(post.publishedAt);
+const modified = formatDate(post.modifiedAt);
+const showUpdated = Boolean(modified && modified !== published);
+const categories = (post.categories ?? []).filter((term) => term?.name);
+---
+
+<section
+  id="blog-article-hero"
+  class="blog-article-hero relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] pt-[calc(var(--header-height)+1.35rem)] pb-8 sm:pt-[calc(var(--header-height)+1.75rem)] sm:pb-11"
+  aria-labelledby="blog-article-heading"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="absolute top-12 left-[8%] h-48 w-48 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.1),transparent_70%)] blur-3xl"></div>
+    <div class="absolute right-[6%] bottom-4 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.07),transparent_70%)] blur-3xl"></div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/30 to-transparent"></div>
+  </div>
+
+  <Container class="relative">
+    <nav aria-label="Breadcrumb" class="mb-6 sm:mb-7">
+      <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] leading-none text-white/55">
+        {
+          crumbs.map((item, index) => {
+            const last = index === crumbs.length - 1;
+            return (
+              <li class="inline-flex max-w-full items-center gap-2">
+                {index > 0 && <span aria-hidden="true" class="text-white/30">/</span>}
+                {last ? (
+                  <span aria-current="page" class="truncate text-highlight">
+                    {item.name}
+                  </span>
+                ) : (
+                  <a href={item.href} class="truncate transition hover:text-highlight">
+                    {item.name}
+                  </a>
+                )}
+              </li>
+            );
+          })
+        }
+      </ol>
+    </nav>
+
+    <div class="blog-article-hero__layout">
+      <div class="blog-article-hero__copy min-w-0">
+        {
+          categories.length > 0 && (
+            <ul class="flex flex-wrap gap-2" aria-label="Categories">
+              {categories.map((category) => (
+                <li>
+                  <span class:list={[eyebrowClass, 'w-fit max-w-full']}>{category.name}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <h1
+          id="blog-article-heading"
+          class:list={[
+            'max-w-3xl font-display text-[1.75rem] leading-[1.12] font-semibold tracking-tight text-balance text-white sm:text-[2.35rem] sm:leading-[1.08] lg:text-[2.75rem] lg:leading-[1.05]',
+            categories.length > 0 ? 'mt-4 sm:mt-5' : 'mt-0',
+          ]}
+        >
+          {post.title}
+        </h1>
+
+        <div class="blog-article-hero__meta mt-5 flex flex-wrap items-center gap-x-3 gap-y-2.5 text-sm text-white/55 sm:mt-6 sm:gap-x-4">
+          {
+            post.authorName && (
+              <div class="inline-flex items-center gap-2.5">
+                {post.authorAvatar ? (
+                  <img
+                    src={post.authorAvatar}
+                    alt=""
+                    width={36}
+                    height={36}
+                    loading="eager"
+                    decoding="async"
+                    class="h-9 w-9 rounded-full border border-white/15 object-cover"
+                  />
+                ) : (
+                  <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-highlight/30 bg-highlight/10 text-xs font-semibold text-highlight">
+                    {post.authorName.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
+                <span class="font-medium text-white/80">{post.authorName}</span>
+              </div>
+            )
+          }
+
+          {
+            published && (
+              <>
+                <span class="blog-article-hero__dot" aria-hidden="true" />
+                <time datetime={post.publishedAt}>{published}</time>
+              </>
+            )
+          }
+
+          {
+            showUpdated && (
+              <>
+                <span class="blog-article-hero__dot" aria-hidden="true" />
+                <span>
+                  Updated <time datetime={post.modifiedAt}>{modified}</time>
+                </span>
+              </>
+            )
+          }
+
+          <span class="blog-article-hero__dot" aria-hidden="true" />
+          <span>{readingMinutes} min read</span>
+        </div>
+      </div>
+
+      {
+        post.image && (
+          <div class="blog-article-hero__media min-w-0">
+            <figure class="overflow-hidden rounded-[1.35rem] border border-white/12 bg-surface shadow-[0_20px_60px_rgb(0_0_0_/0.32)] sm:rounded-[1.6rem]">
+              <img
+                src={post.image.src}
+                alt={post.image.alt}
+                width={post.image.width ?? 1200}
+                height={post.image.height ?? 675}
+                fetchpriority="high"
+                decoding="async"
+                class="aspect-[16/10] h-full w-full object-cover"
+              />
+            </figure>
+          </div>
+        )
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .blog-article-hero__layout {
+    display: grid;
+    align-items: start;
+    gap: 1.75rem;
+  }
+
+  .blog-article-hero__copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+  }
+
+  .blog-article-hero__dot {
+    display: none;
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.35);
+  }
+
+  @media (min-width: 480px) {
+    .blog-article-hero__dot {
+      display: inline-block;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .blog-article-hero__layout {
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+      align-items: center;
+      gap: 2.75rem;
+    }
+  }
+</style>

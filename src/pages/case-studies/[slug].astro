@@ -1,16 +1,30 @@
 ---
+import CaseStudyBeforeAfter from '../../components/sections/case-study/CaseStudyBeforeAfter.astro';
+import CaseStudyChallenge from '../../components/sections/case-study/CaseStudyChallenge.astro';
+import CaseStudyExecution from '../../components/sections/case-study/CaseStudyExecution.astro';
+import CaseStudyFinalCta from '../../components/sections/case-study/CaseStudyFinalCta.astro';
+import CaseStudyHero from '../../components/sections/case-study/CaseStudyHero.astro';
+import CaseStudyLegacyBody from '../../components/sections/case-study/CaseStudyLegacyBody.astro';
+import CaseStudyMetrics from '../../components/sections/case-study/CaseStudyMetrics.astro';
+import CaseStudyOverview from '../../components/sections/case-study/CaseStudyOverview.astro';
+import CaseStudyPerformance from '../../components/sections/case-study/CaseStudyPerformance.astro';
+import CaseStudyRelated from '../../components/sections/case-study/CaseStudyRelated.astro';
+import CaseStudyStrategy from '../../components/sections/case-study/CaseStudyStrategy.astro';
+import CaseStudyTakeaways from '../../components/sections/case-study/CaseStudyTakeaways.astro';
+import QuoteModal from '../../components/interactive/QuoteModal';
 import { caseStudies } from '../../config/case-studies';
-import { breadcrumbSchema, webPageSchema } from '../../lib/schema/jsonld';
+import { breadcrumbSchema, caseStudySchema, webPageSchema } from '../../lib/schema/jsonld';
+import { absoluteUrl } from '../../lib/seo/url';
 import type { CaseStudy } from '../../types/content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHero from '../../components/sections/PageHero.astro';
-import Container from '../../components/ui/Container.astro';
 
 export function getStaticPaths() {
-  return caseStudies.map((study) => ({
-    params: { slug: study.slug },
-    props: { study },
-  }));
+  return caseStudies
+    .filter((study) => Boolean(study.slug))
+    .map((study) => ({
+      params: { slug: study.slug },
+      props: { study },
+    }));
 }
 
 interface Props {
@@ -23,47 +37,44 @@ const crumbs = [
   { name: 'Case studies', href: '/case-studies/' },
   { name: study.title, href: study.path },
 ];
-const description = study.summary;
+
+const title = study.seoTitle || study.title;
+const description = study.seoDescription || study.summary;
+const shareImage = study.ogImage ?? study.heroImage ?? study.image;
+const imageUrl = shareImage?.src ? absoluteUrl(shareImage.src) : undefined;
 ---
 
 <BaseLayout
-  title={study.title}
+  title={title}
   description={description}
   path={study.path}
   noindex={study.placeholder}
-  schema={[webPageSchema({ title: study.title, description, path: study.path }), breadcrumbSchema(crumbs)]}
+  ogType="article"
+  image={imageUrl}
+  imageAlt={shareImage?.alt}
+  imageWidth={shareImage?.width}
+  imageHeight={shareImage?.height}
+  publishedAt={study.publishedAt}
+  modifiedAt={study.modifiedAt || study.publishedAt}
+  schema={[
+    webPageSchema({ title, description, path: study.path }),
+    breadcrumbSchema(crumbs),
+    caseStudySchema(study),
+  ]}
 >
-  <PageHero eyebrow={study.service} title={study.title} lede={study.summary} crumbs={crumbs} />
-  <section class="py-14 sm:py-16">
-    <Container class="max-w-3xl">
-      {
-        study.placeholder && (
-          <p class="rounded-2xl border border-highlight/30 bg-highlight/10 px-5 py-4 text-sm leading-6 text-white">
-            Placeholder. Client name, sector detail, and outcomes have not been added. This page does not report results.
-          </p>
-        )
-      }
-      <dl class="mt-8 grid gap-4 sm:grid-cols-2">
-        <div class="rounded-2xl border border-white/10 p-5">
-          <dt class="text-xs font-semibold tracking-[0.16em] text-white/50 uppercase">Service</dt>
-          <dd class="mt-2 text-lg">{study.service}</dd>
-        </div>
-        <div class="rounded-2xl border border-white/10 p-5">
-          <dt class="text-xs font-semibold tracking-[0.16em] text-white/50 uppercase">Sector</dt>
-          <dd class="mt-2 text-lg">{study.sector}</dd>
-        </div>
-      </dl>
-      <div class="prose-vc mt-10">
-        {study.sections.map((section) => (
-          <section>
-            <h2>{section.heading}</h2>
-            <p>{section.body}</p>
-          </section>
-        ))}
-      </div>
-      <p class="mt-10">
-        <a href="/case-studies/" class="text-sm font-semibold text-highlight">All case studies</a>
-      </p>
-    </Container>
-  </section>
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+  <article>
+    <CaseStudyHero study={study} crumbs={crumbs} />
+    <CaseStudyMetrics study={study} />
+    <CaseStudyOverview study={study} />
+    <CaseStudyChallenge study={study} />
+    <CaseStudyStrategy study={study} />
+    <CaseStudyExecution study={study} />
+    <CaseStudyBeforeAfter study={study} />
+    <CaseStudyPerformance study={study} />
+    <CaseStudyTakeaways study={study} />
+    <CaseStudyLegacyBody study={study} />
+    <CaseStudyRelated study={study} />
+    <CaseStudyFinalCta />
+  </article>
 </BaseLayout>

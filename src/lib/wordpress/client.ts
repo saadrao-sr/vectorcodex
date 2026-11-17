@@ -3,8 +3,10 @@
  * Do not import this module from React components.
  * WORDPRESS_API_KEY is not prefixed with PUBLIC_ and is not sent to the browser.
  */
-import type { BlogListResult, BlogPost, BlogTerm } from '../../types/content';
-import type { WpPost, WpTerm } from '../../types/wordpress';
+import { getSecret } from 'astro:env/server';
+import type { BlogImage, BlogListResult, BlogPost, BlogTerm } from '../../types/content';
+import type { WpMedia, WpPost, WpTerm } from '../../types/wordpress';
+import { estimateReadingMinutes } from '../blog/content';
 import { summarize } from '../seo/format';
 import { sanitizeContent, toPlainText } from './sanitize';
 
@@ -17,7 +19,9 @@ interface CacheEntry {
   data: unknown;
 }
 
+/** Build-time only. Disabled in `astro dev` so WordPress edits appear on refresh. */
 const cache = new Map<string, Promise<CacheEntry>>();
+const isDev = import.meta.env.DEV;
 
 function assertServer() {
   if (!import.meta.env.SSR) {
@@ -25,11 +29,28 @@ function assertServer() {
   }
 }
 
+/** Read server secrets via Astro's env schema (`astro:env/server`). */
+function readServerEnv(name: 'WORDPRESS_API_URL' | 'WORDPRESS_API_KEY') {
+  const fromSchema = getSecret(name);
+  if (typeof fromSchema === 'string' && fromSchema.trim()) return fromSchema.trim();
+  if (typeof process !== 'undefined' && typeof process.env?.[name] === 'string' && process.env[name]!.trim()) {
+    return process.env[name]!.trim();
+  }
+  return '';
+}
+
+/**
+ * Normalise WORDPRESS_API_URL to the wp-json root.
+ * Accepts:
+ * - https://blog.vectorcodex.com
+ * - https://blog.vectorcodex.com/wp-json
+ * - https://blog.vectorcodex.com/wp-json/wp/v2
+ */
 function apiRoot() {
-  const raw = import.meta.env.WORDPRESS_API_URL?.trim();
+  const raw = readServerEnv('WORDPRESS_API_URL');
   if (!raw) return null;
   let url = raw.replace(/\/$/, '');
-  url = url.replace(/\/wp\/v2$/, '');
+  url = url.replace(/\/wp\/v2\/?$/, '');
   if (!url.endsWith('/wp-json')) url = `${url}/wp-json`;
   return url;
 }
@@ -39,7 +60,7 @@ function authHeaders() {
     Accept: 'application/json',
     'User-Agent': 'VectorCodexWebsite/1.0',
   };
-  const key = import.meta.env.WORDPRESS_API_KEY?.trim();
+  const key = readServerEnv('WORDPRESS_API_KEY');
   if (key) {
     headers.Authorization = key.startsWith('Basic ') || key.startsWith('Bearer ') ? key : `Bearer ${key}`;
   }
@@ -52,13 +73,17 @@ async function wpGet(path: string): Promise<CacheEntry> {
   if (!root) throw new Error('WordPress is not configured.');
 
   const requestUrl = `${root}${path.startsWith('/') ? path : `/${path}`}`;
-  const existing = cache.get(requestUrl);
-  if (existing) return existing;
+  // Process-lifetime cache freezes featured images / titles after the first hit in `astro dev`.
+  if (!isDev) {
+    const existing = cache.get(requestUrl);
+    if (existing) return existing;
+  }
 
   const pending = (async () => {
     const response = await fetch(requestUrl, {
       headers: authHeaders(),
       signal: AbortSignal.timeout(20000),
+      ...(isDev ? { cache: 'no-store' as RequestCache } : {}),
     });
     const body = await response.text();
     let data: unknown = null;
@@ -87,61 +112,129 @@ async function wpGet(path: string): Promise<CacheEntry> {
     };
   })();
 
-  cache.set(requestUrl, pending);
+  if (!isDev) cache.set(requestUrl, pending);
   try {
     return await pending;
   } catch (error) {
-    cache.delete(requestUrl);
+    if (!isDev) cache.delete(requestUrl);
     throw error;
   }
 }
 
-function mapPost(post: WpPost): BlogPost | null {
+function mapMediaImage(media: WpMedia | undefined, fallbackAlt: string): BlogImage | undefined {
+  if (!media || media.code || typeof media.source_url !== 'string' || !media.source_url.trim()) {
+    return undefined;
+  }
+  const sizes = media.media_details?.sizes;
+  const preferred =
+    sizes?.['blog-thumb'] ||
+    sizes?.medium_large ||
+    sizes?.large ||
+    sizes?.medium ||
+    undefined;
+  const src = preferred?.source_url?.trim() || media.source_url.trim();
+  if (!src) return undefined;
+  return {
+    src,
+    alt: media.alt_text?.trim() || fallbackAlt,
+    width: preferred?.width ?? media.media_details?.width,
+    height: preferred?.height ?? media.media_details?.height,
+  };
+}
+
+async function resolveFeaturedImage(post: WpPost, title: string): Promise<BlogImage | undefined> {
+  const embedded = mapMediaImage(post._embedded?.['wp:featuredmedia']?.[0], title);
+  if (embedded) return embedded;
+
+  const mediaId = post.featured_media;
+  if (!mediaId || mediaId <= 0) return undefined;
+
+  try {
+    const result = await wpGet(`/wp/v2/media/${mediaId}`);
+    return mapMediaImage(result.data as WpMedia, title);
+  } catch (error) {
+    console.error(
+      `[wordpress] featured media ${mediaId} unavailable`,
+      error instanceof Error ? error.message : error,
+    );
+    return undefined;
+  }
+}
+
+async function mapPost(post: WpPost): Promise<BlogPost | null> {
   if (!post?.slug || !post.title?.rendered) return null;
   const title = toPlainText(post.title.rendered);
   const excerpt = summarize(toPlainText(post.excerpt?.rendered ?? ''), 220);
-  const media = post._embedded?.['wp:featuredmedia']?.[0];
-  const terms = post._embedded?.['wp:term']?.[0] ?? [];
-  const authorName = post._embedded?.author?.[0]?.name?.trim();
-  const image = media?.source_url
-    ? {
-        src: media.source_url,
-        alt: media.alt_text?.trim() || title,
-        width: media.media_details?.width,
-        height: media.media_details?.height,
-      }
-    : undefined;
+  const termGroups = post._embedded?.['wp:term'] ?? [];
+  const flatTerms = termGroups.flat();
+  const author = post._embedded?.author?.[0];
+  const authorName = author?.name?.trim();
+  const authorAvatar = author?.avatar_urls?.['96'] || author?.avatar_urls?.['48'] || author?.avatar_urls?.['24'];
+  const contentHtml = sanitizeContent(post.content?.rendered ?? '');
+  const image = await resolveFeaturedImage(post, title);
+
+  const mapTerm = (term: WpTerm) => ({
+    id: typeof term.id === 'number' ? term.id : undefined,
+    name: toPlainText(term.name),
+    slug: term.slug,
+  });
+
+  const categories = flatTerms
+    .filter((term) => term.taxonomy === 'category')
+    .map(mapTerm);
+
+  const tags = flatTerms.filter((term) => term.taxonomy === 'post_tag').map(mapTerm);
+
+  // WordPress embeds categories in group 0; fall back if taxonomy is omitted.
+  const resolvedCategories =
+    categories.length > 0
+      ? categories
+      : (termGroups[0] ?? []).map(mapTerm);
 
   return {
     id: post.id,
     slug: post.slug,
     title,
     excerpt,
-    contentHtml: sanitizeContent(post.content?.rendered ?? ''),
+    contentHtml,
     publishedAt: post.date,
     modifiedAt: post.modified || post.date,
     authorName: authorName || undefined,
+    authorAvatar: authorAvatar || undefined,
     image,
-    categories: terms
-      .filter((term) => term.taxonomy === 'category' || !term.taxonomy)
-      .map((term) => ({ name: toPlainText(term.name), slug: term.slug })),
+    categories: resolvedCategories,
+    tags: tags.length > 0 ? tags : undefined,
+    readingMinutes: estimateReadingMinutes(contentHtml),
   };
+}
+
+async function mapPosts(data: unknown): Promise<BlogPost[]> {
+  if (!Array.isArray(data)) return [];
+  const mapped = await Promise.all(data.map((item) => mapPost(item as WpPost)));
+  return mapped.filter((item): item is BlogPost => Boolean(item));
 }
 
 export async function getPostsPage(page: number, perPage = BLOG_PAGE_SIZE): Promise<BlogListResult> {
   const safePage = Math.max(1, page);
   const safePerPage = Math.min(100, Math.max(1, perPage));
-  if (!apiRoot()) {
-    return { configured: false, ok: true, posts: [], page: safePage, totalPages: 0, total: 0 };
+  const root = apiRoot();
+  if (!root) {
+    return {
+      configured: false,
+      ok: false,
+      posts: [],
+      page: safePage,
+      totalPages: 0,
+      total: 0,
+      error: 'WORDPRESS_API_URL is missing. Set it in the project root .env file.',
+    };
   }
 
   try {
     const result = await wpGet(
-      `/wp/v2/posts?_embed=1&orderby=date&order=desc&page=${safePage}&per_page=${safePerPage}`,
+      `/wp/v2/posts?status=publish&_embed=1&orderby=date&order=desc&page=${safePage}&per_page=${safePerPage}`,
     );
-    const posts = Array.isArray(result.data)
-      ? result.data.map((item) => mapPost(item as WpPost)).filter((item): item is BlogPost => Boolean(item))
-      : [];
+    const posts = await mapPosts(result.data);
     const totalPages = result.totalPages > 0 ? result.totalPages : posts.length > 0 ? 1 : 0;
     return {
       configured: true,
@@ -152,8 +245,17 @@ export async function getPostsPage(page: number, perPage = BLOG_PAGE_SIZE): Prom
       total: result.total,
     };
   } catch (error) {
-    console.error('[wordpress] post list unavailable', error instanceof Error ? error.message : error);
-    return { configured: true, ok: false, posts: [], page: safePage, totalPages: 0, total: 0 };
+    const message = error instanceof Error ? error.message : 'Unknown WordPress request error';
+    console.error('[wordpress] post list unavailable', message);
+    return {
+      configured: true,
+      ok: false,
+      posts: [],
+      page: safePage,
+      totalPages: 0,
+      total: 0,
+      error: `WordPress request failed (${root}): ${message}`,
+    };
   }
 }
 
@@ -176,10 +278,55 @@ export async function getCategories(): Promise<BlogTerm[]> {
     const result = await wpGet('/wp/v2/categories?per_page=100&hide_empty=true&orderby=count&order=desc');
     if (!Array.isArray(result.data)) return [];
     return (result.data as WpTerm[])
-      .filter((term) => term.slug && term.name && (term.count ?? 1) > 0)
-      .map((term) => ({ name: toPlainText(term.name), slug: term.slug }));
+      .filter((term) => term.slug && term.name && term.slug !== 'uncategorized' && (term.count ?? 1) > 0)
+      .map((term) => ({
+        id: typeof term.id === 'number' ? term.id : undefined,
+        name: toPlainText(term.name),
+        slug: term.slug,
+      }));
   } catch (error) {
     console.error('[wordpress] categories unavailable', error instanceof Error ? error.message : error);
     return [];
+  }
+}
+
+/** Fetch a page of published posts filtered by WordPress category ID. */
+export async function getPostsByCategoryId(
+  categoryId: number,
+  page = 1,
+  perPage = BLOG_PAGE_SIZE,
+): Promise<BlogListResult> {
+  const safePage = Math.max(1, page);
+  const safePerPage = Math.min(100, Math.max(1, perPage));
+  if (!apiRoot() || !Number.isFinite(categoryId) || categoryId <= 0) {
+    return { configured: Boolean(apiRoot()), ok: false, posts: [], page: safePage, totalPages: 0, total: 0 };
+  }
+
+  try {
+    const result = await wpGet(
+      `/wp/v2/posts?status=publish&_embed=1&categories=${categoryId}&orderby=date&order=desc&page=${safePage}&per_page=${safePerPage}`,
+    );
+    const posts = await mapPosts(result.data);
+    const totalPages = result.totalPages > 0 ? result.totalPages : posts.length > 0 ? 1 : 0;
+    return {
+      configured: true,
+      ok: true,
+      posts,
+      page: safePage,
+      totalPages,
+      total: result.total,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown WordPress request error';
+    console.error('[wordpress] category posts unavailable', message);
+    return {
+      configured: true,
+      ok: false,
+      posts: [],
+      page: safePage,
+      totalPages: 0,
+      total: 0,
+      error: message,
+    };
   }
 }

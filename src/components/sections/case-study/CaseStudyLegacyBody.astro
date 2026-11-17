@@ -1,0 +1,51 @@
+---
+import type { CaseStudy } from '../../../types/content';
+import Container from '../../ui/Container.astro';
+
+interface Props {
+  study: CaseStudy;
+}
+
+const { study } = Astro.props;
+const hasStructuredDetail = Boolean(
+  study.clientOverview ||
+    study.challenge ||
+    study.strategy ||
+    study.execution ||
+    study.beforeAfter ||
+    study.performance ||
+    study.takeaways,
+);
+---
+
+{
+  !hasStructuredDetail && study.sections.length > 0 && (
+    <section class="border-t border-white/10 py-10 sm:py-12 lg:py-14" aria-label="Case study details">
+      <Container class="max-w-3xl">
+        {study.placeholder && (
+          <p class="rounded-2xl border border-highlight/30 bg-highlight/10 px-5 py-4 text-sm leading-6 text-white">
+            Placeholder. Client name, sector detail, and outcomes have not been added. This page does not report results.
+          </p>
+        )}
+        <dl class="mt-8 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-2xl border border-white/10 p-5">
+            <dt class="text-xs font-semibold tracking-[0.16em] text-white/50 uppercase">Service</dt>
+            <dd class="mt-2 text-lg text-white">{study.service}</dd>
+          </div>
+          <div class="rounded-2xl border border-white/10 p-5">
+            <dt class="text-xs font-semibold tracking-[0.16em] text-white/50 uppercase">Sector</dt>
+            <dd class="mt-2 text-lg text-white">{study.sector}</dd>
+          </div>
+        </dl>
+        <div class="prose-vc mt-10">
+          {study.sections.map((section) => (
+            <section>
+              <h2>{section.heading}</h2>
+              <p>{section.body}</p>
+            </section>
+          ))}
+        </div>
+      </Container>
+    </section>
+  )
+}

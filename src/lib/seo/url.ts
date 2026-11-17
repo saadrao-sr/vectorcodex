@@ -4,6 +4,10 @@ export function absoluteUrl(path: string) {
   if (/^https?:\/\//i.test(path)) return path;
   const withLeading = path.startsWith('/') ? path : `/${path}`;
   if (withLeading === '/') return `${site.url}/`;
+  // Asset paths keep their extension — do not force a trailing slash.
+  if (/\.[a-zA-Z0-9]{2,8}$/.test(withLeading)) {
+    return `${site.url}${withLeading}`;
+  }
   const canonical = withLeading.endsWith('/') ? withLeading : `${withLeading}/`;
   return `${site.url}${canonical}`;
 }

@@ -379,7 +379,7 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
               transition={{ duration: reduced ? 0 : 0.2 }}
               className="relative z-10 flex max-h-[min(100svh,100dvh)] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border border-white/12 bg-[#0D120C] shadow-[0_30px_80px_rgb(0_0_0_/0.55)] sm:max-h-[min(90svh,90dvh)] sm:rounded-3xl"
             >
-              <div className="relative shrink-0 overflow-hidden border-b border-white/10 px-5 py-5 sm:px-7 sm:py-6">
+              <div className="relative shrink-0 border-b border-white/10 px-5 pt-5 pb-5 sm:px-7 sm:pt-6 sm:pb-6">
                 <div
                   className="pointer-events-none absolute inset-0 bg-gradient-to-br from-highlight/18 via-lime/5 to-transparent"
                   aria-hidden="true"
@@ -389,12 +389,12 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
                   aria-hidden="true"
                 />
                 <div className="relative flex items-start justify-between gap-4">
-                  <div>
+                  <div className="min-w-0 pr-1">
                     <p className="text-xs font-semibold tracking-[0.16em] text-highlight uppercase">Team Requirements</p>
                     <h2 id={titleId} className="mt-2 font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                       Build Your Extended Team
                     </h2>
-                    <p className="mt-2 max-w-xl text-sm leading-6 text-white/60">
+                    <p className="mt-2 max-w-xl text-sm leading-6 text-white/65">
                       Tell us the department, headcount, budget, and timeline. We will reply with a tailored staffing plan.
                     </p>
                   </div>

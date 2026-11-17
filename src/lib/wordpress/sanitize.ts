@@ -16,6 +16,32 @@ const namedEntities: Record<string, string> = {
   mdash: '—',
 };
 
+/** Stable VectorCodex editorial component attributes from the Classic Editor plugin. */
+const vcDataAttributes = [
+  'data-vc-component',
+  'data-vc-citation',
+  'data-vc-source-name',
+  'data-vc-source-url',
+  'data-vc-label',
+  'data-vc-title',
+  'data-vc-publisher',
+  'data-vc-url',
+  'data-vc-date',
+  'data-vc-eyebrow',
+  'data-vc-value',
+  'data-vc-description',
+  'data-vc-heading',
+  'data-vc-contact',
+  'data-vc-primary-text',
+  'data-vc-primary-url',
+  'data-vc-secondary-text',
+  'data-vc-secondary-url',
+  'data-vc-quote',
+  'data-vc-attribution',
+] as const;
+
+const vcClassAndData = ['class', 'role', 'aria-hidden', 'aria-level', ...vcDataAttributes];
+
 export function decodeEntities(input: string) {
   return input
     .replace(/&#(\d+);/g, (_, value: string) => String.fromCodePoint(Number(value)))
@@ -74,29 +100,62 @@ export function sanitizeContent(html: string) {
       'sup',
       'sub',
       'span',
+      'iframe',
+      'div',
+      'aside',
+      'section',
+      'footer',
+      'cite',
     ],
     allowedAttributes: {
-      a: ['href', 'title', 'rel', 'target'],
+      a: ['href', 'title', 'rel', 'target', ...vcClassAndData],
       img: ['src', 'alt', 'width', 'height', 'loading', 'decoding'],
       th: ['colspan', 'rowspan'],
       td: ['colspan', 'rowspan'],
+      h2: ['id', 'class'],
+      h3: ['id', 'class'],
+      h4: ['id', 'class'],
+      h5: ['id', 'class'],
+      h6: ['id', 'class'],
+      iframe: ['src', 'title', 'width', 'height', 'allow', 'allowfullscreen', 'loading', 'referrerpolicy'],
+      div: vcClassAndData,
+      aside: vcClassAndData,
+      section: vcClassAndData,
+      span: vcClassAndData,
+      p: vcClassAndData,
+      blockquote: vcClassAndData,
+      footer: ['class'],
+      cite: ['class'],
+      sup: ['class'],
       '*': [],
     },
     allowedSchemes: ['http', 'https', 'mailto'],
     allowedSchemesByTag: {
       img: ['http', 'https'],
+      iframe: ['https'],
     },
+    allowedIframeHostnames: ['www.youtube.com', 'youtube.com', 'www.youtube-nocookie.com', 'player.vimeo.com'],
     transformTags: {
       h1: 'h2',
-      a: (_tagName, attribs) => ({
-        tagName: 'a',
-        attribs: definedAttributes({
-          href: attribs.href,
-          title: attribs.title,
-          rel: 'noopener noreferrer',
-          target: attribs.target === '_blank' ? '_blank' : undefined,
-        }),
-      }),
+      a: (_tagName, attribs) => {
+        const className = attribs.class ?? '';
+        const forceBlank =
+          attribs.target === '_blank' ||
+          className.includes('vc-inline-citation') ||
+          className.includes('vc-source-reference__link') ||
+          className.includes('vc-stat-item__source');
+        return {
+          tagName: 'a',
+          attribs: definedAttributes({
+            href: attribs.href,
+            title: attribs.title,
+            class: attribs.class,
+            rel: 'noopener noreferrer',
+            target: forceBlank ? '_blank' : undefined,
+            ...Object.fromEntries(vcDataAttributes.map((key) => [key, attribs[key]])),
+          }),
+        };
+      },
       img: (_tagName, attribs) => ({
         tagName: 'img',
         attribs: definedAttributes({

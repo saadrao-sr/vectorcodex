@@ -1,12 +1,23 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
-import { ArrowUpRight, ChevronDown, Menu, Sparkles, X } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Menu, Phone, Sparkles, X } from 'lucide-react';
 import { industriesMegaLinks } from '../../config/industries-mega-menu';
 import { megaMenuCategories } from '../../config/mega-menu';
 import { site } from '../../config/site';
 import type { NavLink } from '../../types/content';
 import { buttonClass } from '../ui/styles';
+
+const phoneHref = site.telephone
+  ? `tel:${site.telephone.replace(/\s+/g, '')}`
+  : site.whatsapp
+    ? `tel:+${site.whatsapp}`
+    : '';
+const phoneDisplay = site.telephone
+  ? site.telephone
+  : site.whatsapp
+    ? `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)} ${site.whatsapp.slice(5)}`
+    : '';
 
 interface SocialLink {
   label: string;
@@ -475,6 +486,26 @@ export default function MobileNav({ links, currentPath, socials = site.socials }
                     </button>
                   </div>
 
+                  {phoneHref && phoneDisplay ? (
+                    <a
+                      href={phoneHref}
+                      className="flex items-center gap-3 rounded-2xl border border-white/12 bg-white/[0.03] px-3.5 py-3 text-white transition duration-300 hover:border-highlight/40 hover:bg-highlight/10 hover:text-highlight"
+                      onClick={() => setOpen(false)}
+                    >
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-highlight/30 bg-highlight/10 text-highlight">
+                        <Phone size={16} aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[0.65rem] font-semibold tracking-[0.14em] text-white/45 uppercase">
+                          Call us
+                        </span>
+                        <span className="mt-0.5 block font-display text-base font-semibold tracking-tight">
+                          {phoneDisplay}
+                        </span>
+                      </span>
+                    </a>
+                  ) : null}
+
                   {socials.length > 0 && (
                     <ul className="flex flex-wrap gap-2.5" aria-label="Social media">
                       {socials.map((social) => (
@@ -484,7 +515,7 @@ export default function MobileNav({ links, currentPath, socials = site.socials }
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={social.label}
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/12 bg-white/[0.03] text-white transition duration-300 hover:border-highlight/50 hover:bg-highlight/10 hover:text-highlight"
+                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/[0.03] text-white transition duration-300 hover:border-highlight/50 hover:bg-highlight/10 hover:text-highlight"
                           >
                             <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
                               <path d={socialPaths[social.icon]} />

@@ -1,6 +1,5 @@
 ---
 import { ArrowUpRight } from 'lucide-react';
-import { blogPlaceholders } from '../../config/blog-placeholders';
 import { formatDate } from '../../lib/seo/format';
 import { getPostsPage } from '../../lib/wordpress/client';
 import InsightsCarousel from '../interactive/InsightsCarousel';
@@ -8,9 +7,7 @@ import Container from '../ui/Container.astro';
 import { buttonClass, eyebrowClass } from '../ui/styles';
 
 const result = await getPostsPage(1, 6);
-const livePosts = result.ok ? result.posts.slice(0, 6) : [];
-const usingPlaceholders = livePosts.length === 0;
-const posts = usingPlaceholders ? blogPlaceholders.slice(0, 6) : livePosts;
+const posts = result.ok ? result.posts.slice(0, 6) : [];
 
 const slides = posts.map((post) => ({
   id: post.id,
@@ -28,7 +25,7 @@ const slides = posts.map((post) => ({
         height: post.image.height,
       }
     : undefined,
-  href: usingPlaceholders ? undefined : `/blog/${post.slug}/`,
+  href: `/blog/${post.slug}/`,
 }));
 ---
 
@@ -62,14 +59,14 @@ const slides = posts.map((post) => ({
     </div>
 
     {
-      usingPlaceholders && (
-        <p class="mt-4 text-xs leading-5 text-white/45 sm:mt-5" role="status">
-          Placeholder articles for layout preview — published WordPress posts will replace these automatically.
+      slides.length > 0 ? (
+        <InsightsCarousel client:visible items={slides} />
+      ) : (
+        <p class="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-6 text-sm leading-6 text-white/60" role="status">
+          Insights will appear here once WordPress articles are published.
         </p>
       )
     }
-
-    <InsightsCarousel client:visible items={slides} />
 
     <div class="mt-6 flex justify-center sm:mt-7">
       <a

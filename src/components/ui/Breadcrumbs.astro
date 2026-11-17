@@ -8,20 +8,16 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<nav aria-label="Breadcrumb" class="mb-6">
-  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-white/60">
+<nav aria-label="Breadcrumb" class="mb-5 sm:mb-6">
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] leading-none text-white/55">
     {
       items.map((item, index) => {
         const last = index === items.length - 1;
         return (
-          <li class="flex min-w-0 items-center gap-2">
-            {index > 0 && (
-              <span aria-hidden="true" class="text-white/30">
-                /
-              </span>
-            )}
+          <li class="inline-flex max-w-full items-center gap-2">
+            {index > 0 && <span aria-hidden="true" class="text-white/30">/</span>}
             {last ? (
-              <span aria-current="page" class="truncate text-white">
+              <span aria-current="page" class="truncate text-highlight">
                 {item.name}
               </span>
             ) : (

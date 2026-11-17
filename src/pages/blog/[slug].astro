@@ -1,17 +1,32 @@
 ---
-import PostCard from '../../components/blog/PostCard.astro';
+import BlogArticleHero from '../../components/blog/detail/BlogArticleHero.astro';
+import BlogArticleNav from '../../components/blog/detail/BlogArticleNav.astro';
+import BlogAuthorCard from '../../components/blog/detail/BlogAuthorCard.astro';
+import BlogContent from '../../components/blog/detail/BlogContent.astro';
+import BlogFinalCta from '../../components/blog/detail/BlogFinalCta.astro';
+import BlogRelatedArticles from '../../components/blog/detail/BlogRelatedArticles.astro';
+import BlogSidebarCta from '../../components/blog/detail/BlogSidebarCta.astro';
+import BlogShare from '../../components/interactive/BlogShare';
+import BlogTableOfContents from '../../components/interactive/BlogTableOfContents';
+import QuoteModal from '../../components/interactive/QuoteModal';
 import Container from '../../components/ui/Container.astro';
-import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate, summarize } from '../../lib/seo/format';
-import { articleSchema, breadcrumbSchema } from '../../lib/schema/jsonld';
+import {
+  enrichArticleContent,
+  getAdjacentPosts,
+  getContextualServiceLinks,
+  getRelatedPosts,
+} from '../../lib/blog/content';
+import { absoluteUrl } from '../../lib/seo/url';
+import { summarize } from '../../lib/seo/format';
+import { articleSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema/jsonld';
 import { getAllPosts } from '../../lib/wordpress/client';
 import type { BlogPost } from '../../types/content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getAllPosts();
   return posts
-    .filter((post) => post.slug && post.slug !== 'page')
+    .filter((post) => post.slug && post.slug !== 'page' && post.id > 0)
     .map((post) => ({
       params: { slug: post.slug },
       props: { post },
@@ -22,78 +37,119 @@ interface Props {
   post: BlogPost;
 }
 
-const { post } = Astro.props;
+const { post: pathPost } = Astro.props;
+const allPosts = (await getAllPosts()).filter((item) => item.id > 0);
+// Prefer a fresh WordPress fetch so citations/CTAs/stats appear after CMS edits
+// (getStaticPaths props can stay stale during `astro dev`).
+const post = allPosts.find((item) => item.slug === pathPost.slug) ?? pathPost;
 const path = `/blog/${post.slug}/`;
+const pageUrl = absoluteUrl(path);
 const description = summarize(post.excerpt || post.title, 160);
+const { html: contentHtml, headings } = enrichArticleContent(post.contentHtml);
+const readingMinutes = post.readingMinutes ?? 1;
+const primaryCategory = post.categories[0];
+const placeholder = false;
+
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Blog', href: '/blog/' },
+  ...(primaryCategory ? [{ name: primaryCategory.name, href: '/blog/' }] : []),
   { name: post.title, href: path },
 ];
-const published = formatDate(post.publishedAt);
-const modified = formatDate(post.modifiedAt);
-const others = (await getAllPosts()).filter((item) => item.slug !== post.slug).slice(0, 3);
+
+const related = getRelatedPosts(post, allPosts, 3) as BlogPost[];
+const { previous, next } = getAdjacentPosts(post.slug, allPosts);
+const serviceLinks = getContextualServiceLinks(post.categories);
+const shareImage = post.image?.src ? absoluteUrl(post.image.src) : undefined;
 ---
 
 <BaseLayout
   title={post.title}
   description={description}
   path={path}
+  noindex={placeholder}
   ogType="article"
-  image={post.image?.src}
+  image={shareImage}
   imageAlt={post.image?.alt}
   imageWidth={post.image?.width}
   imageHeight={post.image?.height}
   publishedAt={post.publishedAt}
   modifiedAt={post.modifiedAt}
-  schema={[articleSchema({ ...post, excerpt: description }), breadcrumbSchema(crumbs)]}
+  schema={[
+    webPageSchema({ title: post.title, description, path }),
+    breadcrumbSchema(crumbs),
+    articleSchema({ ...post, excerpt: description, contentHtml, readingMinutes }),
+  ]}
 >
-  <article class="py-12 sm:py-16">
-    <Container class="max-w-3xl">
-      <Breadcrumbs items={crumbs} />
-      {post.categories.length > 0 && <p class="text-xs font-semibold tracking-[0.16em] text-highlight uppercase">{post.categories.map((category) => category.name).join(', ')}</p>}
-      <h1 class="mt-3 font-display text-4xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">{post.title}</h1>
-      <p class="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-sm text-white/60">
-        {published && (
-          <span>
-            Published <time datetime={post.publishedAt}>{published}</time>
-          </span>
-        )}
-        {modified && modified !== published && (
-          <span>
-            Updated <time datetime={post.modifiedAt}>{modified}</time>
-          </span>
-        )}
-        {post.authorName && <span>By {post.authorName}</span>}
-      </p>
-      {
-        post.image && (
-          <img
-            src={post.image.src}
-            alt={post.image.alt}
-            width={post.image.width}
-            height={post.image.height}
-            decoding="async"
-            class="mt-8 aspect-[16/9] w-full rounded-2xl object-cover"
-          />
-        )
-      }
-      <div class="prose-vc mt-10" set:html={post.contentHtml} />
-      <p class="mt-12">
-        <a href="/blog/" class="text-sm font-semibold text-highlight">All articles</a>
-      </p>
-    </Container>
-    {
-      others.length > 0 && (
-        <Container class="mt-16">
-          <h2 class="font-display text-3xl font-semibold tracking-tight">More articles</h2>
-          <div class="mt-6 grid gap-5 md:grid-cols-3">
-            {others.map((item) => (
-              <PostCard post={item} />
-            ))}
+  <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
+
+  <article>
+    <BlogArticleHero post={post} crumbs={crumbs} readingMinutes={readingMinutes} />
+
+    <section class="relative isolate border-t border-white/10 bg-[#0D120C] py-8 sm:py-10 lg:py-12">
+      <Container>
+        <div class="blog-article__layout">
+          <div class="blog-article__main min-w-0">
+            {
+              headings.length > 0 && (
+                <div class="mb-5 lg:hidden">
+                  <BlogTableOfContents client:visible headings={headings} />
+                </div>
+              )
+            }
+
+            <BlogContent html={contentHtml} />
+
+            <div class="mt-8 space-y-4 sm:mt-10">
+              <div class="lg:hidden">
+                <BlogShare client:visible url={pageUrl} title={post.title} />
+              </div>
+              <BlogAuthorCard post={post} />
+            </div>
+
+            <BlogArticleNav previous={previous} next={next} />
           </div>
-        </Container>
-      )
-    }
+
+          <aside class="blog-article__sidebar min-w-0">
+            <div class="blog-article__sticky space-y-4">
+              {
+                headings.length > 0 && (
+                  <div class="hidden lg:block">
+                    <BlogTableOfContents client:visible headings={headings} />
+                  </div>
+                )
+              }
+              <BlogSidebarCta serviceLinks={serviceLinks} />
+              <div class="hidden lg:block">
+                <BlogShare client:visible url={pageUrl} title={post.title} />
+              </div>
+            </div>
+          </aside>
+        </div>
+      </Container>
+    </section>
+
+    <BlogRelatedArticles posts={related} />
+    <BlogFinalCta />
   </article>
 </BaseLayout>
+
+<style>
+  .blog-article__layout {
+    display: grid;
+    align-items: start;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .blog-article__layout {
+      grid-template-columns: minmax(0, 1.7fr) minmax(16rem, 0.7fr);
+      gap: 2.25rem;
+    }
+
+    .blog-article__sticky {
+      position: sticky;
+      top: calc(var(--header-height) + 1rem);
+    }
+  }
+</style>

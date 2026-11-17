@@ -1,0 +1,43 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import { buttonClass } from '../../ui/styles';
+
+interface Props {
+  serviceLinks?: { label: string; href: string }[];
+}
+
+const { serviceLinks = [] } = Astro.props;
+---
+
+<aside class="rounded-2xl border border-highlight/25 bg-highlight/[0.05] px-4 py-4 sm:px-5 sm:py-5">
+  <p class="text-[0.65rem] font-semibold tracking-[0.14em] text-highlight uppercase">Need a hand?</p>
+  <h2 class="mt-2 font-display text-lg font-semibold tracking-tight text-white">
+    Need Help With Your Digital Strategy?
+  </h2>
+  <p class="mt-2 text-sm leading-6 text-white/65">
+    Tell us what you are trying to grow. We will outline a clear next step.
+  </p>
+  <button
+    type="button"
+    class:list={[buttonClass.base, buttonClass.gradient, 'mt-4 w-full']}
+    data-quote-open
+  >
+    Discuss Your Project
+    <ArrowUpRight size={15} aria-hidden="true" />
+  </button>
+
+  {
+    serviceLinks.length > 0 && (
+      <ul class="mt-4 space-y-2 border-t border-white/10 pt-4">
+        {serviceLinks.map((link) => (
+          <li>
+            <a href={link.href} class="inline-flex items-center gap-1.5 text-sm font-semibold text-highlight">
+              {link.label}
+              <ArrowUpRight size={13} aria-hidden="true" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</aside>

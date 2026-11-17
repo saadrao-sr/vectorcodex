@@ -375,29 +375,31 @@ export default function QuoteModal({ endpoint = '' }: Props) {
                 <div className="absolute -right-20 -bottom-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.1),transparent_70%)] blur-2xl" />
               </div>
 
-              <div className="relative flex items-start justify-between gap-4 border-b border-white/10 px-5 py-5 sm:px-8 sm:py-6">
-                <div>
-                  <p className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-highlight uppercase">
-                    <span className="h-2 w-2 rounded-full bg-highlight" aria-hidden="true" />
-                    Let's Get Started
-                  </p>
-                  <h2 id={titleId} className="mt-3 max-w-2xl font-display text-2xl font-semibold tracking-tight text-balance text-white sm:text-3xl lg:text-[2.1rem]">
-                    This Could Be the Start of Something <span className="text-highlight">Incredible!</span>
-                  </h2>
+              <div className="relative shrink-0 border-b border-white/10 px-5 pt-5 pb-5 sm:px-8 sm:pt-6 sm:pb-6">
+                <div className="relative flex items-start justify-between gap-4">
+                  <div className="min-w-0 pr-1">
+                    <p className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-highlight uppercase">
+                      <span className="h-2 w-2 rounded-full bg-highlight" aria-hidden="true" />
+                      Let's Get Started
+                    </p>
+                    <h2 id={titleId} className="mt-3 max-w-2xl font-display text-2xl font-semibold tracking-tight text-balance text-white sm:text-3xl lg:text-[2.1rem]">
+                      This Could Be the Start of Something <span className="text-highlight">Incredible!</span>
+                    </h2>
+                  </div>
+                  <button
+                    ref={closeRef}
+                    type="button"
+                    className="inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white transition hover:border-highlight hover:bg-highlight/10 hover:text-highlight"
+                    onClick={() => setOpen(false)}
+                  >
+                    <X aria-hidden="true" size={18} />
+                    <span className="sr-only">Close</span>
+                  </button>
                 </div>
-                <button
-                  ref={closeRef}
-                  type="button"
-                  className="inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white transition hover:border-highlight hover:bg-highlight/10 hover:text-highlight"
-                  onClick={() => setOpen(false)}
-                >
-                  <X aria-hidden="true" size={18} />
-                  <span className="sr-only">Close</span>
-                </button>
               </div>
 
               <form
-                className="relative overflow-y-auto px-5 py-5 sm:px-8 sm:py-7"
+                className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-8 sm:py-7"
                 method="post"
                 action={endpoint || undefined}
                 onSubmit={onSubmit}

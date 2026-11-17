@@ -1,0 +1,114 @@
+---
+import type { CaseStudy } from '../../../types/content';
+import Container from '../../ui/Container.astro';
+import { eyebrowClass } from '../../ui/styles';
+
+interface Props {
+  study: CaseStudy;
+}
+
+const { study } = Astro.props;
+const comparison = study.beforeAfter;
+---
+
+{
+  comparison && (
+    <section
+      id="before-after"
+      class="cs-compare relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-8 sm:py-10 lg:py-12"
+      aria-labelledby="before-after-heading"
+    >
+      <Container>
+        <header class="mx-auto max-w-2xl text-center">
+          <p class:list={[eyebrowClass, 'mx-auto w-fit']}>Before & After</p>
+          <h2
+            id="before-after-heading"
+            class="mt-2.5 font-display text-xl font-semibold tracking-tight text-balance text-white sm:mt-3 sm:text-2xl lg:text-[1.75rem]"
+          >
+            What changed in the engagement
+          </h2>
+        </header>
+
+        <div class="cs-compare__grid mt-5 sm:mt-6">
+          <article class="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+            {comparison.beforeImage && (
+              <img
+                src={comparison.beforeImage.src}
+                alt={comparison.beforeImage.alt}
+                width={comparison.beforeImage.width ?? 960}
+                height={comparison.beforeImage.height ?? 540}
+                loading="lazy"
+                decoding="async"
+                class="cs-compare__image w-full object-cover"
+              />
+            )}
+            <div class="px-3.5 py-3.5 sm:px-4 sm:py-4">
+              <p class="text-[0.65rem] font-semibold tracking-[0.14em] text-white/45 uppercase">
+                {comparison.beforeLabel}
+              </p>
+              {comparison.beforeBody && (
+                <p class="mt-2 text-sm leading-6 text-white/70">{comparison.beforeBody}</p>
+              )}
+            </div>
+          </article>
+
+          <article class="overflow-hidden rounded-2xl border border-highlight/25 bg-highlight/[0.04]">
+            {comparison.afterImage && (
+              <img
+                src={comparison.afterImage.src}
+                alt={comparison.afterImage.alt}
+                width={comparison.afterImage.width ?? 960}
+                height={comparison.afterImage.height ?? 540}
+                loading="lazy"
+                decoding="async"
+                class="cs-compare__image w-full object-cover"
+              />
+            )}
+            <div class="px-3.5 py-3.5 sm:px-4 sm:py-4">
+              <p class="text-[0.65rem] font-semibold tracking-[0.14em] text-highlight uppercase">
+                {comparison.afterLabel}
+              </p>
+              {comparison.afterBody && (
+                <p class="mt-2 text-sm leading-6 text-white/70">{comparison.afterBody}</p>
+              )}
+            </div>
+          </article>
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+<style>
+  .cs-compare__grid {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .cs-compare__image {
+    aspect-ratio: 16 / 7;
+    max-height: 9.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .cs-compare__grid {
+      gap: 1rem;
+    }
+
+    .cs-compare__image {
+      max-height: 10.5rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .cs-compare__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.15rem;
+      align-items: stretch;
+    }
+
+    .cs-compare__image {
+      max-height: 11rem;
+    }
+  }
+</style>
