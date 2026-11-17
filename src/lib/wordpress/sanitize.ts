@@ -16,7 +16,7 @@ const namedEntities: Record<string, string> = {
   mdash: '—',
 };
 
-/** Stable VectorCodex editorial component attributes from the Classic Editor plugin. */
+/** Stable VectorCodex editorial attributes from Classic Editor style formats / legacy HTML. */
 const vcDataAttributes = [
   'data-vc-component',
   'data-vc-citation',

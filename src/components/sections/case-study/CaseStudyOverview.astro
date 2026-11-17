@@ -23,19 +23,19 @@ const overview = study.clientOverview;
       </div>
 
       <Container class="relative">
-        <div class="cs-overview__layout mx-auto w-full max-w-3xl">
+        <div class="cs-overview__layout w-full">
           <header class="cs-overview__intro text-center">
             <p class:list={[eyebrowClass, 'mx-auto w-fit']}>Client Overview</p>
             <h2
               id="client-overview-heading"
-              class="mx-auto mt-2.5 max-w-xl font-display text-[1.35rem] leading-tight font-semibold tracking-tight text-balance text-white sm:mt-3 sm:text-2xl lg:text-[1.75rem] lg:leading-[1.15]"
+              class="mx-auto mt-2.5 max-w-3xl font-display text-[1.35rem] leading-tight font-semibold tracking-tight text-balance text-white sm:mt-3 sm:text-2xl lg:text-[1.75rem] lg:leading-[1.15]"
             >
               Business context before tactics
             </h2>
           </header>
 
           <div class="cs-overview__body mt-5 sm:mt-6">
-            <div class="cs-overview__panel text-left">
+            <div class="cs-overview__panel">
               <p class="text-[0.95rem] leading-7 text-white/72 sm:text-base sm:leading-8">{overview.body}</p>
 
               {overview.audience && (
@@ -46,16 +46,18 @@ const overview = study.clientOverview;
               )}
 
               {overview.objectives && overview.objectives.length > 0 && (
-                <div class="mt-5 border-t border-white/10 pt-4 sm:mt-5 sm:pt-5">
-                  <h3 class="font-display text-base font-semibold tracking-tight text-white sm:text-lg">Objectives</h3>
-                  <ul class="mt-3 space-y-2">
-                    {overview.objectives.map((item) => (
-                      <li class="flex gap-3 text-sm leading-6 text-white/70 sm:text-[0.95rem] sm:leading-7">
-                        <span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-highlight" aria-hidden="true" />
-                        <span>{item}</span>
+                <div class="cs-overview__objectives mt-4 border-t border-white/10 pt-4 sm:mt-5 sm:pt-4">
+                  <h3 class="font-display text-sm font-semibold tracking-tight text-white sm:text-base">Objectives</h3>
+                  <ol class="cs-overview__objective-list mt-3 grid grid-cols-3 gap-2 sm:mt-3.5 sm:gap-3">
+                    {overview.objectives.map((item, index) => (
+                      <li class="cs-overview__objective-item">
+                        <span class="cs-overview__objective-index" aria-hidden="true">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <p class="cs-overview__objective-text">{item}</p>
                       </li>
                     ))}
-                  </ul>
+                  </ol>
                 </div>
               )}
             </div>
@@ -68,7 +70,7 @@ const overview = study.clientOverview;
 
 <style>
   .cs-overview__panel {
-    padding: 1.1rem 1rem;
+    padding: 1rem 0.95rem;
     border: 1px solid rgb(255 255 255 / 0.1);
     border-radius: 1rem;
     background:
@@ -76,15 +78,71 @@ const overview = study.clientOverview;
       rgb(13 18 12);
   }
 
+  .cs-overview__objective-item {
+    position: relative;
+    overflow: hidden;
+    min-height: 100%;
+    min-width: 0;
+    padding: 0.75rem 0.65rem 0.75rem 0.75rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 0.85rem;
+    background:
+      linear-gradient(135deg, rgb(222 243 77 / 0.06), transparent 42%),
+      rgb(255 255 255 / 0.025);
+  }
+
+  .cs-overview__objective-item::before {
+    content: '';
+    position: absolute;
+    top: 0.55rem;
+    bottom: 0.55rem;
+    left: 0;
+    width: 2px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #c5f63d, #f6ef5c);
+  }
+
+  .cs-overview__objective-index {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #def34d;
+  }
+
+  .cs-overview__objective-text {
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: rgb(255 255 255 / 0.78);
+  }
+
   @media (min-width: 640px) {
     .cs-overview__panel {
-      padding: 1.25rem 1.2rem;
+      padding: 1.15rem 1.15rem;
+    }
+
+    .cs-overview__objective-item {
+      padding: 1.05rem 1.05rem 1.05rem 1.1rem;
+    }
+
+    .cs-overview__objective-index {
+      margin-bottom: 0.4rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+    }
+
+    .cs-overview__objective-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
     }
   }
 
   @media (min-width: 900px) {
     .cs-overview__panel {
-      padding: 1.35rem 1.3rem;
+      padding: 1.25rem 1.25rem;
     }
   }
 </style>

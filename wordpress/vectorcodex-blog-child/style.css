@@ -1,0 +1,13 @@
+/*
+Theme Name: VectorCodex Blog
+Theme URI: https://vectorcodex.com
+Description: Child theme for VectorCodex Classic Editor style formats (CTA, Pro Tip, Citation, Statistics).
+Author: VectorCodex
+Template: hostinger-ai-theme
+Version: 1.3.0
+Requires at least: 6.4
+Text Domain: vectorcodex-blog-child
+*/
+
+/* Front-end styles for this headless blog are handled by Astro.
+   Classic Editor preview styles live in editor-style.css. */

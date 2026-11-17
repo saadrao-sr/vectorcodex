@@ -2,6 +2,7 @@
 import { ArrowDown, ArrowUpRight, Code2, LineChart, Search, Target } from 'lucide-react';
 import type { Crumb } from '../../types/content';
 import Container from '../ui/Container.astro';
+import SectionBannerBg from '../ui/SectionBannerBg.astro';
 import { buttonClass, eyebrowClass } from '../ui/styles';
 
 interface Props {
@@ -21,11 +22,7 @@ const floats = [
   class="about-hero relative isolate overflow-x-clip overflow-y-visible border-b border-white/10 bg-[#0D120C] pt-[calc(var(--header-height)+1.5rem)] pb-12 sm:pt-[calc(var(--header-height)+2rem)] sm:pb-14 lg:pb-16"
   aria-labelledby="about-hero-heading"
 >
-  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-    <div class="absolute top-[-8%] left-[12%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.12),transparent_70%)] blur-3xl sm:h-72 sm:w-72"></div>
-    <div class="absolute right-[-4%] bottom-[8%] h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.08),transparent_72%)] blur-3xl sm:h-80 sm:w-80"></div>
-    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-highlight/30 to-transparent"></div>
-  </div>
+  <SectionBannerBg eager />
 
   <Container class="relative">
     <div class="grid items-center gap-8 sm:gap-9 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] md:gap-8 lg:gap-12 xl:gap-16">

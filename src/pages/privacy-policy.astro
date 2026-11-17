@@ -2,6 +2,7 @@
 import LegalToc from '../components/interactive/LegalToc';
 import PageCrumbBand from '../components/sections/PageCrumbBand.astro';
 import Container from '../components/ui/Container.astro';
+import SectionBannerBg from '../components/ui/SectionBannerBg.astro';
 import { eyebrowClass } from '../components/ui/styles';
 import { legalPlaceholders, privacyPolicyMeta, privacyPolicyToc } from '../config/legal';
 import { site } from '../config/site';
@@ -36,10 +37,7 @@ const placeholderClass = 'rounded-md bg-white/[0.04] px-1.5 py-0.5 font-medium t
   <PageCrumbBand title="Privacy Policy" crumbs={crumbs} />
 
   <section class="relative isolate overflow-x-clip border-b border-white/10 bg-[#0D120C] py-10 sm:py-12 lg:py-14" aria-labelledby="privacy-hero-heading">
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <div class="absolute top-16 left-[12%] h-52 w-52 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.08),transparent_70%)] blur-3xl"></div>
-      <div class="absolute right-[10%] bottom-8 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.05),transparent_70%)] blur-3xl"></div>
-    </div>
+    <SectionBannerBg eager />
     <Container class="relative">
       <p class:list={[eyebrowClass, 'w-fit max-w-full']}>Legal Information</p>
       <h1

@@ -4,8 +4,8 @@
  * WORDPRESS_API_KEY is not prefixed with PUBLIC_ and is not sent to the browser.
  */
 import { getSecret } from 'astro:env/server';
-import type { BlogImage, BlogListResult, BlogPost, BlogTerm } from '../../types/content';
-import type { WpMedia, WpPost, WpTerm } from '../../types/wordpress';
+import type { BlogFaq, BlogImage, BlogListResult, BlogPost, BlogTerm } from '../../types/content';
+import type { WpFaq, WpMedia, WpPost, WpTerm } from '../../types/wordpress';
 import { estimateReadingMinutes } from '../blog/content';
 import { summarize } from '../seo/format';
 import { sanitizeContent, toPlainText } from './sanitize';
@@ -161,6 +161,25 @@ async function resolveFeaturedImage(post: WpPost, title: string): Promise<BlogIm
   }
 }
 
+function mapFaqs(raw: WpFaq[] | undefined, slug: string): BlogFaq[] | undefined {
+  if (!Array.isArray(raw) || raw.length === 0) return undefined;
+
+  const faqs = raw
+    .map((item, index) => {
+      const question = toPlainText(item?.question ?? '').trim();
+      const answer = toPlainText(item?.answer ?? '').trim();
+      if (!question || !answer) return null;
+      return {
+        id: `${slug}-faq-${index + 1}`,
+        question,
+        answer,
+      };
+    })
+    .filter((item): item is BlogFaq => Boolean(item));
+
+  return faqs.length > 0 ? faqs : undefined;
+}
+
 async function mapPost(post: WpPost): Promise<BlogPost | null> {
   if (!post?.slug || !post.title?.rendered) return null;
   const title = toPlainText(post.title.rendered);
@@ -205,6 +224,7 @@ async function mapPost(post: WpPost): Promise<BlogPost | null> {
     categories: resolvedCategories,
     tags: tags.length > 0 ? tags : undefined,
     readingMinutes: estimateReadingMinutes(contentHtml),
+    faqs: mapFaqs(post.vc_faqs, post.slug),
   };
 }
 

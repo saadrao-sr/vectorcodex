@@ -1,8 +1,8 @@
 ---
 import BlogArticleHero from '../../components/blog/detail/BlogArticleHero.astro';
 import BlogArticleNav from '../../components/blog/detail/BlogArticleNav.astro';
-import BlogAuthorCard from '../../components/blog/detail/BlogAuthorCard.astro';
 import BlogContent from '../../components/blog/detail/BlogContent.astro';
+import BlogFaqs from '../../components/blog/detail/BlogFaqs.astro';
 import BlogFinalCta from '../../components/blog/detail/BlogFinalCta.astro';
 import BlogRelatedArticles from '../../components/blog/detail/BlogRelatedArticles.astro';
 import BlogSidebarCta from '../../components/blog/detail/BlogSidebarCta.astro';
@@ -18,7 +18,7 @@ import {
 } from '../../lib/blog/content';
 import { absoluteUrl } from '../../lib/seo/url';
 import { summarize } from '../../lib/seo/format';
-import { articleSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema/jsonld';
+import { articleSchema, breadcrumbSchema, faqPageSchema, webPageSchema } from '../../lib/schema/jsonld';
 import { getAllPosts } from '../../lib/wordpress/client';
 import type { BlogPost } from '../../types/content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -61,6 +61,13 @@ const related = getRelatedPosts(post, allPosts, 3) as BlogPost[];
 const { previous, next } = getAdjacentPosts(post.slug, allPosts);
 const serviceLinks = getContextualServiceLinks(post.categories);
 const shareImage = post.image?.src ? absoluteUrl(post.image.src) : undefined;
+const faqs = post.faqs ?? [];
+const schema = [
+  webPageSchema({ title: post.title, description, path }),
+  breadcrumbSchema(crumbs),
+  articleSchema({ ...post, excerpt: description, contentHtml, readingMinutes }),
+  ...(faqs.length > 0 ? [faqPageSchema(faqs)] : []),
+];
 ---
 
 <BaseLayout
@@ -75,11 +82,7 @@ const shareImage = post.image?.src ? absoluteUrl(post.image.src) : undefined;
   imageHeight={post.image?.height}
   publishedAt={post.publishedAt}
   modifiedAt={post.modifiedAt}
-  schema={[
-    webPageSchema({ title: post.title, description, path }),
-    breadcrumbSchema(crumbs),
-    articleSchema({ ...post, excerpt: description, contentHtml, readingMinutes }),
-  ]}
+  schema={schema}
 >
   <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
 
@@ -100,11 +103,10 @@ const shareImage = post.image?.src ? absoluteUrl(post.image.src) : undefined;
 
             <BlogContent html={contentHtml} />
 
-            <div class="mt-8 space-y-4 sm:mt-10">
-              <div class="lg:hidden">
-                <BlogShare client:visible url={pageUrl} title={post.title} />
-              </div>
-              <BlogAuthorCard post={post} />
+            <BlogFaqs items={faqs} />
+
+            <div class="mt-8 sm:mt-10 lg:hidden">
+              <BlogShare client:visible url={pageUrl} title={post.title} />
             </div>
 
             <BlogArticleNav previous={previous} next={next} />

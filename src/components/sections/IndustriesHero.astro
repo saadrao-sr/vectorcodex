@@ -11,6 +11,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import Container from '../ui/Container.astro';
+import SectionBannerBg from '../ui/SectionBannerBg.astro';
 import { buttonClass, eyebrowClass } from '../ui/styles';
 
 type Tile = {
@@ -37,10 +38,7 @@ const rightTiles = tiles.filter((tile) => tile.side === 'right');
   class="industries-hero relative isolate overflow-x-clip border-t border-white/10 bg-[#0D120C] py-8 sm:py-10 lg:py-12"
   aria-labelledby="industries-hero-heading"
 >
-  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-    <div class="absolute top-10 left-[8%] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.09),transparent_70%)] blur-3xl"></div>
-    <div class="absolute right-[6%] bottom-8 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgb(197_246_61_/0.06),transparent_70%)] blur-3xl"></div>
-  </div>
+  <SectionBannerBg eager />
 
   <Container class="relative">
     <div class="industries-hero__layout">

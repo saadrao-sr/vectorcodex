@@ -152,6 +152,12 @@ export interface BlogAuthorSocial {
   href: string;
 }
 
+export interface BlogFaq {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export interface BlogPost {
   id: number;
   slug: string;
@@ -168,6 +174,8 @@ export interface BlogPost {
   categories: BlogTerm[];
   tags?: BlogTerm[];
   readingMinutes?: number;
+  /** FAQs from WordPress post meta (`vc_faqs`), shown after content above Share. */
+  faqs?: BlogFaq[];
 }
 
 export interface BlogListResult {

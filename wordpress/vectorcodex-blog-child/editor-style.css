@@ -1,0 +1,158 @@
+/**
+ * Classic Editor preview styles for VectorCodex formats.
+ * Colours: bg #0D120C · text #FFFFFF · accent #DEF34D · CTA #C5F63D → #F6EF5C
+ */
+
+body.vc-classic-editor,
+body#tinymce.wp-editor {
+  background: #0d120c;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+body.vc-classic-editor a,
+body#tinymce.wp-editor a {
+  color: #def34d;
+}
+
+/* —— CTA Block —— */
+.vc-editorial-cta {
+  margin: 1.5em 0;
+  padding: 1.25rem 1.15rem;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 1rem;
+  background:
+    linear-gradient(160deg, rgb(26 36 24 / 0.95), #0d120c 48%, rgb(16 22 14)),
+    #0d120c;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 0 0 1px rgb(222 243 77 / 0.08);
+  color: #ffffff;
+}
+
+.vc-editorial-cta::before {
+  content: 'CTA Block — add button text, apply “CTA Button”, then Insert/Edit Link for the URL';
+  display: block;
+  margin: 0 0 0.75rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #def34d;
+}
+
+.vc-editorial-cta p {
+  margin: 0 0 0.75em;
+  color: rgb(255 255 255 / 0.82);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.vc-editorial-cta p:last-child {
+  margin-bottom: 0;
+}
+
+.vc-editorial-cta a.vc-editorial-cta__btn,
+.vc-editorial-cta a.vc-editorial-cta__btn--primary,
+.vc-editorial-cta > p:last-child > a:only-child {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  color: #0d120c !important;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none !important;
+  background: linear-gradient(135deg, #c5f63d, #f6ef5c);
+}
+
+/* —— Pro Tip —— */
+.vc-pro-tip {
+  margin: 1.35em 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgb(222 243 77 / 0.28);
+  border-radius: 0.9rem;
+  background: linear-gradient(160deg, #152015, #10170f);
+  color: #ffffff;
+}
+
+.vc-pro-tip::before {
+  content: 'Pro Tip';
+  display: block;
+  margin: 0 0 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #def34d;
+}
+
+.vc-pro-tip p {
+  margin: 0 0 0.65em;
+  color: rgb(255 255 255 / 0.88);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.vc-pro-tip p:last-child {
+  margin-bottom: 0;
+}
+
+/* —— Citation (inline) —— */
+.vc-inline-citation {
+  padding: 0.05em 0.22em;
+  border-radius: 0.2em;
+  border-bottom: 1px solid rgb(222 243 77 / 0.65);
+  background: rgb(222 243 77 / 0.12);
+  color: #def34d;
+  font-weight: 600;
+}
+
+/* —— Key Statistics —— */
+.vc-statistics {
+  margin: 1.5em 0;
+  padding: 1.15rem 1.2rem 1.2rem 1.25rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-left: 3px solid #def34d;
+  border-radius: 1rem;
+  background:
+    linear-gradient(165deg, rgb(222 243 77 / 0.05), transparent 38%),
+    #0d120c;
+  box-shadow: inset 0 1px 0 rgb(222 243 77 / 0.08);
+  color: #ffffff;
+}
+
+.vc-statistics::before {
+  content: 'Key Statistics';
+  display: block;
+  margin: 0 0 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #def34d;
+}
+
+.vc-statistics p {
+  margin: 0 0 0.65em;
+  max-width: 48rem;
+  color: rgb(255 255 255 / 0.78);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.vc-statistics p:last-child {
+  margin-bottom: 0;
+}
+
+.vc-statistics strong,
+.vc-statistics b {
+  color: #def34d;
+  font-weight: 700;
+}

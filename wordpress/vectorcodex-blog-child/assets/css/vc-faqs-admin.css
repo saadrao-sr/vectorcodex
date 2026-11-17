@@ -1,0 +1,28 @@
+#vc-blog-faqs .vc-faq-row {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem 0.35rem;
+  border: 1px solid #dcdcde;
+  border-radius: 6px;
+  background: #fff;
+}
+
+#vc-blog-faqs .vc-faq-row__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+#vc-blog-faqs .vc-faq-index {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #1d2327;
+}
+
+#vc-blog-faqs .vc-faq-remove {
+  color: #b32d2e;
+}
+
+#vc-blog-faqs #vc-faqs-add {
+  margin-top: 0.25rem;
+}

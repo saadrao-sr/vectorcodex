@@ -1,6 +1,7 @@
 ---
 import { ArrowUpRight } from 'lucide-react';
 import Container from '../../ui/Container.astro';
+import SectionBannerBg from '../../ui/SectionBannerBg.astro';
 import { buttonClass, eyebrowClass } from '../../ui/styles';
 ---
 
@@ -9,9 +10,7 @@ import { buttonClass, eyebrowClass } from '../../ui/styles';
   class="relative isolate overflow-hidden border-t border-white/10 bg-[#0D120C] py-8 sm:py-10 lg:py-12"
   aria-labelledby="blog-final-cta-heading"
 >
-  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-    <div class="absolute top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(222_243_77_/0.14),transparent_70%)] blur-3xl"></div>
-  </div>
+  <SectionBannerBg />
 
   <Container class="relative">
     <div class="mx-auto max-w-5xl overflow-hidden rounded-[1.75rem] border border-white/12 bg-white/[0.03] px-6 py-10 text-center sm:px-10 sm:py-12">

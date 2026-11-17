@@ -34,6 +34,11 @@ export interface WpAuthor {
   avatar_urls?: Record<string, string>;
 }
 
+export interface WpFaq {
+  question?: string;
+  answer?: string;
+}
+
 export interface WpPost {
   id: number;
   slug: string;
@@ -43,6 +48,8 @@ export interface WpPost {
   title: WpRendered;
   excerpt: WpRendered;
   content: WpRendered;
+  /** Registered by VectorCodex Blog child theme. */
+  vc_faqs?: WpFaq[];
   _embedded?: {
     author?: WpAuthor[];
     'wp:featuredmedia'?: WpMedia[];
