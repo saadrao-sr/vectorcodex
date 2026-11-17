@@ -14,6 +14,7 @@ import CaseStudyTakeaways from '../../components/sections/case-study/CaseStudyTa
 import QuoteModal from '../../components/interactive/QuoteModal';
 import { caseStudies } from '../../config/case-studies';
 import { breadcrumbSchema, caseStudySchema, webPageSchema } from '../../lib/schema/jsonld';
+import { definePageSeo } from '../../lib/seo/page-seo';
 import { absoluteUrl } from '../../lib/seo/url';
 import type { CaseStudy } from '../../types/content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -38,17 +39,28 @@ const crumbs = [
   { name: study.title, href: study.path },
 ];
 
-const title = study.seoTitle || study.title;
-const description = study.seoDescription || study.summary;
+/** Edit SEO on the case study config (`seoTitle`, `seoDescription`, `robots`, `canonical`). */
+const seo = definePageSeo({
+  title: study.seoTitle || study.title,
+  description: study.seoDescription || study.summary,
+  path: study.path,
+  robots: study.robots,
+  canonical: study.canonical,
+  noindex: study.placeholder,
+});
+const title = seo.title;
+const description = seo.description;
 const shareImage = study.ogImage ?? study.heroImage ?? study.image;
 const imageUrl = shareImage?.src ? absoluteUrl(shareImage.src) : undefined;
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
-  path={study.path}
-  noindex={study.placeholder}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   ogType="article"
   image={imageUrl}
   imageAlt={shareImage?.alt}

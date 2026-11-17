@@ -6,27 +6,36 @@ import BookingModal from '../../../../components/interactive/BookingModal';
 import { shopifyDevelopmentChildService } from '../../../../config/service-children';
 import { getService } from '../../../../config/services';
 import { breadcrumbSchema, faqPageSchema, serviceSchema, webPageSchema } from '../../../../lib/schema/jsonld';
+import { definePageSeo } from '../../../../lib/seo/page-seo';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 
 const service = shopifyDevelopmentChildService;
-const title = service.seoTitle;
-const description = service.seoDescription;
-const path = service.path;
+/** Edit SEO on this child service config (`seoTitle`, `seoDescription`, `robots`, `canonical`). */
+const seo = definePageSeo({
+  title: service.seoTitle,
+  description: service.seoDescription,
+  path: service.path,
+  robots: service.robots,
+  canonical: service.canonical,
+});
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Services', href: '/services/' },
   { name: service.parentLabel, href: service.parentPath },
-  { name: service.name, href: path },
+  { name: service.name, href: seo.path },
 ];
 const catalogService = getService(service.slug);
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
-  path={path}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   schema={[
-    webPageSchema({ title, description, path }),
+    webPageSchema({ title: seo.title, description: seo.description, path: seo.path }),
     breadcrumbSchema(crumbs),
     faqPageSchema(service.faqs.items),
     serviceSchema(catalogService),

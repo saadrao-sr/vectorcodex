@@ -3,10 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Container from '../components/ui/Container.astro';
 import { buttonClass } from '../components/ui/styles';
 import { webPageSchema } from '../lib/schema/jsonld';
+import { pageSeo } from '../config/page-seo';
 import { site } from '../config/site';
 
-const title = 'Page not found';
-const description = 'The page you requested is not on the VectorCodex website.';
+/** Edit SEO in `src/config/page-seo.ts` → `pageSeo.notFound`. */
+const seo = pageSeo.notFound;
+const title = seo.title;
+const description = seo.description;
 
 const destinations = [
   { href: '/services/', label: 'Services' },
@@ -18,11 +21,13 @@ const destinations = [
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
-  path="/404/"
-  noindex
-  schema={[webPageSchema({ title, description, path: '/404/' })]}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex ?? true}
+  schema={[webPageSchema({ title: seo.title, description: seo.description, path: seo.path })]}
 >
   <section class="not-found" aria-labelledby="not-found-heading">
     <div class="not-found__atmosphere" aria-hidden="true">

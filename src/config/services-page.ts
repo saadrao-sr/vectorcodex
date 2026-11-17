@@ -65,6 +65,7 @@ function pillar(
   };
 }
 
+/** @deprecated Prefer `pageSeo.services` from `config/page-seo`. Kept for call-site compatibility. */
 export const servicesPageMeta = {
   title: 'Services',
   description:

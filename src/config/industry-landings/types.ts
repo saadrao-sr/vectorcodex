@@ -60,6 +60,10 @@ export type IndustryLanding = {
   path: string;
   seoTitle: string;
   seoDescription: string;
+  /** Optional full robots directive. Defaults to indexable. */
+  robots?: string;
+  /** Optional canonical override (absolute URL or path). Defaults to `path`. */
+  canonical?: string;
   /** Visual motif for hero composition. */
   visualMotif: IndustryVisualMotif;
   hero: {

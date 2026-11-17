@@ -1,6 +1,7 @@
 ---
 import { industries, type IndustryLanding } from '../../config/industries';
 import { breadcrumbSchema, faqPageSchema, webPageSchema } from '../../lib/schema/jsonld';
+import { definePageSeo } from '../../lib/seo/page-seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageCrumbBand from '../../components/sections/PageCrumbBand.astro';
 import IndustryHero from '../../components/sections/industry/IndustryHero.astro';
@@ -28,22 +29,30 @@ interface Props {
 }
 
 const { industry } = Astro.props;
-const title = industry.seoTitle;
-const description = industry.seoDescription;
-const path = industry.path;
+/** Edit SEO on the industry config (`seoTitle`, `seoDescription`, `robots`, `canonical`). */
+const seo = definePageSeo({
+  title: industry.seoTitle,
+  description: industry.seoDescription,
+  path: industry.path,
+  robots: industry.robots,
+  canonical: industry.canonical,
+});
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Industries', href: '/industries/' },
-  { name: industry.name, href: path },
+  { name: industry.name, href: seo.path },
 ];
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
-  path={path}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   schema={[
-    webPageSchema({ title, description, path }),
+    webPageSchema({ title: seo.title, description: seo.description, path: seo.path }),
     breadcrumbSchema(crumbs),
     faqPageSchema(industry.faqs.items),
   ]}

@@ -1,5 +1,6 @@
 ---
 import { Mail } from 'lucide-react';
+import { pageSeo } from '../config/page-seo';
 import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
 import { site } from '../config/site';
 import { talentProfiles } from '../config/team-talent';
@@ -10,13 +11,11 @@ import Container from '../components/ui/Container.astro';
 import { buttonClass } from '../components/ui/styles';
 import TeamRequirementsModal from '../components/interactive/TeamRequirementsModal';
 
-const title = 'Our Team';
-const description =
-  'Explore VectorCodex talent solutions — dedicated specialists across SEO, web development, PPC, content, digital marketing, and UI/UX.';
-const path = '/our-team/';
+/** Edit SEO in `src/config/page-seo.ts` → `pageSeo.ourTeam`. */
+const seo = pageSeo.ourTeam;
 const crumbs = [
   { name: 'Home', href: '/' },
-  { name: 'Our Team', href: path },
+  { name: 'Our Team', href: seo.path },
 ];
 
 function contactHref(email: string | null, role: string) {
@@ -30,7 +29,15 @@ function contactLabel(email: string | null) {
 }
 ---
 
-<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
+  schema={[webPageSchema({ title: seo.title, description: seo.description, path: seo.path }), breadcrumbSchema(crumbs)]}
+>
   <TeamRequirementsModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
 
   <PageHero

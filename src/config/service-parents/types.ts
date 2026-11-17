@@ -45,6 +45,10 @@ export type ParentServiceLanding = {
   enquiryValue: ParentServiceEnquiryValue;
   seoTitle: string;
   seoDescription: string;
+  /** Optional full robots directive. Defaults to indexable. */
+  robots?: string;
+  /** Optional canonical override (absolute URL or path). Defaults to `path`. */
+  canonical?: string;
   schemaSummary: string;
   hero: {
     eyebrow: string;

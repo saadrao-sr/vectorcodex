@@ -1,4 +1,5 @@
 ---
+import { pageSeo } from '../config/page-seo';
 import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageCrumbBand from '../components/sections/PageCrumbBand.astro';
@@ -6,16 +7,23 @@ import ContactHero from '../components/sections/ContactHero.astro';
 import ContactInquiry from '../components/sections/ContactInquiry.astro';
 import ContactLocations from '../components/sections/ContactLocations.astro';
 
-const title = 'Contact';
-const description = 'Contact VectorCodex about SEO, web development, or digital marketing for a UK organisation.';
-const path = '/contact/';
+/** Edit SEO in `src/config/page-seo.ts` → `pageSeo.contact`. */
+const seo = pageSeo.contact;
 const crumbs = [
   { name: 'Home', href: '/' },
-  { name: 'Contact', href: path },
+  { name: 'Contact', href: seo.path },
 ];
 ---
 
-<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
+  schema={[webPageSchema({ title: seo.title, description: seo.description, path: seo.path }), breadcrumbSchema(crumbs)]}
+>
   <PageCrumbBand title="Contact" crumbs={crumbs} />
   <ContactHero />
   <ContactInquiry />

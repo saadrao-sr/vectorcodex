@@ -46,6 +46,10 @@ export type ChildServiceLanding = {
   enquiryValue: ChildServiceEnquiryValue;
   seoTitle: string;
   seoDescription: string;
+  /** Optional full robots directive. Defaults to indexable. */
+  robots?: string;
+  /** Optional canonical override (absolute URL or path). Defaults to `path`. */
+  canonical?: string;
   schemaSummary: string;
   /** Ordered section keys. Omit a key to hide that section. */
   sectionOrder: ChildServiceSectionKey[];

@@ -7,9 +7,16 @@ import Seo from '../components/seo/Seo.astro';
 import { organizationSchema, webPageSchema } from '../lib/schema/jsonld';
 
 interface Props {
+  /** Meta title */
   title: string;
+  /** Meta description */
   description: string;
+  /** Route path (also default canonical) */
   path?: string;
+  /** Full robots directive, e.g. `index, follow` or `noindex, follow` */
+  robots?: string;
+  /** Absolute URL or path override for canonical */
+  canonical?: string;
   noindex?: boolean;
   ogType?: 'website' | 'article';
   image?: string;
@@ -27,6 +34,8 @@ const {
   title,
   description,
   path = Astro.url.pathname,
+  robots,
+  canonical,
   noindex = false,
   ogType = 'website',
   image,
@@ -48,6 +57,8 @@ const {
       title={title}
       description={description}
       path={path}
+      robots={robots}
+      canonical={canonical}
       noindex={noindex}
       ogType={ogType}
       image={image}

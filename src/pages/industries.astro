@@ -1,4 +1,5 @@
 ---
+import { pageSeo } from '../config/page-seo';
 import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageCrumbBand from '../components/sections/PageCrumbBand.astro';
@@ -8,17 +9,23 @@ import IndustriesJourney from '../components/sections/IndustriesJourney.astro';
 import IndustriesFinalCta from '../components/sections/IndustriesFinalCta.astro';
 import QuoteModal from '../components/interactive/QuoteModal';
 
-const title = 'Industries';
-const description =
-  'VectorCodex works with UK organisations across sectors that need clear search, websites, and marketing. Sector detail will expand as published work is approved.';
-const path = '/industries/';
+/** Edit SEO in `src/config/page-seo.ts` → `pageSeo.industries`. */
+const seo = pageSeo.industries;
 const crumbs = [
   { name: 'Home', href: '/' },
-  { name: 'Industries', href: path },
+  { name: 'Industries', href: seo.path },
 ];
 ---
 
-<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
+  schema={[webPageSchema({ title: seo.title, description: seo.description, path: seo.path }), breadcrumbSchema(crumbs)]}
+>
   <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
   <PageCrumbBand title="Industries" crumbs={crumbs} />
   <IndustriesHero />

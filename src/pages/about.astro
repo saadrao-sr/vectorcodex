@@ -1,4 +1,5 @@
 ---
+import { pageSeo } from '../config/page-seo';
 import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AboutHero from '../components/sections/AboutHero.astro';
@@ -11,17 +12,23 @@ import AboutTestimonials from '../components/sections/AboutTestimonials.astro';
 import AboutFinalCta from '../components/sections/AboutFinalCta.astro';
 import QuoteModal from '../components/interactive/QuoteModal';
 
-const title = 'About';
-const description =
-  'About VectorCodex — a UK digital growth partner combining SEO, web development, and marketing to help businesses grow online.';
-const path = '/about/';
+/** Edit SEO in `src/config/page-seo.ts` → `pageSeo.about`. */
+const seo = pageSeo.about;
 const crumbs = [
   { name: 'Home', href: '/' },
-  { name: 'About', href: path },
+  { name: 'About', href: seo.path },
 ];
 ---
 
-<BaseLayout title={title} description={description} path={path} schema={[webPageSchema({ title, description, path }), breadcrumbSchema(crumbs)]}>
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
+  schema={[webPageSchema({ title: seo.title, description: seo.description, path: seo.path }), breadcrumbSchema(crumbs)]}
+>
   <QuoteModal client:idle endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT} />
   <AboutHero crumbs={crumbs} />
   <ClientLogoSlider />

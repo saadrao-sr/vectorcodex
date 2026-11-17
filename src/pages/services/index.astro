@@ -1,8 +1,6 @@
 ---
-import {
-  servicesFaqs,
-  servicesPageMeta,
-} from '../../config/services-page';
+import { servicesFaqs } from '../../config/services-page';
+import { pageSeo } from '../../config/page-seo';
 import { breadcrumbSchema, faqPageSchema, webPageSchema } from '../../lib/schema/jsonld';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageCrumbBand from '../../components/sections/PageCrumbBand.astro';
@@ -16,19 +14,23 @@ import ServicesFinalCta from '../../components/sections/ServicesFinalCta.astro';
 import QuoteModal from '../../components/interactive/QuoteModal';
 import BookingModal from '../../components/interactive/BookingModal';
 
-const { title, description, path } = servicesPageMeta;
+/** Edit SEO in `src/config/page-seo.ts` → `pageSeo.services`. */
+const seo = pageSeo.services;
 const crumbs = [
   { name: 'Home', href: '/' },
-  { name: 'Services', href: path },
+  { name: 'Services', href: seo.path },
 ];
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
-  path={path}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   schema={[
-    webPageSchema({ title, description, path }),
+    webPageSchema({ title: seo.title, description: seo.description, path: seo.path }),
     breadcrumbSchema(crumbs),
     faqPageSchema(servicesFaqs),
   ]}

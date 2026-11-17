@@ -5,13 +5,16 @@ import Container from '../components/ui/Container.astro';
 import SectionBannerBg from '../components/ui/SectionBannerBg.astro';
 import { eyebrowClass } from '../components/ui/styles';
 import { legalPlaceholders, privacyPolicyMeta, privacyPolicyToc } from '../config/legal';
+import { pageSeo } from '../config/page-seo';
 import { site } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { breadcrumbSchema, webPageSchema } from '../lib/schema/jsonld';
 
-const title = privacyPolicyMeta.seoTitle;
-const description = privacyPolicyMeta.seoDescription;
-const path = privacyPolicyMeta.path;
+/** Edit SEO in `src/config/page-seo.ts` → `pageSeo.privacyPolicy`. */
+const seo = pageSeo.privacyPolicy;
+const title = seo.title;
+const description = seo.description;
+const path = seo.path;
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Privacy Policy', href: path },
@@ -25,12 +28,15 @@ const placeholderClass = 'rounded-md bg-white/[0.04] px-1.5 py-0.5 font-medium t
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
-  path={path}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   modifiedAt={privacyPolicyMeta.lastUpdatedIso}
   schema={[
-    webPageSchema({ title, description, path }),
+    webPageSchema({ title: seo.title, description: seo.description, path: seo.path }),
     breadcrumbSchema(crumbs),
   ]}
 >

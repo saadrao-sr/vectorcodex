@@ -19,6 +19,14 @@ export interface Service {
   intro: string;
   includes: ServiceInclude[];
   related: string[];
+  /** Editable meta title. Falls back to `title`. */
+  seoTitle?: string;
+  /** Editable meta description. Falls back to `description`. */
+  seoDescription?: string;
+  /** Optional full robots directive. */
+  robots?: string;
+  /** Optional canonical override (absolute URL or path). */
+  canonical?: string;
 }
 
 export interface CaseStudySection {
@@ -90,6 +98,10 @@ export interface CaseStudy {
   seoTitle?: string;
   /** Unique meta description (~140–160 chars). Falls back to summary. */
   seoDescription?: string;
+  /** Optional full robots directive. Defaults to indexable unless `placeholder`. */
+  robots?: string;
+  /** Optional canonical override (absolute URL or path). Defaults to `path`. */
+  canonical?: string;
   ogImage?: CaseStudyImage;
   publishedAt?: string;
   modifiedAt?: string;

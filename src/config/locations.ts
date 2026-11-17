@@ -120,6 +120,14 @@ export type LocationOffice = {
   heroDescription: string;
   /** Short intro for lower sections and meta description. */
   summary: string;
+  /** Editable meta title. Falls back to a location default on the page. */
+  seoTitle?: string;
+  /** Editable meta description. Falls back to `summary` / hero copy. */
+  seoDescription?: string;
+  /** Optional full robots directive. Defaults to noindex when `placeholder`. */
+  robots?: string;
+  /** Optional canonical override (absolute URL or path). Defaults to `path`. */
+  canonical?: string;
   /** Market landscape section — unique copy per location. */
   landscape: LocationLandscape;
   /** Digital challenges section — unique barriers per location. */

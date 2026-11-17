@@ -7,25 +7,37 @@ import { ppcParentService } from '../../../config/service-parents/ppc-management
 import { getService } from '../../../config/services';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { breadcrumbSchema, faqPageSchema, serviceSchema, webPageSchema } from '../../../lib/schema/jsonld';
+import { definePageSeo } from '../../../lib/seo/page-seo';
 
 const service = getService('ppc-management');
 const parent = ppcParentService;
+/** Edit SEO on `ppcParentService` (`seoTitle`, `seoDescription`, `robots`, `canonical`). */
+const seo = definePageSeo({
+  title: parent.seoTitle,
+  description: parent.seoDescription,
+  path: service.path,
+  robots: parent.robots,
+  canonical: parent.canonical,
+});
 
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Services', href: '/services/' },
-  { name: service.title, href: service.path },
+  { name: service.title, href: seo.path },
 ];
 
 const faqEntities = parent.faqs.items.map(({ question, answer }) => ({ question, answer }));
 ---
 
 <BaseLayout
-  title={parent.seoTitle}
-  description={parent.seoDescription}
-  path={service.path}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   schema={[
-    webPageSchema({ title: parent.seoTitle, description: parent.seoDescription, path: service.path }),
+    webPageSchema({ title: seo.title, description: seo.description, path: seo.path }),
     breadcrumbSchema(crumbs),
     faqPageSchema(faqEntities),
     serviceSchema(service),

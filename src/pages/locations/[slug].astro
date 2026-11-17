@@ -1,6 +1,7 @@
 ---
 import { locations, type LocationOffice } from '../../config/locations';
 import { breadcrumbSchema, faqPageSchema, webPageSchema } from '../../lib/schema/jsonld';
+import { definePageSeo } from '../../lib/seo/page-seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageCrumbBand from '../../components/sections/PageCrumbBand.astro';
 import LocationHero from '../../components/sections/LocationHero.astro';
@@ -27,23 +28,31 @@ interface Props {
 }
 
 const { location } = Astro.props;
-const title = `Digital Growth in ${location.name}`;
-const description = location.heroDescription;
-const path = location.path;
+/** Edit SEO on the location config (`seoTitle`, `seoDescription`, `robots`, `canonical`). */
+const seo = definePageSeo({
+  title: location.seoTitle || `Digital Growth in ${location.name}`,
+  description: location.seoDescription || location.summary || location.heroDescription,
+  path: location.path,
+  robots: location.robots,
+  canonical: location.canonical,
+  noindex: location.placeholder,
+});
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Contact', href: '/contact/' },
-  { name: location.name, href: path },
+  { name: location.name, href: seo.path },
 ];
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
-  path={path}
-  noindex={location.placeholder}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   schema={[
-    webPageSchema({ title, description, path }),
+    webPageSchema({ title: seo.title, description: seo.description, path: seo.path }),
     breadcrumbSchema(crumbs),
     faqPageSchema(location.faqs.items),
   ]}

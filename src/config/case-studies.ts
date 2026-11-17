@@ -41,6 +41,8 @@ export const caseStudies: CaseStudy[] = [
     seoTitle: 'SEO Engagement Case Study | VectorCodex',
     seoDescription:
       'See how VectorCodex structures SEO engagements — discovery, technical foundations, content, and measurement. Verified client outcomes will be published when approved.',
+    // robots: 'noindex, follow',
+    // canonical: '/case-studies/seo-engagement/',
     publishedAt: '2026-11-06T10:00:00.000Z',
     modifiedAt: '2026-11-17T10:00:00.000Z',
     clientLabel: 'Client name to be confirmed',

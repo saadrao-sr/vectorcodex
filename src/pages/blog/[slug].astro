@@ -19,6 +19,7 @@ import {
 import { absoluteUrl } from '../../lib/seo/url';
 import { summarize } from '../../lib/seo/format';
 import { articleSchema, breadcrumbSchema, faqPageSchema, webPageSchema } from '../../lib/schema/jsonld';
+import { definePageSeo } from '../../lib/seo/page-seo';
 import { getAllPosts } from '../../lib/wordpress/client';
 import type { BlogPost } from '../../types/content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -50,6 +51,16 @@ const readingMinutes = post.readingMinutes ?? 1;
 const primaryCategory = post.categories[0];
 const placeholder = false;
 
+/** Editable per-post SEO — override title/description/robots/canonical when needed. */
+const seo = definePageSeo({
+  title: post.title,
+  description,
+  path,
+  // robots: 'index, follow, max-image-preview:large',
+  // canonical: path,
+  noindex: placeholder,
+});
+
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Blog', href: '/blog/' },
@@ -71,10 +82,12 @@ const schema = [
 ---
 
 <BaseLayout
-  title={post.title}
-  description={description}
-  path={path}
-  noindex={placeholder}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   ogType="article"
   image={shareImage}
   imageAlt={post.image?.alt}

@@ -6,25 +6,34 @@ import QuoteModal from '../../../components/interactive/QuoteModal';
 import { seoParentService } from '../../../config/service-parents/seo';
 import { getService } from '../../../config/services';
 import { breadcrumbSchema, faqPageSchema, serviceSchema, webPageSchema } from '../../../lib/schema/jsonld';
+import { definePageSeo } from '../../../lib/seo/page-seo';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 
-const title = seoParentService.seoTitle;
-const description = seoParentService.seoDescription;
-const path = seoParentService.path;
+/** Edit SEO on `seoParentService` (`seoTitle`, `seoDescription`, `robots`, `canonical`). */
+const seo = definePageSeo({
+  title: seoParentService.seoTitle,
+  description: seoParentService.seoDescription,
+  path: seoParentService.path,
+  robots: seoParentService.robots,
+  canonical: seoParentService.canonical,
+});
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Services', href: '/services/' },
-  { name: seoParentService.name, href: path },
+  { name: seoParentService.name, href: seo.path },
 ];
 const catalogService = getService('seo');
 ---
 
 <BaseLayout
-  title={title}
-  description={description}
-  path={path}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
   schema={[
-    webPageSchema({ title, description, path }),
+    webPageSchema({ title: seo.title, description: seo.description, path: seo.path }),
     breadcrumbSchema(crumbs),
     faqPageSchema(seoParentService.faqs.items),
     serviceSchema(catalogService),

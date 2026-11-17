@@ -1,6 +1,7 @@
 ---
 import { relatedServices } from '../../config/services';
 import { breadcrumbSchema, serviceSchema, webPageSchema } from '../../lib/schema/jsonld';
+import { definePageSeo } from '../../lib/seo/page-seo';
 import type { Service } from '../../types/content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CtaBand from './CtaBand.astro';
@@ -13,19 +14,30 @@ interface Props {
 }
 
 const { service } = Astro.props;
+/** Edit SEO on the service config (`seoTitle`, `seoDescription`, `robots`, `canonical`). */
+const seo = definePageSeo({
+  title: service.seoTitle || service.title,
+  description: service.seoDescription || service.description,
+  path: service.path,
+  robots: service.robots,
+  canonical: service.canonical,
+});
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Services', href: '/services/' },
-  { name: service.title, href: service.path },
+  { name: service.title, href: seo.path },
 ];
 const related = relatedServices(service);
 ---
 
 <BaseLayout
-  title={service.title}
-  description={service.description}
-  path={service.path}
-  schema={[webPageSchema({ title: service.title, description: service.description, path: service.path }), serviceSchema(service), breadcrumbSchema(crumbs)]}
+  title={seo.title}
+  description={seo.description}
+  path={seo.path}
+  robots={seo.robots}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
+  schema={[webPageSchema({ title: seo.title, description: seo.description, path: seo.path }), serviceSchema(service), breadcrumbSchema(crumbs)]}
 >
   <PageHero eyebrow={service.group} title={service.title} lede={service.intro} crumbs={crumbs} />
   <section class="py-14 sm:py-16 lg:py-20" aria-labelledby="included-heading">
