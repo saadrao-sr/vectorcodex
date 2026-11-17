@@ -247,6 +247,7 @@ if (!defined('VC_LEADS_VERSION')) {
 require_once $plugin_dir . '/includes/class-vc-lead-meta.php';
 require_once $plugin_dir . '/includes/class-vc-lead-normalize.php';
 require_once $plugin_dir . '/includes/class-vc-lead-security.php';
+require_once $plugin_dir . '/includes/class-vc-lead-presentation.php';
 require_once $plugin_dir . '/includes/class-vc-lead-email.php';
 require_once $plugin_dir . '/includes/class-vc-lead-turnstile.php';
 
@@ -266,11 +267,154 @@ $pricing = VC_Lead_Normalize::from_request($fixtures['pricing_calculator']);
 vc_test_assert(!empty($pricing['ok']), 'pricing calculator ok', $passed, $failed, $lines);
 if (!empty($pricing['ok'])) {
 	$p = $pricing['data']['payload'];
-	vc_test_assert(isset($p['businessAnswers']['industry']), 'pricing keeps businessAnswers', $passed, $failed, $lines);
-	vc_test_assert(isset($p['serviceAnswers']['web-development']['cms']), 'pricing keeps serviceAnswers', $passed, $failed, $lines);
+	vc_test_assert(isset($p['businessAnswers']['companyName']), 'pricing keeps businessAnswers', $passed, $failed, $lines);
+	vc_test_assert(isset($p['serviceAnswers']['web']['websiteType']), 'pricing keeps serviceAnswers', $passed, $failed, $lines);
+	vc_test_assert(isset($p['contactAnswers']['jobTitle']), 'pricing keeps contactAnswers job title', $passed, $failed, $lines);
 	vc_test_assert(isset($p['contactAnswers']['consent']) && $p['contactAnswers']['consent'] === 'yes', 'pricing keeps contactAnswers', $passed, $failed, $lines);
 	vc_test_assert(isset($p['estimate']['label']), 'pricing keeps estimate', $passed, $failed, $lines);
 }
+
+// Form-type-aware presentation: only relevant fields, source URL preserved.
+$expected_keys = array(
+	'quote'              => array('name', 'company', 'phone', 'email', 'service', 'timeline', 'budget', 'message'),
+	'booking'            => array('name', 'email', 'phone', 'company', 'budget', 'service'),
+	'free_audit'         => array('website', 'name', 'email', 'phone', 'company', 'focus', 'message'),
+	'team_requirements'  => array('name', 'email', 'phone', 'company', 'department', 'resources', 'budget', 'engagement', 'timeline', 'message'),
+	'project_inquiry'    => array('name', 'email', 'company', 'phone', 'website_url', 'service', 'budget', 'message'),
+	'homepage_inquiry'   => array('name', 'email', 'phone', 'company', 'service', 'budget', 'message'),
+);
+
+$lead_seed = 200;
+foreach ($expected_keys as $type => $keys) {
+	$normalized = VC_Lead_Normalize::from_request($fixtures[$type]);
+	vc_test_assert(!empty($normalized['ok']), "presentation seed normalize $type", $passed, $failed, $lines);
+	if (empty($normalized['ok'])) {
+		continue;
+	}
+	$id = $lead_seed++;
+	VC_Lead_Meta::save_lead_fields(
+		$id,
+		array_merge(
+			$normalized['data'],
+			array(
+				'submitted_at' => '2026-11-18T12:00:00+00:00',
+				'source_url'   => $fixtures[$type]['source_url'],
+			)
+		)
+	);
+
+	$rows = VC_Lead_Presentation::form_rows($id, true);
+	$row_keys = array_map(
+		function ($row) {
+			return $row['key'];
+		},
+		$rows
+	);
+	foreach ($keys as $key) {
+		vc_test_assert(in_array($key, $row_keys, true), "$type detail includes $key", $passed, $failed, $lines);
+	}
+	// Irrelevant generic fields must not appear when not in this form schema.
+	if ($type === 'free_audit') {
+		vc_test_assert(!in_array('service', $row_keys, true), 'free_audit hides service', $passed, $failed, $lines);
+		vc_test_assert(!in_array('budget', $row_keys, true), 'free_audit hides budget', $passed, $failed, $lines);
+		vc_test_assert(!in_array('timeline', $row_keys, true), 'free_audit hides timeline', $passed, $failed, $lines);
+	}
+	if ($type === 'booking') {
+		vc_test_assert(!in_array('timeline', $row_keys, true), 'booking hides timeline', $passed, $failed, $lines);
+	}
+
+	$source = VC_Lead_Presentation::source_url($id);
+	vc_test_assert($source === $fixtures[$type]['source_url'], "$type source URL preserved", $passed, $failed, $lines);
+
+	$email_body = implode("\n", VC_Lead_Presentation::admin_email_lines($id));
+	vc_test_assert(strpos($email_body, 'Source URL: ' . $fixtures[$type]['source_url']) !== false, "$type email includes source URL", $passed, $failed, $lines);
+	if ($type === 'free_audit') {
+		vc_test_assert(strpos($email_body, 'Website name / URL:') !== false, 'free_audit email includes website', $passed, $failed, $lines);
+		vc_test_assert(!preg_match('/^Service:/m', $email_body), 'free_audit email omits service', $passed, $failed, $lines);
+		vc_test_assert(!preg_match('/^Budget:/m', $email_body), 'free_audit email omits budget', $passed, $failed, $lines);
+		vc_test_assert(!preg_match('/^Timeline:/m', $email_body), 'free_audit email omits timeline', $passed, $failed, $lines);
+	}
+	if ($type === 'booking') {
+		vc_test_assert(strpos($email_body, 'Timeline:') === false, 'booking email omits timeline', $passed, $failed, $lines);
+	}
+
+	$csv_details = VC_Lead_Presentation::form_details_export_text($id);
+	vc_test_assert($csv_details !== '', "$type CSV details not empty", $passed, $failed, $lines);
+	vc_test_assert(VC_Lead_Presentation::csv_safe('=SUM(A1)') === "'=SUM(A1)", 'CSV formula injection guarded', $passed, $failed, $lines);
+}
+
+// Pricing presentation sections + email.
+$pricing_id = 300;
+$pricing_payload = json_decode($fixtures['pricing_calculator']['payload_json'], true);
+VC_Lead_Meta::save_lead_fields(
+	$pricing_id,
+	array(
+		'form_type'    => 'pricing_calculator',
+		'status'       => 'new',
+		'name'         => 'Gabe Price',
+		'email'        => 'gabe.price@example.com',
+		'phone'        => '+447700903333',
+		'company'      => 'Price Co',
+		'service'      => 'web',
+		'budget'       => 'Indicative mid-range',
+		'summary'      => $fixtures['pricing_calculator']['summary'],
+		'source_url'   => 'https://vectorcodex.com/pricing/',
+		'submitted_at' => '2026-11-18T10:00:00+00:00',
+		'payload'      => $pricing_payload,
+	)
+);
+$sections = VC_Lead_Presentation::pricing_sections($pricing_id);
+$titles = array_map(
+	function ($section) {
+		return $section['title'];
+	},
+	$sections
+);
+vc_test_assert(in_array('Business information', $titles, true), 'pricing sections include business', $passed, $failed, $lines);
+vc_test_assert(in_array('Contact information', $titles, true), 'pricing sections include contact', $passed, $failed, $lines);
+vc_test_assert(count(VC_Lead_Presentation::form_rows($pricing_id)) === 0, 'pricing uses sections not flat form rows', $passed, $failed, $lines);
+$pricing_email = implode("\n", VC_Lead_Presentation::admin_email_lines($pricing_id));
+vc_test_assert(strpos($pricing_email, 'Job title:') !== false, 'pricing email includes job title', $passed, $failed, $lines);
+vc_test_assert(strpos($pricing_email, 'Source URL: https://vectorcodex.com/pricing/') !== false, 'pricing email includes source URL', $passed, $failed, $lines);
+vc_test_assert(strpos(VC_Lead_Presentation::pricing_export_text($pricing_id), 'Company name:') !== false, 'pricing CSV export readable', $passed, $failed, $lines);
+
+// Source URL recovery from payload when meta empty.
+$legacy_id = 301;
+VC_Lead_Meta::save_lead_fields(
+	$legacy_id,
+	array(
+		'form_type' => 'quote',
+		'name'      => 'Legacy',
+		'email'     => 'legacy@example.com',
+		'phone'     => '+441111111111',
+		'company'   => 'Legacy Co',
+		'service'   => 'SEO',
+		'timeline'  => 'ASAP',
+		'budget'    => '£1k',
+		'source_url'=> '',
+		'payload'   => array(
+			'form_type'  => 'quote',
+			'source_url' => 'https://vectorcodex.com/recovered/',
+			'fields'     => array('name' => 'Legacy'),
+		),
+	)
+);
+// Clear meta source after save embedding — simulate old lead without meta URL.
+update_post_meta($legacy_id, VC_Lead_Meta::SOURCE_URL, '');
+vc_test_assert(
+	VC_Lead_Presentation::source_url($legacy_id) === 'https://vectorcodex.com/recovered/',
+	'source URL recovered from payload',
+	$passed,
+	$failed,
+	$lines
+);
+vc_test_assert(
+	VC_Lead_Presentation::source_url_display(9999) === VC_Lead_Presentation::NOT_RECORDED,
+	'missing source URL displays Not recorded',
+	$passed,
+	$failed,
+	$lines
+);
 
 $invalid = VC_Lead_Normalize::from_request(array('form_type' => 'quote', 'name' => '', 'email' => 'bad'));
 vc_test_assert(empty($invalid['ok']), 'rejects empty/invalid quote', $passed, $failed, $lines);
@@ -375,7 +519,8 @@ vc_test_assert(VC_Lead_Meta::get($lead_id, VC_Lead_Meta::EMAIL_ADMIN_STATUS) ===
 $sent_mail = array();
 VC_Lead_Email::notify_staff($pricing_lead_id);
 vc_test_assert(count($sent_mail) === 1, 'pricing admin notification sends', $passed, $failed, $lines);
-vc_test_assert(strpos($sent_mail[0]['body'], 'Pricing calculator') !== false || strpos($sent_mail[0]['body'], 'Calculator summary') !== false, 'pricing admin email includes readable summary section', $passed, $failed, $lines);
+vc_test_assert(strpos($sent_mail[0]['body'], 'Business information') !== false || strpos($sent_mail[0]['body'], 'Contact information') !== false, 'pricing admin email includes readable grouped sections', $passed, $failed, $lines);
+vc_test_assert(strpos($sent_mail[0]['body'], 'Source URL:') !== false, 'pricing admin email includes source URL', $passed, $failed, $lines);
 vc_test_assert(strpos($sent_mail[0]['body'], 'lead_id=' . $pricing_lead_id) !== false, 'pricing admin email links to complete lead detail', $passed, $failed, $lines);
 
 // Customer acknowledgement.

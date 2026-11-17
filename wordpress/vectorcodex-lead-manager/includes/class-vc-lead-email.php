@@ -137,43 +137,7 @@ class VC_Lead_Email {
 
 		$subject = sprintf('[VectorCodex Lead] %s — %s', $type_label, $name);
 
-		$lines = array(
-			'A new lead was stored in WordPress.',
-			'',
-			'Form type: ' . $type_label,
-			'Name: ' . $name,
-			'Email: ' . VC_Lead_Meta::get($lead_id, VC_Lead_Meta::EMAIL),
-			'Phone: ' . VC_Lead_Meta::get($lead_id, VC_Lead_Meta::PHONE),
-			'Company: ' . VC_Lead_Meta::get($lead_id, VC_Lead_Meta::COMPANY),
-			'Service: ' . VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SERVICE),
-			'Budget: ' . VC_Lead_Meta::get($lead_id, VC_Lead_Meta::BUDGET),
-			'Timeline: ' . VC_Lead_Meta::get($lead_id, VC_Lead_Meta::TIMELINE),
-			'Submitted: ' . VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SUBMITTED_AT),
-			'Source: ' . VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SOURCE_URL),
-		);
-
-		$message = VC_Lead_Meta::get($lead_id, VC_Lead_Meta::MESSAGE);
-		if ($message !== '') {
-			$lines[] = '';
-			$lines[] = 'Message:';
-			$lines[] = $message;
-		}
-
-		$summary = VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SUMMARY);
-		if ($summary !== '') {
-			$lines[] = '';
-			$lines[] = 'Summary:';
-			$lines[] = $summary;
-		}
-
-		if ($form_type === 'pricing_calculator') {
-			$lines[] = '';
-			$lines[] = '— Pricing calculator —';
-			$lines = array_merge($lines, self::pricing_admin_lines($lead_id));
-			$lines[] = '';
-			$lines[] = 'Complete submitted information (including nested answers) is available in the WordPress lead detail view.';
-		}
-
+		$lines   = VC_Lead_Presentation::admin_email_lines($lead_id);
 		$lines[] = '';
 		$lines[] = 'Open in admin: ' . admin_url('admin.php?page=vc-leads&action=view&lead_id=' . (int) $lead_id);
 
@@ -274,73 +238,6 @@ class VC_Lead_Email {
 			'body'    => implode("\n", $lines),
 			'headers' => $headers,
 		);
-	}
-
-	/**
-	 * Readable pricing lines for admin email (not the full raw JSON dump).
-	 *
-	 * @param int $lead_id Lead ID.
-	 * @return string[]
-	 */
-	private static function pricing_admin_lines($lead_id) {
-		$payload = VC_Lead_Meta::get_payload($lead_id);
-		$lines   = array();
-		if (!is_array($payload)) {
-			$lines[] = '(Payload unavailable — open the lead detail screen for the stored submission.)';
-			return $lines;
-		}
-
-		if (!empty($payload['estimate']) && is_array($payload['estimate'])) {
-			$label = isset($payload['estimate']['label']) ? (string) $payload['estimate']['label'] : '';
-			$min   = isset($payload['estimate']['min']) ? (string) $payload['estimate']['min'] : '';
-			$max   = isset($payload['estimate']['max']) ? (string) $payload['estimate']['max'] : '';
-			$lines[] = 'Estimate: ' . trim($label . ' ' . ($min !== '' && $max !== '' ? "({$min}–{$max})" : ''));
-		}
-		if (!empty($payload['primaryService'])) {
-			$lines[] = 'Primary service: ' . (string) $payload['primaryService'];
-		}
-		if (!empty($payload['allServices']) && is_array($payload['allServices'])) {
-			$lines[] = 'All services: ' . implode(', ', array_map('strval', $payload['allServices']));
-		}
-
-		if (!empty($payload['summaryText'])) {
-			$lines[] = '';
-			$lines[] = 'Calculator summary:';
-			$lines[] = (string) $payload['summaryText'];
-		} else {
-			if (!empty($payload['businessAnswers']) && is_array($payload['businessAnswers'])) {
-				$lines[] = '';
-				$lines[] = 'Business answers:';
-				foreach ($payload['businessAnswers'] as $key => $value) {
-					$lines[] = '- ' . $key . ': ' . self::stringify_answer($value);
-				}
-			}
-			if (!empty($payload['serviceAnswers']) && is_array($payload['serviceAnswers'])) {
-				foreach ($payload['serviceAnswers'] as $service_id => $answers) {
-					$lines[] = '';
-					$lines[] = 'Service answers (' . $service_id . '):';
-					if (is_array($answers)) {
-						foreach ($answers as $key => $value) {
-							$lines[] = '- ' . $key . ': ' . self::stringify_answer($value);
-						}
-					}
-				}
-			}
-		}
-
-		return $lines;
-	}
-
-	/**
-	 * @param mixed $value Answer value.
-	 * @return string
-	 */
-	private static function stringify_answer($value) {
-		if (is_scalar($value) || $value === null) {
-			return (string) $value;
-		}
-		$json = wp_json_encode($value);
-		return is_string($json) ? $json : '';
 	}
 
 	/**

@@ -120,6 +120,8 @@ When `form_type` is omitted, the plugin infers type from distinctive fields / so
 - `public` / `publicly_queryable` / `show_in_rest` = false  
 - Manual admin creation disabled (`create_posts` → `do_not_allow`); public creates only via the custom REST route  
 - Capability gate for admin: `manage_options`
+- Admin detail, staff emails and CSV exports are **form-type aware** (only fields that form collects)
+- Source URL is required in presentation (`source_url` / Referer); recovered from payload when meta is empty; otherwise shown as `Not recorded`
 
 ## Admin permissions
 

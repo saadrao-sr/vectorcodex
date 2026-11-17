@@ -256,8 +256,15 @@ class VC_Lead_Normalize {
 	 * @return array
 	 */
 	private static function build_fallback_payload($form_type, array $raw, array $flat) {
+		// Form-type-aware honeypot skips: free_audit uses `website` as a real field.
+		if ($form_type === 'free_audit' || $form_type === 'pricing_calculator') {
+			$honeypot_skip = array('company_website', 'website_hp');
+		} else {
+			$honeypot_skip = self::honeypot_keys();
+		}
+
 		$skip = array_merge(
-			self::honeypot_keys(),
+			$honeypot_skip,
 			array('payload_json', 'payload', 'human_check', 'consent', 'cf-turnstile-response')
 		);
 		$fields = array();

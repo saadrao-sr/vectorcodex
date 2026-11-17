@@ -341,29 +341,46 @@ class VC_Lead_Admin {
 		}
 		echo '<p><a href="' . esc_url($back) . '">&larr; Back to all leads</a></p>';
 
+		$source_display = VC_Lead_Presentation::source_url_display($lead_id);
+		$source_url     = VC_Lead_Presentation::source_url($lead_id);
+
 		echo '<div class="vc-leads-detail-grid">';
 		echo '<div class="vc-leads-card">';
-		echo '<h2>Contact</h2>';
+		echo '<h2>Submission</h2>';
 		echo '<table class="form-table"><tbody>';
 		self::detail_row('Form type', isset($types[$form_type]) ? $types[$form_type] : $form_type);
-		self::detail_row('Name', VC_Lead_Meta::get($lead_id, VC_Lead_Meta::NAME));
-		self::detail_row('Email', VC_Lead_Meta::get($lead_id, VC_Lead_Meta::EMAIL));
-		self::detail_row('Phone', VC_Lead_Meta::get($lead_id, VC_Lead_Meta::PHONE));
-		self::detail_row('Company', VC_Lead_Meta::get($lead_id, VC_Lead_Meta::COMPANY));
-		self::detail_row('Service', VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SERVICE));
-		self::detail_row('Budget', VC_Lead_Meta::get($lead_id, VC_Lead_Meta::BUDGET));
-		self::detail_row('Timeline', VC_Lead_Meta::get($lead_id, VC_Lead_Meta::TIMELINE));
 		self::detail_row('Submitted', self::format_datetime(VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SUBMITTED_AT)));
-		self::detail_row('Source URL', VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SOURCE_URL));
+		echo '<tr><th scope="row">Source URL</th><td>';
+		if ($source_url !== '') {
+			echo '<a href="' . esc_url($source_url) . '" target="_blank" rel="noopener noreferrer"><strong>' . esc_html($source_display) . '</strong></a>';
+		} else {
+			echo '<strong>' . esc_html(VC_Lead_Presentation::NOT_RECORDED) . '</strong>';
+		}
+		echo '</td></tr>';
 		echo '</tbody></table>';
 
-		$summary = VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SUMMARY);
-		$message = VC_Lead_Meta::get($lead_id, VC_Lead_Meta::MESSAGE);
-		if ($summary !== '') {
-			echo '<h3>Summary</h3><pre class="vc-leads-pre">' . esc_html($summary) . '</pre>';
-		}
-		if ($message !== '') {
-			echo '<h3>Message</h3><pre class="vc-leads-pre">' . esc_html($message) . '</pre>';
+		if ($form_type === 'pricing_calculator') {
+			echo '<h3>Pricing calculator answers</h3>';
+			self::render_pricing_sections(VC_Lead_Presentation::pricing_sections($lead_id));
+			$summary = VC_Lead_Meta::get($lead_id, VC_Lead_Meta::SUMMARY);
+			if ($summary !== '') {
+				echo '<h3>Summary text</h3><pre class="vc-leads-pre">' . esc_html($summary) . '</pre>';
+			}
+		} else {
+			echo '<h3>Submitted fields</h3>';
+			echo '<table class="form-table"><tbody>';
+			foreach (VC_Lead_Presentation::form_rows($lead_id, true) as $row) {
+				$value = $row['value'];
+				if ($value === '' && in_array($row['key'], VC_Lead_Presentation::optional_keys($form_type), true)) {
+					continue;
+				}
+				if ($row['key'] === 'message' && $value !== '') {
+					echo '<tr><th scope="row">' . esc_html($row['label']) . '</th><td><pre class="vc-leads-pre">' . esc_html($value) . '</pre></td></tr>';
+				} else {
+					self::detail_row($row['label'], $value !== '' ? $value : '—');
+				}
+			}
+			echo '</tbody></table>';
 		}
 		echo '</div>';
 
@@ -408,11 +425,8 @@ class VC_Lead_Admin {
 		echo '</div>';
 
 		echo '<div class="vc-leads-card vc-leads-card--wide">';
-		echo '<h2>Complete payload</h2>';
-		if ($form_type === 'pricing_calculator' && is_array($payload)) {
-			self::render_pricing_payload($payload);
-		}
-		echo '<h3>Raw JSON</h3>';
+		echo '<h2>Complete original payload</h2>';
+		echo '<p class="description">Preserved submission JSON for auditability. The sections above show only fields relevant to this form type.</p>';
 		echo '<pre class="vc-leads-pre vc-leads-pre--json">' . esc_html(wp_json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)) . '</pre>';
 		echo '</div>';
 
@@ -420,66 +434,34 @@ class VC_Lead_Admin {
 	}
 
 	/**
-	 * Grouped readable view for pricing calculator answers.
+	 * Render grouped pricing sections from presentation helper.
 	 *
-	 * @param array $payload Decoded payload.
+	 * @param array $sections Sections.
 	 */
-	private static function render_pricing_payload(array $payload) {
+	private static function render_pricing_sections(array $sections) {
+		if (empty($sections)) {
+			echo '<p>No pricing answers recorded.</p>';
+			return;
+		}
 		echo '<div class="vc-leads-pricing">';
-		if (!empty($payload['estimate']) && is_array($payload['estimate'])) {
-			echo '<h3>Estimate</h3>';
-			self::render_kv_table($payload['estimate']);
-		}
-		if (!empty($payload['primaryService']) || !empty($payload['allServices'])) {
-			echo '<h3>Services</h3><ul>';
-			if (!empty($payload['primaryService'])) {
-				echo '<li><strong>Primary:</strong> ' . esc_html((string) $payload['primaryService']) . '</li>';
+		foreach ($sections as $section) {
+			$title = isset($section['title']) ? (string) $section['title'] : '';
+			$rows  = isset($section['rows']) && is_array($section['rows']) ? $section['rows'] : array();
+			if ($title !== '') {
+				echo '<h4>' . esc_html($title) . '</h4>';
 			}
-			if (!empty($payload['additionalServices']) && is_array($payload['additionalServices'])) {
-				echo '<li><strong>Additional:</strong> ' . esc_html(implode(', ', array_map('strval', $payload['additionalServices']))) . '</li>';
-			}
-			if (!empty($payload['allServices']) && is_array($payload['allServices'])) {
-				echo '<li><strong>All:</strong> ' . esc_html(implode(', ', array_map('strval', $payload['allServices']))) . '</li>';
-			}
-			echo '</ul>';
-		}
-		if (!empty($payload['businessAnswers']) && is_array($payload['businessAnswers'])) {
-			echo '<h3>Business answers</h3>';
-			self::render_kv_table($payload['businessAnswers']);
-		}
-		if (!empty($payload['serviceAnswers']) && is_array($payload['serviceAnswers'])) {
-			echo '<h3>Service answers</h3>';
-			foreach ($payload['serviceAnswers'] as $service_id => $answers) {
-				echo '<h4>' . esc_html((string) $service_id) . '</h4>';
-				if (is_array($answers)) {
-					self::render_kv_table($answers);
+			echo '<table class="widefat striped vc-leads-kv"><tbody>';
+			foreach ($rows as $row) {
+				$label = isset($row['label']) ? (string) $row['label'] : '';
+				$value = isset($row['value']) ? (string) $row['value'] : '';
+				if ($value === '') {
+					continue;
 				}
+				echo '<tr><th>' . esc_html($label) . '</th><td>' . esc_html($value) . '</td></tr>';
 			}
-		}
-		if (!empty($payload['contactAnswers']) && is_array($payload['contactAnswers'])) {
-			echo '<h3>Contact answers</h3>';
-			$contact = $payload['contactAnswers'];
-			unset($contact['company_website'], $contact['human_check']);
-			self::render_kv_table($contact);
-		}
-		if (!empty($payload['summaryText'])) {
-			echo '<h3>Summary text</h3><pre class="vc-leads-pre">' . esc_html((string) $payload['summaryText']) . '</pre>';
+			echo '</tbody></table>';
 		}
 		echo '</div>';
-	}
-
-	/**
-	 * Key/value table for nested answer maps.
-	 *
-	 * @param array $data Data.
-	 */
-	private static function render_kv_table(array $data) {
-		echo '<table class="widefat striped vc-leads-kv"><tbody>';
-		foreach ($data as $key => $value) {
-			$display = is_scalar($value) ? (string) $value : wp_json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-			echo '<tr><th>' . esc_html((string) $key) . '</th><td>' . esc_html($display) . '</td></tr>';
-		}
-		echo '</tbody></table>';
 	}
 
 	/**

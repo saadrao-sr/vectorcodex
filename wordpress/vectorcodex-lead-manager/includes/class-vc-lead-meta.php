@@ -131,9 +131,21 @@ class VC_Lead_Meta {
 		}
 
 		if (isset($data['payload']) && is_array($data['payload'])) {
-			update_post_meta($post_id, self::PAYLOAD_JSON, wp_json_encode($data['payload']));
+			$payload = $data['payload'];
+			if (!empty($data['source_url']) && class_exists('VC_Lead_Presentation')) {
+				$payload = VC_Lead_Presentation::embed_source_url($payload, (string) $data['source_url']);
+			}
+			update_post_meta($post_id, self::PAYLOAD_JSON, wp_json_encode($payload));
 		} elseif (isset($data['payload_json']) && is_string($data['payload_json'])) {
-			update_post_meta($post_id, self::PAYLOAD_JSON, $data['payload_json']);
+			$raw = $data['payload_json'];
+			if (!empty($data['source_url']) && class_exists('VC_Lead_Presentation')) {
+				$decoded = json_decode($raw, true);
+				if (is_array($decoded)) {
+					$decoded = VC_Lead_Presentation::embed_source_url($decoded, (string) $data['source_url']);
+					$raw = wp_json_encode($decoded);
+				}
+			}
+			update_post_meta($post_id, self::PAYLOAD_JSON, $raw);
 		}
 	}
 }

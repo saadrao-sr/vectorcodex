@@ -64,11 +64,22 @@ class VC_Lead_Export {
 			wp_die(esc_html__('Unable to open export stream.', 'vectorcodex-leads'));
 		}
 
-		// UTF-8 BOM for Excel.
 		fwrite($out, "\xEF\xBB\xBF");
 
-		fputcsv(
-			$out,
+		$extra_keys = array(
+			'website'     => 'Website',
+			'website_url' => 'Website URL',
+			'focus'       => 'Primary focus',
+			'department'  => 'Department',
+			'resources'   => 'Resources required',
+			'engagement'  => 'Engagement type',
+			'service'     => 'Service',
+			'budget'      => 'Budget',
+			'timeline'    => 'Timeline',
+			'message'     => 'Message',
+		);
+
+		$header = array_merge(
 			array(
 				'ID',
 				'Form type',
@@ -77,44 +88,68 @@ class VC_Lead_Export {
 				'Email',
 				'Phone',
 				'Company',
-				'Service',
-				'Budget',
-				'Timeline',
 				'Submitted at',
 				'Source URL',
-				'Summary',
-				'Message',
+				'Form details',
+				'Pricing details',
 				'Payload JSON',
-			)
+			),
+			array_values($extra_keys)
 		);
+		fputcsv($out, $header);
 
-		$types = VC_Lead_Meta::form_types();
+		$types    = VC_Lead_Meta::form_types();
 		$statuses = VC_Lead_Meta::statuses();
 
 		foreach ($query->posts as $post) {
 			$id = (int) $post->ID;
 			$ft = VC_Lead_Meta::get($id, VC_Lead_Meta::FORM_TYPE);
 			$st = VC_Lead_Meta::get($id, VC_Lead_Meta::STATUS);
-			fputcsv(
-				$out,
-				array(
-					$id,
-					isset($types[$ft]) ? $types[$ft] : $ft,
-					isset($statuses[$st]) ? $statuses[$st] : $st,
-					VC_Lead_Meta::get($id, VC_Lead_Meta::NAME),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::EMAIL),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::PHONE),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::COMPANY),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::SERVICE),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::BUDGET),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::TIMELINE),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::SUBMITTED_AT),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::SOURCE_URL),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::SUMMARY),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::MESSAGE),
-					VC_Lead_Meta::get($id, VC_Lead_Meta::PAYLOAD_JSON),
-				)
+
+			$schema_keys = array();
+			$schemas     = VC_Lead_Presentation::field_schemas();
+			if (isset($schemas[$ft])) {
+				$schema_keys = array_keys($schemas[$ft]);
+			}
+
+			$row = array(
+				$id,
+				isset($types[$ft]) ? $types[$ft] : $ft,
+				isset($statuses[$st]) ? $statuses[$st] : $st,
+				VC_Lead_Meta::get($id, VC_Lead_Meta::NAME),
+				VC_Lead_Meta::get($id, VC_Lead_Meta::EMAIL),
+				VC_Lead_Meta::get($id, VC_Lead_Meta::PHONE),
+				VC_Lead_Meta::get($id, VC_Lead_Meta::COMPANY),
+				VC_Lead_Meta::get($id, VC_Lead_Meta::SUBMITTED_AT),
+				VC_Lead_Presentation::source_url_display($id),
+				VC_Lead_Presentation::form_details_export_text($id),
+				$ft === 'pricing_calculator' ? VC_Lead_Presentation::pricing_export_text($id) : '',
+				VC_Lead_Meta::get($id, VC_Lead_Meta::PAYLOAD_JSON),
 			);
+
+			$resolved = array();
+			foreach (VC_Lead_Presentation::form_rows($id, false) as $field_row) {
+				$resolved[$field_row['key']] = $field_row['value'];
+			}
+
+			foreach ($extra_keys as $key => $_label) {
+				if ($ft === 'pricing_calculator') {
+					$row[] = '';
+					continue;
+				}
+				// Only fill columns that belong to this form schema (or message/service/budget when present).
+				if (!empty($schema_keys) && !in_array($key, $schema_keys, true)) {
+					$row[] = '';
+					continue;
+				}
+				$row[] = isset($resolved[$key]) ? $resolved[$key] : '';
+			}
+
+			$safe = array();
+			foreach ($row as $cell) {
+				$safe[] = VC_Lead_Presentation::csv_safe(is_scalar($cell) ? (string) $cell : '');
+			}
+			fputcsv($out, $safe);
 		}
 
 		fclose($out);

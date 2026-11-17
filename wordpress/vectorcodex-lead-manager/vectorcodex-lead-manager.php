@@ -3,7 +3,7 @@
  * Plugin Name:       VectorCodex Lead Manager
  * Plugin URI:        https://vectorcodex.com/
  * Description:       Stores and manages website form submissions (quotes, bookings, audits, pricing calculator, and more) for VectorCodex. Separate from editorial formatting.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            VectorCodex
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define('VC_LEADS_VERSION', '1.1.0');
+define('VC_LEADS_VERSION', '1.2.0');
 define('VC_LEADS_PLUGIN_FILE', __FILE__);
 define('VC_LEADS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('VC_LEADS_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -29,6 +29,7 @@ require_once VC_LEADS_PLUGIN_DIR . 'includes/class-vc-lead-cpt.php';
 require_once VC_LEADS_PLUGIN_DIR . 'includes/class-vc-lead-meta.php';
 require_once VC_LEADS_PLUGIN_DIR . 'includes/class-vc-lead-normalize.php';
 require_once VC_LEADS_PLUGIN_DIR . 'includes/class-vc-lead-security.php';
+require_once VC_LEADS_PLUGIN_DIR . 'includes/class-vc-lead-presentation.php';
 require_once VC_LEADS_PLUGIN_DIR . 'includes/class-vc-lead-email.php';
 require_once VC_LEADS_PLUGIN_DIR . 'includes/class-vc-lead-turnstile.php';
 require_once VC_LEADS_PLUGIN_DIR . 'includes/class-vc-lead-rest.php';
