@@ -13,7 +13,7 @@ const { service } = Astro.props;
 
 const studies = service.caseStudySlugs
   .map((slug) => caseStudies.find((item) => item.slug === slug))
-  .filter((item): item is NonNullable<typeof item> => Boolean(item) && !item.placeholder);
+  .filter((item): item is (typeof caseStudies)[number] => item != null && !item.placeholder);
 ---
 
 {

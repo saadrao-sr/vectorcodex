@@ -26,8 +26,11 @@ import {
   type StepDef,
 } from '../../config/pricing-calculator';
 import { focusFirstFormError } from '../../lib/forms/focusFirstError';
+import { isTurnstileFailureCode } from '../../lib/forms/submitLead';
+import { isTurnstileConfigured, TURNSTILE_REQUIRED_ERROR } from '../../lib/forms/turnstile';
 import { buildSummaryText, submitPricingEnquiry } from '../../lib/pricing-calculator/submit';
 import { buttonClass } from '../ui/styles';
+import TurnstileField from './TurnstileField';
 
 interface Props {
   endpoint?: string;
@@ -279,6 +282,9 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
   const [errorMessage, setErrorMessage] = useState('');
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReset, setTurnstileReset] = useState(0);
+  const [turnstileError, setTurnstileError] = useState('');
 
   useEffect(() => {
     try {
@@ -514,9 +520,20 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
   }
 
   async function submit() {
+    if (status === 'submitting') return;
     if (!state.primaryService || !currentStep) return;
     const nextErrors = validateStep(currentStep, state.contactAnswers);
     setErrors(nextErrors);
+    setTurnstileError('');
+    if (isTurnstileConfigured() && !turnstileToken) {
+      setTurnstileError(TURNSTILE_REQUIRED_ERROR);
+      if (Object.keys(nextErrors).length) {
+        scrollToErrors(nextErrors);
+      } else if (panelRef.current) {
+        focusFirstFormError(panelRef.current, { turnstile: TURNSTILE_REQUIRED_ERROR });
+      }
+      return;
+    }
     if (Object.keys(nextErrors).length) {
       scrollToErrors(nextErrors);
       return;
@@ -552,13 +569,21 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
 
     setStatus('submitting');
     setErrorMessage('');
-    const result = await submitPricingEnquiry(endpoint, payload);
+    const result = await submitPricingEnquiry(endpoint, payload, { turnstileToken });
     if (!result.ok) {
       setStatus('error');
       setErrorMessage(result.message);
+      if (isTurnstileFailureCode(result.code)) {
+        setTurnstileToken(null);
+        setTurnstileReset((value) => value + 1);
+        setTurnstileError(result.message);
+      }
       return;
     }
     setStatus('idle');
+    setTurnstileToken(null);
+    setTurnstileReset((value) => value + 1);
+    setTurnstileError('');
     setState((current) => ({ ...current, phase: 'success' }));
   }
 
@@ -794,6 +819,16 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
                 onHumanCheck={revealUpperContactErrors}
               />
             </div>
+
+            <TurnstileField
+              className="mt-4"
+              error={turnstileError}
+              resetSignal={turnstileReset}
+              onTokenChange={(token) => {
+                setTurnstileToken(token);
+                if (token) setTurnstileError('');
+              }}
+            />
 
             {status === 'error' && (
               <p className="mt-4 rounded-2xl border border-cta/35 bg-cta/10 px-4 py-3 text-sm text-cta" role="alert">

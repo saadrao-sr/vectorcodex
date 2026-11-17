@@ -3,8 +3,11 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
 import { Check, ChevronDown, X } from 'lucide-react';
 import { focusFirstFormError } from '../../lib/forms/focusFirstError';
+import { isTurnstileFailureCode, prepareLeadFormData, submitLeadFormData } from '../../lib/forms/submitLead';
+import { isTurnstileConfigured, TURNSTILE_REQUIRED_ERROR } from '../../lib/forms/turnstile';
 import { buttonClass } from '../ui/styles';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
+import TurnstileField from './TurnstileField';
 
 const BUDGET_OPTIONS = ['Under £500', '£500–£1,000', '£1,000–£3,000', '£3,000–£5,000', '£5,000+'] as const;
 
@@ -23,6 +26,7 @@ interface Errors {
   phone?: string;
   service?: string;
   human_check?: string;
+  turnstile?: string;
 }
 
 interface Props {
@@ -181,6 +185,9 @@ export default function BookingModal({ endpoint = '' }: Props) {
   const [budget, setBudget] = useState('');
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'unconfigured'>('idle');
+  const [statusDetail, setStatusDetail] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -198,6 +205,9 @@ export default function BookingModal({ endpoint = '' }: Props) {
       setBudget('');
       setErrors({});
       setStatus('idle');
+      setStatusDetail('');
+      setTurnstileToken(null);
+      setTurnstileReset((value) => value + 1);
       setOpen(true);
     };
     document.addEventListener('click', onClick);
@@ -258,13 +268,14 @@ export default function BookingModal({ endpoint = '' }: Props) {
     if (phone.replace(/\D/g, '').length < 7) next.phone = 'Enter a valid mobile number.';
     if (!selected) next.service = 'Select a service.';
     if (!isBotCheckPassed(data)) next.human_check = BOT_CHECK_ERROR;
+    if (isTurnstileConfigured() && !turnstileToken) next.turnstile = TURNSTILE_REQUIRED_ERROR;
     return next;
   }
 
   function revealUpperFieldErrors(form: HTMLFormElement | null) {
     if (!form) return;
     const next = validate(form);
-    const { human_check: _bot, ...upper } = next;
+    const { human_check: _bot, turnstile: _ts, ...upper } = next;
     if (Object.keys(upper).length === 0) return;
     setErrors(upper);
     setStatus('idle');
@@ -273,9 +284,11 @@ export default function BookingModal({ endpoint = '' }: Props) {
 
   async function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === 'submitting') return;
     const form = event.currentTarget;
     const next = validate(form);
     setErrors(next);
+    setStatusDetail('');
     if (Object.keys(next).length > 0) {
       setStatus('idle');
       focusFirstFormError(form, next);
@@ -297,27 +310,37 @@ export default function BookingModal({ endpoint = '' }: Props) {
     }
 
     setStatus('submitting');
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-      if (!response.ok) throw new Error('Request failed');
-      form.reset();
-      setService('');
-      setBudget('');
-      setStatus('success');
-    } catch {
-      setStatus('error');
+    const body = prepareLeadFormData(new FormData(form), 'booking', { turnstileToken });
+    const result = await submitLeadFormData(endpoint, body);
+    if (!result.ok) {
+      if (result.code === 'unconfigured') {
+        setStatus('unconfigured');
+      } else {
+        setStatus('error');
+        setStatusDetail(result.message);
+      }
+      if (isTurnstileFailureCode(result.code)) {
+        setTurnstileToken(null);
+        setTurnstileReset((value) => value + 1);
+        setErrors((current) => ({ ...current, turnstile: result.message }));
+      }
+      return;
     }
+
+    form.reset();
+    setService('');
+    setBudget('');
+    setTurnstileToken(null);
+    setTurnstileReset((value) => value + 1);
+    setErrors({});
+    setStatus('success');
   }
 
   const statusText =
     status === 'success'
       ? 'Thanks. Your consultation request has been recorded.'
       : status === 'error'
-        ? 'The request could not be sent. Please try again.'
+        ? statusDetail || 'The request could not be sent. Please try again.'
         : status === 'unconfigured'
           ? 'The booking form is not connected to an inbox yet. Set PUBLIC_CONTACT_ENDPOINT to enable submissions. Your details were not sent.'
           : 'We use your details only to reply to this enquiry.';
@@ -393,6 +416,7 @@ export default function BookingModal({ endpoint = '' }: Props) {
                 onSubmit={onSubmit}
                 noValidate
               >
+                <input type="hidden" name="form_type" value="booking" />
                 <div className="hidden" aria-hidden="true">
                   <label>
                     Website
@@ -530,6 +554,11 @@ export default function BookingModal({ endpoint = '' }: Props) {
 
                 <div className="mt-7 space-y-3 border-t border-white/10 pt-6">
                   <BotCheckField error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
+                  <TurnstileField
+                    error={errors.turnstile}
+                    resetSignal={turnstileReset}
+                    onTokenChange={setTurnstileToken}
+                  />
                   <button
                     type="submit"
                     className={`${buttonClass.base} ${buttonClass.gradient} w-full whitespace-nowrap px-6 sm:w-auto`}

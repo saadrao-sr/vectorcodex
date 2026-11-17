@@ -1,5 +1,6 @@
 import type { Answers, ServiceId } from '../../config/pricing-calculator';
 import { calculateIndicativeEstimate, formatAnswerValue, getService } from '../../config/pricing-calculator';
+import { prepareLeadFormData, submitLeadFormData } from '../forms/submitLead';
 
 export type PricingEnquiryPayload = {
   form_type: 'pricing_calculator';
@@ -14,9 +15,11 @@ export type PricingEnquiryPayload = {
   submittedAt: string;
 };
 
-export function buildSummaryText(payload: Omit<PricingEnquiryPayload, 'form_type' | 'summaryText' | 'submittedAt' | 'estimate'> & {
-  estimate: ReturnType<typeof calculateIndicativeEstimate>;
-}) {
+export function buildSummaryText(
+  payload: Omit<PricingEnquiryPayload, 'form_type' | 'summaryText' | 'submittedAt' | 'estimate'> & {
+    estimate: ReturnType<typeof calculateIndicativeEstimate>;
+  },
+) {
   const lines: string[] = [];
   lines.push('VectorCodex pricing calculator enquiry');
   lines.push(`Services: ${payload.allServices.map((id) => getService(id).title).join(' + ')}`);
@@ -46,48 +49,25 @@ export function buildSummaryText(payload: Omit<PricingEnquiryPayload, 'form_type
 export async function submitPricingEnquiry(
   endpoint: string,
   payload: PricingEnquiryPayload,
-): Promise<{ ok: true } | { ok: false; message: string }> {
-  if (!endpoint.trim()) {
-    return {
-      ok: false,
-      message:
-        'Submissions are not connected yet. Set PUBLIC_CONTACT_ENDPOINT to a secure server endpoint that emails VectorCodex and sends the visitor an acknowledgement.',
-    };
-  }
+  options?: { turnstileToken?: string | null },
+): Promise<{ ok: true } | { ok: false; message: string; code?: string }> {
+  const body = new FormData();
+  body.set('primary_service', payload.primaryService);
+  body.set('additional_services', payload.additionalServices.join(','));
+  body.set('all_services', payload.allServices.join(','));
+  body.set('summary', payload.summaryText);
+  body.set('estimate_label', payload.estimate.label);
+  body.set('submitted_at', payload.submittedAt);
+  // Preserve the complete nested structure exactly as built by the calculator.
+  body.set('payload_json', JSON.stringify(payload));
+  body.set('name', String(payload.contactAnswers.fullName ?? ''));
+  body.set('email', String(payload.contactAnswers.email ?? ''));
+  body.set('phone', String(payload.contactAnswers.phone ?? ''));
+  body.set('company', String(payload.contactAnswers.company ?? ''));
 
-  try {
-    const body = new FormData();
-    body.set('form_type', payload.form_type);
-    body.set('primary_service', payload.primaryService);
-    body.set('additional_services', payload.additionalServices.join(','));
-    body.set('all_services', payload.allServices.join(','));
-    body.set('summary', payload.summaryText);
-    body.set('estimate_label', payload.estimate.label);
-    body.set('submitted_at', payload.submittedAt);
-    body.set('payload_json', JSON.stringify(payload));
-    body.set('name', String(payload.contactAnswers.fullName ?? ''));
-    body.set('email', String(payload.contactAnswers.email ?? ''));
-    body.set('phone', String(payload.contactAnswers.phone ?? ''));
-    body.set('company', String(payload.contactAnswers.company ?? ''));
+  prepareLeadFormData(body, 'pricing_calculator', { turnstileToken: options?.turnstileToken });
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      body,
-      headers: { Accept: 'application/json' },
-    });
-
-    if (!response.ok) {
-      return {
-        ok: false,
-        message: 'We could not send your project brief. Please try again in a moment.',
-      };
-    }
-
-    return { ok: true };
-  } catch {
-    return {
-      ok: false,
-      message: 'Network error while sending your project brief. Please check your connection and try again.',
-    };
-  }
+  const result = await submitLeadFormData(endpoint, body);
+  if (result.ok) return { ok: true };
+  return { ok: false, message: result.message, code: result.code };
 }

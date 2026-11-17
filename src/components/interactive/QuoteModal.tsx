@@ -3,8 +3,11 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
 import { Check, ChevronDown, X } from 'lucide-react';
 import { focusFirstFormError } from '../../lib/forms/focusFirstError';
+import { isTurnstileFailureCode, prepareLeadFormData, submitLeadFormData } from '../../lib/forms/submitLead';
+import { isTurnstileConfigured, TURNSTILE_REQUIRED_ERROR } from '../../lib/forms/turnstile';
 import { buttonClass } from '../ui/styles';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
+import TurnstileField from './TurnstileField';
 
 const SERVICE_OPTIONS = [
   'SEO',
@@ -33,6 +36,7 @@ interface Errors {
   service?: string;
   timeline?: string;
   human_check?: string;
+  turnstile?: string;
 }
 
 interface Props {
@@ -197,6 +201,9 @@ export default function QuoteModal({ endpoint = '' }: Props) {
   const [budgetMax, setBudgetMax] = useState(40);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'unconfigured'>('idle');
+  const [statusDetail, setStatusDetail] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -213,6 +220,9 @@ export default function QuoteModal({ endpoint = '' }: Props) {
       if (nextService) setService(nextService);
       setErrors({});
       setStatus('idle');
+      setStatusDetail('');
+      setTurnstileToken(null);
+      setTurnstileReset((value) => value + 1);
       setOpen(true);
     };
     document.addEventListener('click', onClick);
@@ -276,13 +286,14 @@ export default function QuoteModal({ endpoint = '' }: Props) {
     if (!selectedService) next.service = 'Select a service.';
     if (!selectedTimeline) next.timeline = 'Select a project timeline.';
     if (!isBotCheckPassed(data)) next.human_check = BOT_CHECK_ERROR;
+    if (isTurnstileConfigured() && !turnstileToken) next.turnstile = TURNSTILE_REQUIRED_ERROR;
     return next;
   }
 
   function revealUpperFieldErrors(form: HTMLFormElement | null) {
     if (!form) return;
     const next = validate(form);
-    const { human_check: _bot, ...upper } = next;
+    const { human_check: _bot, turnstile: _ts, ...upper } = next;
     if (Object.keys(upper).length === 0) return;
     setErrors(upper);
     setStatus('idle');
@@ -291,9 +302,11 @@ export default function QuoteModal({ endpoint = '' }: Props) {
 
   async function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === 'submitting') return;
     const form = event.currentTarget;
     const next = validate(form);
     setErrors(next);
+    setStatusDetail('');
     if (Object.keys(next).length > 0) {
       setStatus('idle');
       focusFirstFormError(form, next);
@@ -313,29 +326,39 @@ export default function QuoteModal({ endpoint = '' }: Props) {
     }
 
     setStatus('submitting');
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-      if (!response.ok) throw new Error('Request failed');
-      form.reset();
-      setService('');
-      setTimeline('');
-      setBudgetMin(BUDGET_MIN);
-      setBudgetMax(40);
-      setStatus('success');
-    } catch {
-      setStatus('error');
+    const body = prepareLeadFormData(new FormData(form), 'quote', { turnstileToken });
+    const result = await submitLeadFormData(endpoint, body);
+    if (!result.ok) {
+      if (result.code === 'unconfigured') {
+        setStatus('unconfigured');
+      } else {
+        setStatus('error');
+        setStatusDetail(result.message);
+      }
+      if (isTurnstileFailureCode(result.code)) {
+        setTurnstileToken(null);
+        setTurnstileReset((value) => value + 1);
+        setErrors((current) => ({ ...current, turnstile: result.message }));
+      }
+      return;
     }
+
+    form.reset();
+    setService('');
+    setTimeline('');
+    setBudgetMin(BUDGET_MIN);
+    setBudgetMax(40);
+    setTurnstileToken(null);
+    setTurnstileReset((value) => value + 1);
+    setErrors({});
+    setStatus('success');
   }
 
   const statusText =
     status === 'success'
       ? 'Thanks. Your quote request has been recorded.'
       : status === 'error'
-        ? 'The request could not be sent. Please try again.'
+        ? statusDetail || 'The request could not be sent. Please try again.'
         : status === 'unconfigured'
           ? 'The form is not connected to an inbox yet. Set PUBLIC_CONTACT_ENDPOINT to enable submissions. Your details were not sent.'
           : 'We use your details only to reply to this enquiry.';
@@ -616,6 +639,12 @@ export default function QuoteModal({ endpoint = '' }: Props) {
 
                 <div className="mt-7 space-y-3 border-t border-white/10 pt-6">
                   <BotCheckField error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
+                  <TurnstileField
+                    className="mt-3"
+                    error={errors.turnstile}
+                    resetSignal={turnstileReset}
+                    onTokenChange={setTurnstileToken}
+                  />
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <button
                     type="submit"

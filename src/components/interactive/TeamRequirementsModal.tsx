@@ -3,8 +3,11 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
 import { Check, ChevronDown, X } from 'lucide-react';
 import { focusFirstFormError } from '../../lib/forms/focusFirstError';
+import { isTurnstileFailureCode, prepareLeadFormData, submitLeadFormData } from '../../lib/forms/submitLead';
+import { isTurnstileConfigured, TURNSTILE_REQUIRED_ERROR } from '../../lib/forms/turnstile';
 import { buttonClass } from '../ui/styles';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
+import TurnstileField from './TurnstileField';
 
 const BUDGET_OPTIONS = [
   'Under £2,000 / month',
@@ -43,6 +46,7 @@ interface Errors {
   resources?: string;
   budget?: string;
   human_check?: string;
+  turnstile?: string;
 }
 
 interface Props {
@@ -204,6 +208,9 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
   const [timeline, setTimeline] = useState('');
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'unconfigured'>('idle');
+  const [statusDetail, setStatusDetail] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -223,6 +230,9 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
       setTimeline('');
       setErrors({});
       setStatus('idle');
+      setStatusDetail('');
+      setTurnstileToken(null);
+      setTurnstileReset((value) => value + 1);
       setOpen(true);
     };
     document.addEventListener('click', onClick);
@@ -284,6 +294,7 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
     if (!resources) next.resources = 'Select how many resources you need.';
     if (!budget) next.budget = 'Select a budget range.';
     if (!isBotCheckPassed(data)) next.human_check = BOT_CHECK_ERROR;
+    if (isTurnstileConfigured() && !turnstileToken) next.turnstile = TURNSTILE_REQUIRED_ERROR;
     return next;
   }
 
@@ -298,7 +309,7 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
   function revealUpperFieldErrors(form: HTMLFormElement | null) {
     if (!form) return;
     const next = validate(form);
-    const { human_check: _bot, ...upper } = next;
+    const { human_check: _bot, turnstile: _ts, ...upper } = next;
     if (Object.keys(upper).length === 0) return;
     setErrors(upper);
     setStatus('idle');
@@ -307,9 +318,11 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
 
   async function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === 'submitting') return;
     const form = event.currentTarget;
     const next = validate(form);
     setErrors(next);
+    setStatusDetail('');
     if (Object.keys(next).length > 0) {
       setStatus('idle');
       focusFirstFormError(form, next);
@@ -330,26 +343,36 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
     }
 
     setStatus('submitting');
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-      if (!response.ok) throw new Error('Request failed');
-      form.reset();
-      resetSelects();
-      setStatus('success');
-    } catch {
-      setStatus('error');
+    const body = prepareLeadFormData(new FormData(form), 'team_requirements', { turnstileToken });
+    const result = await submitLeadFormData(endpoint, body);
+    if (!result.ok) {
+      if (result.code === 'unconfigured') {
+        setStatus('unconfigured');
+      } else {
+        setStatus('error');
+        setStatusDetail(result.message);
+      }
+      if (isTurnstileFailureCode(result.code)) {
+        setTurnstileToken(null);
+        setTurnstileReset((value) => value + 1);
+        setErrors((current) => ({ ...current, turnstile: result.message }));
+      }
+      return;
     }
+
+    form.reset();
+    resetSelects();
+    setTurnstileToken(null);
+    setTurnstileReset((value) => value + 1);
+    setErrors({});
+    setStatus('success');
   }
 
   const statusText =
     status === 'success'
       ? 'Thanks. Your team requirements have been recorded. We will follow up with a scoped next step.'
       : status === 'error'
-        ? 'The request could not be sent. Please try again.'
+        ? statusDetail || 'The request could not be sent. Please try again.'
         : status === 'unconfigured'
           ? 'This form is not connected to an inbox yet. Set PUBLIC_CONTACT_ENDPOINT to enable submissions. Your details were not sent.'
           : 'Share the roles, headcount, and budget so we can propose the right team mix.';
@@ -429,7 +452,7 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
                 onSubmit={onSubmit}
                 noValidate
               >
-                <input type="hidden" name="formType" value="team-requirements" />
+                <input type="hidden" name="form_type" value="team_requirements" />
                 <input type="hidden" name="subject" value="Team requirements enquiry" />
 
                 <div className="hidden" aria-hidden="true">
@@ -633,6 +656,11 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
 
                 <div className="mt-7 space-y-3 border-t border-white/10 pt-6">
                   <BotCheckField error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
+                  <TurnstileField
+                    error={errors.turnstile}
+                    resetSignal={turnstileReset}
+                    onTokenChange={setTurnstileToken}
+                  />
                   <button
                     type="submit"
                     className={`${buttonClass.base} ${buttonClass.gradient} w-full whitespace-nowrap px-6 shadow-[0_12px_40px_rgb(197_246_61_/0.16)] sm:w-auto`}

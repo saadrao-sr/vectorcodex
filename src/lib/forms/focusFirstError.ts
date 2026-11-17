@@ -4,9 +4,10 @@
  */
 export function focusFirstFormError(
   root: HTMLElement,
-  errors: Record<string, string | undefined | null>,
+  errors: { readonly [key: string]: string | null | undefined } | object,
 ) {
-  const firstKey = Object.keys(errors).find((key) => Boolean(errors[key]));
+  const record = errors as Record<string, string | null | undefined>;
+  const firstKey = Object.keys(record).find((key) => Boolean(record[key]));
   if (!firstKey) return;
 
   const byData = root.querySelector<HTMLElement>(`[data-field-id="${CSS.escape(firstKey)}"]`);

@@ -3,8 +3,11 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
 import { X } from 'lucide-react';
 import { focusFirstFormError } from '../../lib/forms/focusFirstError';
+import { isTurnstileFailureCode, prepareLeadFormData, submitLeadFormData } from '../../lib/forms/submitLead';
+import { isTurnstileConfigured, TURNSTILE_REQUIRED_ERROR } from '../../lib/forms/turnstile';
 import { buttonClass } from '../ui/styles';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
+import TurnstileField from './TurnstileField';
 
 interface Errors {
   name?: string;
@@ -12,6 +15,7 @@ interface Errors {
   phone?: string;
   website?: string;
   human_check?: string;
+  turnstile?: string;
 }
 
 interface Props {
@@ -55,6 +59,9 @@ export default function FreeAuditModal({ endpoint = '' }: Props) {
   const [mounted, setMounted] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'unconfigured'>('idle');
+  const [statusDetail, setStatusDetail] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -69,6 +76,9 @@ export default function FreeAuditModal({ endpoint = '' }: Props) {
       lastFocus.current = trigger;
       setErrors({});
       setStatus('idle');
+      setStatusDetail('');
+      setTurnstileToken(null);
+      setTurnstileReset((value) => value + 1);
       setOpen(true);
     };
     document.addEventListener('click', onClick);
@@ -129,13 +139,14 @@ export default function FreeAuditModal({ endpoint = '' }: Props) {
     if (phone.replace(/\D/g, '').length < 7) next.phone = 'Enter a valid contact number.';
     if (website.length < 3) next.website = 'Enter your website name or URL.';
     if (!isBotCheckPassed(data)) next.human_check = BOT_CHECK_ERROR;
+    if (isTurnstileConfigured() && !turnstileToken) next.turnstile = TURNSTILE_REQUIRED_ERROR;
     return next;
   }
 
   function revealUpperFieldErrors(form: HTMLFormElement | null) {
     if (!form) return;
     const next = validate(form);
-    const { human_check: _bot, ...upper } = next;
+    const { human_check: _bot, turnstile: _ts, ...upper } = next;
     if (Object.keys(upper).length === 0) return;
     setErrors(upper);
     setStatus('idle');
@@ -144,9 +155,11 @@ export default function FreeAuditModal({ endpoint = '' }: Props) {
 
   async function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === 'submitting') return;
     const form = event.currentTarget;
     const next = validate(form);
     setErrors(next);
+    setStatusDetail('');
     if (Object.keys(next).length > 0) {
       setStatus('idle');
       focusFirstFormError(form, next);
@@ -154,8 +167,8 @@ export default function FreeAuditModal({ endpoint = '' }: Props) {
     }
 
     const data = new FormData(form);
-    data.set('form_type', 'free_audit');
     data.set('website', normalizeWebsite(String(data.get('website') ?? '')));
+    prepareLeadFormData(data, 'free_audit', { turnstileToken });
 
     const honeypot = String(data.get('company_website') ?? '').trim();
     if (honeypot) {
@@ -170,25 +183,34 @@ export default function FreeAuditModal({ endpoint = '' }: Props) {
     }
 
     setStatus('submitting');
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
-      });
-      if (!response.ok) throw new Error('Request failed');
-      form.reset();
-      setStatus('success');
-    } catch {
-      setStatus('error');
+    const result = await submitLeadFormData(endpoint, data);
+    if (!result.ok) {
+      if (result.code === 'unconfigured') {
+        setStatus('unconfigured');
+      } else {
+        setStatus('error');
+        setStatusDetail(result.message);
+      }
+      if (isTurnstileFailureCode(result.code)) {
+        setTurnstileToken(null);
+        setTurnstileReset((value) => value + 1);
+        setErrors((current) => ({ ...current, turnstile: result.message }));
+      }
+      return;
     }
+
+    form.reset();
+    setTurnstileToken(null);
+    setTurnstileReset((value) => value + 1);
+    setErrors({});
+    setStatus('success');
   }
 
   const statusText =
     status === 'success'
       ? 'Thanks. Your free audit request has been recorded. We will review your site and follow up.'
       : status === 'error'
-        ? 'The request could not be sent. Please try again.'
+        ? statusDetail || 'The request could not be sent. Please try again.'
         : status === 'unconfigured'
           ? 'The audit form is not connected to an inbox yet. Set PUBLIC_CONTACT_ENDPOINT to enable submissions. Your details were not sent.'
           : 'Share your site details and we will prepare a free digital audit overview.';
@@ -395,6 +417,11 @@ export default function FreeAuditModal({ endpoint = '' }: Props) {
 
                 <div className="mt-7 space-y-3 border-t border-white/10 pt-6">
                   <BotCheckField error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
+                  <TurnstileField
+                    error={errors.turnstile}
+                    resetSignal={turnstileReset}
+                    onTokenChange={setTurnstileToken}
+                  />
                   <button
                     type="submit"
                     className={`${buttonClass.base} ${buttonClass.cta} w-full whitespace-nowrap px-6 shadow-[0_12px_40px_rgb(255_222_93_/0.18)] sm:w-auto`}

@@ -1,7 +1,10 @@
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { focusFirstFormError } from '../../lib/forms/focusFirstError';
+import { isTurnstileFailureCode, prepareLeadFormData, submitLeadFormData } from '../../lib/forms/submitLead';
+import { isTurnstileConfigured, TURNSTILE_REQUIRED_ERROR } from '../../lib/forms/turnstile';
 import { buttonClass } from '../ui/styles';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
+import TurnstileField from './TurnstileField';
 
 interface Props {
   endpoint?: string;
@@ -13,6 +16,7 @@ interface Errors {
   phone?: string;
   message?: string;
   human_check?: string;
+  turnstile?: string;
 }
 
 const serviceOptions = [
@@ -44,6 +48,9 @@ export default function ProjectInquiryForm({ endpoint = '' }: Props) {
   const baseId = useId();
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'unconfigured'>('idle');
+  const [statusDetail, setStatusDetail] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   function validate(form: HTMLFormElement) {
     const data = new FormData(form);
@@ -57,24 +64,27 @@ export default function ProjectInquiryForm({ endpoint = '' }: Props) {
     if (phone.length < 7) next.phone = 'Enter a valid phone number.';
     if (message.length < 10) next.message = 'Add project details of at least 10 characters.';
     if (!isBotCheckPassed(data)) next.human_check = BOT_CHECK_ERROR;
+    if (isTurnstileConfigured() && !turnstileToken) next.turnstile = TURNSTILE_REQUIRED_ERROR;
     return next;
   }
 
   function revealUpperFieldErrors(form: HTMLFormElement | null) {
     if (!form) return;
     const next = validate(form);
-    const { human_check: _bot, ...upper } = next;
+    const { human_check: _bot, turnstile: _ts, ...upper } = next;
     if (Object.keys(upper).length === 0) return;
     setErrors(upper);
     setStatus('idle');
     focusFirstFormError(form, upper);
   }
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === 'submitting') return;
     const form = event.currentTarget;
     const next = validate(form);
     setErrors(next);
+    setStatusDetail('');
     if (Object.keys(next).length > 0) {
       setStatus('idle');
       focusFirstFormError(form, next);
@@ -94,25 +104,35 @@ export default function ProjectInquiryForm({ endpoint = '' }: Props) {
     }
 
     setStatus('submitting');
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-      if (!response.ok) throw new Error('Request failed');
-      form.reset();
-      setStatus('success');
-    } catch {
-      setStatus('error');
+    const body = prepareLeadFormData(new FormData(form), 'project_inquiry', { turnstileToken });
+    const result = await submitLeadFormData(endpoint, body);
+    if (!result.ok) {
+      if (result.code === 'unconfigured') {
+        setStatus('unconfigured');
+      } else {
+        setStatus('error');
+        setStatusDetail(result.message);
+      }
+      if (isTurnstileFailureCode(result.code)) {
+        setTurnstileToken(null);
+        setTurnstileReset((value) => value + 1);
+        setErrors((current) => ({ ...current, turnstile: result.message }));
+      }
+      return;
     }
+
+    form.reset();
+    setTurnstileToken(null);
+    setTurnstileReset((value) => value + 1);
+    setErrors({});
+    setStatus('success');
   }
 
   const statusText =
     status === 'success'
       ? 'Thanks. Your project enquiry has been recorded.'
       : status === 'error'
-        ? 'The enquiry could not be sent. Please try again.'
+        ? statusDetail || 'The enquiry could not be sent. Please try again.'
         : status === 'unconfigured'
           ? 'The form is not connected to an inbox yet. Your details were not sent.'
           : '';
@@ -131,6 +151,7 @@ export default function ProjectInquiryForm({ endpoint = '' }: Props) {
       />
 
       <div className="relative">
+        <input type="hidden" name="form_type" value="project_inquiry" />
         <div className="hidden" aria-hidden="true">
           <label>
             Website
@@ -298,6 +319,12 @@ export default function ProjectInquiryForm({ endpoint = '' }: Props) {
         </div>
 
         <BotCheckField className="mt-6" error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
+        <TurnstileField
+          className="mt-4"
+          error={errors.turnstile}
+          resetSignal={turnstileReset}
+          onTokenChange={setTurnstileToken}
+        />
 
         <button
           type="submit"
