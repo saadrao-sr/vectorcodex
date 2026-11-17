@@ -1,5 +1,6 @@
 ---
 import type { Crumb } from '../../types/content';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Container from '../ui/Container.astro';
 
 interface Props {
@@ -14,31 +15,9 @@ const { crumbs } = Astro.props;
 
 {
   crumbs.length > 0 && (
-    <div
-      class="page-crumbs relative isolate bg-[#0D120C] pt-[calc(var(--header-height)+1.25rem)] pb-2 sm:pt-[calc(var(--header-height)+1.5rem)] sm:pb-3"
-    >
+    <div class="page-crumbs relative isolate bg-[#0D120C] pt-[calc(var(--header-height)+1.25rem)] pb-2 sm:pt-[calc(var(--header-height)+1.5rem)] sm:pb-3">
       <Container>
-        <nav aria-label="Breadcrumb">
-          <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] leading-none text-white/55">
-            {crumbs.map((item, index) => {
-              const last = index === crumbs.length - 1;
-              return (
-                <li class="inline-flex max-w-full items-center gap-2">
-                  {index > 0 && <span aria-hidden="true" class="text-white/30">/</span>}
-                  {last ? (
-                    <span aria-current="page" class="truncate text-highlight">
-                      {item.name}
-                    </span>
-                  ) : (
-                    <a href={item.href} class="truncate transition hover:text-highlight">
-                      {item.name}
-                    </a>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-        </nav>
+        <Breadcrumbs items={crumbs} class="mb-0" />
       </Container>
     </div>
   )

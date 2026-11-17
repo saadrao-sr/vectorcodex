@@ -2,6 +2,7 @@
 import { site } from '../../../config/site';
 import type { BlogAuthorSocial, BlogPost, Crumb } from '../../../types/content';
 import { formatDate } from '../../../lib/seo/format';
+import Breadcrumbs from '../../ui/Breadcrumbs.astro';
 import Container from '../../ui/Container.astro';
 import SectionBannerBg from '../../ui/SectionBannerBg.astro';
 import { eyebrowClass } from '../../ui/styles';
@@ -56,29 +57,7 @@ const authorSocials = (post.authorSocials?.length ? post.authorSocials : fallbac
   <SectionBannerBg eager />
 
   <Container class="relative">
-    <nav aria-label="Breadcrumb" class="mb-6 sm:mb-7">
-      <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] leading-none text-white/55">
-        {
-          crumbs.map((item, index) => {
-            const last = index === crumbs.length - 1;
-            return (
-              <li class="inline-flex max-w-full items-center gap-2">
-                {index > 0 && <span aria-hidden="true" class="text-white/30">/</span>}
-                {last ? (
-                  <span aria-current="page" class="truncate text-highlight">
-                    {item.name}
-                  </span>
-                ) : (
-                  <a href={item.href} class="truncate transition hover:text-highlight">
-                    {item.name}
-                  </a>
-                )}
-              </li>
-            );
-          })
-        }
-      </ol>
-    </nav>
+    <Breadcrumbs items={crumbs} class="mb-6 sm:mb-7" />
 
     <div class="blog-article-hero__layout">
       <div class="blog-article-hero__copy min-w-0">

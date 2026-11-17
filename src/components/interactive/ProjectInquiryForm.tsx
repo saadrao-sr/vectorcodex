@@ -1,4 +1,5 @@
 import { useId, useState, type FormEvent } from 'react';
+import { focusFirstFormError } from '../../lib/forms/focusFirstError';
 import { buttonClass } from '../ui/styles';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
 
@@ -59,6 +60,16 @@ export default function ProjectInquiryForm({ endpoint = '' }: Props) {
     return next;
   }
 
+  function revealUpperFieldErrors(form: HTMLFormElement | null) {
+    if (!form) return;
+    const next = validate(form);
+    const { human_check: _bot, ...upper } = next;
+    if (Object.keys(upper).length === 0) return;
+    setErrors(upper);
+    setStatus('idle');
+    focusFirstFormError(form, upper);
+  }
+
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -66,6 +77,7 @@ export default function ProjectInquiryForm({ endpoint = '' }: Props) {
     setErrors(next);
     if (Object.keys(next).length > 0) {
       setStatus('idle');
+      focusFirstFormError(form, next);
       return;
     }
 
@@ -285,7 +297,7 @@ export default function ProjectInquiryForm({ endpoint = '' }: Props) {
           )}
         </div>
 
-        <BotCheckField className="mt-6" error={errors.human_check} />
+        <BotCheckField className="mt-6" error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
 
         <button
           type="submit"

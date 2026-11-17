@@ -1,4 +1,5 @@
 import { useId, useState, type SubmitEvent } from 'react';
+import { focusFirstFormError } from '../../lib/forms/focusFirstError';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
 
 interface Option {
@@ -39,6 +40,16 @@ export default function ContactForm({ options, endpoint = '' }: Props) {
     return next;
   }
 
+  function revealUpperFieldErrors(form: HTMLFormElement | null) {
+    if (!form) return;
+    const next = validate(form);
+    const { human_check: _bot, ...upper } = next;
+    if (Object.keys(upper).length === 0) return;
+    setErrors(upper);
+    setStatus('idle');
+    focusFirstFormError(form, upper);
+  }
+
   async function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -46,6 +57,7 @@ export default function ContactForm({ options, endpoint = '' }: Props) {
     setErrors(next);
     if (Object.keys(next).length > 0) {
       setStatus('idle');
+      focusFirstFormError(form, next);
       return;
     }
 
@@ -147,7 +159,7 @@ export default function ContactForm({ options, endpoint = '' }: Props) {
           </p>
         )}
       </div>
-      <BotCheckField className="mt-5" error={errors.human_check} />
+      <BotCheckField className="mt-5" error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
       <button type="submit" className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-gradient-to-r from-lime to-gold px-5 text-sm font-semibold text-bg sm:w-auto" disabled={status === 'submitting'} aria-busy={status === 'submitting'}>
         {status === 'submitting' ? 'Sending…' : 'Send enquiry'}
       </button>

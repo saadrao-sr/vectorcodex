@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type CSSProperties, type SubmitEven
 import { createPortal } from 'react-dom';
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
 import { Check, ChevronDown, X } from 'lucide-react';
+import { focusFirstFormError } from '../../lib/forms/focusFirstError';
 import { buttonClass } from '../ui/styles';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
 
@@ -294,6 +295,16 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
     setTimeline('');
   }
 
+  function revealUpperFieldErrors(form: HTMLFormElement | null) {
+    if (!form) return;
+    const next = validate(form);
+    const { human_check: _bot, ...upper } = next;
+    if (Object.keys(upper).length === 0) return;
+    setErrors(upper);
+    setStatus('idle');
+    focusFirstFormError(form, upper);
+  }
+
   async function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -301,6 +312,7 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
     setErrors(next);
     if (Object.keys(next).length > 0) {
       setStatus('idle');
+      focusFirstFormError(form, next);
       return;
     }
 
@@ -620,7 +632,7 @@ export default function TeamRequirementsModal({ endpoint = '' }: Props) {
                 </div>
 
                 <div className="mt-7 space-y-3 border-t border-white/10 pt-6">
-                  <BotCheckField error={errors.human_check} />
+                  <BotCheckField error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
                   <button
                     type="submit"
                     className={`${buttonClass.base} ${buttonClass.gradient} w-full whitespace-nowrap px-6 shadow-[0_12px_40px_rgb(197_246_61_/0.16)] sm:w-auto`}

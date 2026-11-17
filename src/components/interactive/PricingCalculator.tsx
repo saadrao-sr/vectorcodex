@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -25,6 +25,7 @@ import {
   type ServiceId,
   type StepDef,
 } from '../../config/pricing-calculator';
+import { focusFirstFormError } from '../../lib/forms/focusFirstError';
 import { buildSummaryText, submitPricingEnquiry } from '../../lib/pricing-calculator/submit';
 import { buttonClass } from '../ui/styles';
 
@@ -83,11 +84,13 @@ function FieldControl({
   value,
   error,
   onChange,
+  onHumanCheck,
 }: {
   field: FieldDef;
   value: Answers[string] | undefined;
   error?: string;
   onChange: (value: Answers[string]) => void;
+  onHumanCheck?: () => void;
 }) {
   if (field.id === 'consent' || field.id === 'human_check') {
     const checked = value === 'yes';
@@ -101,7 +104,11 @@ function FieldControl({
           type="checkbox"
           className="mt-1 h-4 w-4 rounded border-white/30 bg-transparent text-highlight focus:ring-highlight"
           checked={checked}
-          onChange={(event) => onChange(event.target.checked ? 'yes' : '')}
+          onChange={(event) => {
+            const next = event.target.checked ? 'yes' : '';
+            onChange(next);
+            if (field.id === 'human_check' && next === 'yes') onHumanCheck?.();
+          }}
         />
         <span className="text-sm leading-6 text-white/80">{field.label}</span>
       </label>
@@ -230,17 +237,19 @@ function StepFields({
   answers,
   errors,
   onChange,
+  onHumanCheck,
 }: {
   step: StepDef;
   answers: Answers;
   errors: Record<string, string>;
   onChange: (id: string, value: Answers[string]) => void;
+  onHumanCheck?: () => void;
 }) {
   const fields = visibleFields(step.fields, answers);
   return (
     <div className="space-y-5">
       {fields.map((field) => (
-        <div key={field.id}>
+        <div key={field.id} data-field-id={field.id}>
           {field.id !== 'consent' && field.id !== 'human_check' && (
             <label className="mb-2 block text-sm font-medium text-white/85">
               {field.label}
@@ -253,6 +262,7 @@ function StepFields({
             value={answers[field.id]}
             error={errors[field.id]}
             onChange={(value) => onChange(field.id, value)}
+            onHumanCheck={onHumanCheck}
           />
           {errors[field.id] && <p className="mt-2 text-sm text-cta">{errors[field.id]}</p>}
         </div>
@@ -262,6 +272,7 @@ function StepFields({
 }
 
 export default function PricingCalculator({ endpoint = '' }: Props) {
+  const panelRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<CalculatorState>(initialState);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'error'>('idle');
@@ -307,6 +318,20 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
         : state.phase === 'contact'
           ? contactSteps[0]
           : null;
+
+  function scrollToErrors(nextErrors: Record<string, string>) {
+    if (!panelRef.current || Object.keys(nextErrors).length === 0) return;
+    focusFirstFormError(panelRef.current, nextErrors);
+  }
+
+  function revealUpperContactErrors() {
+    if (!currentStep) return;
+    const nextErrors = validateStep(currentStep, state.contactAnswers);
+    const { human_check: _bot, ...upper } = nextErrors;
+    if (Object.keys(upper).length === 0) return;
+    setErrors(upper);
+    scrollToErrors(upper);
+  }
 
   const progress = useMemo(() => {
     if (state.phase === 'pick') return 5;
@@ -431,7 +456,10 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
     if (state.phase === 'business' && currentStep) {
       const nextErrors = validateStep(currentStep, state.businessAnswers);
       setErrors(nextErrors);
-      if (Object.keys(nextErrors).length) return;
+      if (Object.keys(nextErrors).length) {
+        scrollToErrors(nextErrors);
+        return;
+      }
       if (state.stepIndex < businessSteps.length - 1) {
         setState((current) => ({ ...current, stepIndex: current.stepIndex + 1 }));
         return;
@@ -444,7 +472,10 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
       const answers = state.serviceAnswers[activeServiceId] ?? {};
       const nextErrors = validateStep(currentStep, answers);
       setErrors(nextErrors);
-      if (Object.keys(nextErrors).length) return;
+      if (Object.keys(nextErrors).length) {
+        scrollToErrors(nextErrors);
+        return;
+      }
       if (state.stepIndex < activeService.steps.length - 1) {
         setState((current) => ({ ...current, stepIndex: current.stepIndex + 1 }));
         return;
@@ -486,7 +517,10 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
     if (!state.primaryService || !currentStep) return;
     const nextErrors = validateStep(currentStep, state.contactAnswers);
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length) return;
+    if (Object.keys(nextErrors).length) {
+      scrollToErrors(nextErrors);
+      return;
+    }
 
     const honeypot = String(state.contactAnswers.company_website ?? '').trim();
     if (honeypot) {
@@ -582,7 +616,10 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start xl:grid-cols-[minmax(0,1fr)_20rem]">
-      <div className="min-w-0 rounded-[1.75rem] border border-white/12 bg-white/[0.03] p-5 shadow-[0_24px_80px_rgb(0_0_0_/0.28)] sm:p-7">
+      <div
+        ref={panelRef}
+        className="min-w-0 rounded-[1.75rem] border border-white/12 bg-white/[0.03] p-5 shadow-[0_24px_80px_rgb(0_0_0_/0.28)] sm:p-7"
+      >
         {state.phase !== 'pick' && state.phase !== 'success' && (
           <div className="mb-6 space-y-4">
             <ProgressBar value={progress} label={`Step progress`} />
@@ -754,6 +791,7 @@ export default function PricingCalculator({ endpoint = '' }: Props) {
                 answers={state.contactAnswers}
                 errors={errors}
                 onChange={(id, value) => updateAnswers('contact', id, value)}
+                onHumanCheck={revealUpperContactErrors}
               />
             </div>
 

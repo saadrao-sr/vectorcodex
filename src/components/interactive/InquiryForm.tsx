@@ -1,4 +1,5 @@
 import { useId, useState, type SubmitEvent } from 'react';
+import { focusFirstFormError } from '../../lib/forms/focusFirstError';
 import { buttonClass } from '../ui/styles';
 import BotCheckField, { BOT_CHECK_ERROR, isBotCheckPassed } from './BotCheckField';
 
@@ -52,6 +53,16 @@ export default function InquiryForm({ serviceOptions, budgetOptions, endpoint = 
     return next;
   }
 
+  function revealUpperFieldErrors(form: HTMLFormElement | null) {
+    if (!form) return;
+    const next = validate(form);
+    const { human_check: _bot, ...upper } = next;
+    if (Object.keys(upper).length === 0) return;
+    setErrors(upper);
+    setStatus('idle');
+    focusFirstFormError(form, upper);
+  }
+
   async function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -59,6 +70,7 @@ export default function InquiryForm({ serviceOptions, budgetOptions, endpoint = 
     setErrors(next);
     if (Object.keys(next).length > 0) {
       setStatus('idle');
+      focusFirstFormError(form, next);
       return;
     }
 
@@ -279,7 +291,7 @@ export default function InquiryForm({ serviceOptions, budgetOptions, endpoint = 
       </div>
 
       <div className="mt-5 space-y-3 sm:mt-6">
-        <BotCheckField error={errors.human_check} />
+        <BotCheckField error={errors.human_check} onRequireFields={revealUpperFieldErrors} />
         <button
           type="submit"
           className={`${buttonClass.base} ${buttonClass.gradient} w-full shadow-[0_12px_40px_rgb(197_246_61_/0.16)]`}

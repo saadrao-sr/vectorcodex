@@ -1,6 +1,7 @@
 ---
 import { ArrowUpRight } from 'lucide-react';
 import type { CaseStudy, Crumb } from '../../../types/content';
+import Breadcrumbs from '../../ui/Breadcrumbs.astro';
 import Container from '../../ui/Container.astro';
 import SectionBannerBg from '../../ui/SectionBannerBg.astro';
 import { buttonClass, eyebrowClass } from '../../ui/styles';
@@ -34,29 +35,7 @@ const metaItems = [
   <SectionBannerBg eager />
 
   <Container class="relative">
-    <nav aria-label="Breadcrumb" class="case-study-hero__crumbs">
-      <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] leading-none text-white/55">
-        {
-          crumbs.map((item, index) => {
-            const last = index === crumbs.length - 1;
-            return (
-              <li class="inline-flex max-w-full items-center gap-2">
-                {index > 0 && <span aria-hidden="true" class="text-white/30">/</span>}
-                {last ? (
-                  <span aria-current="page" class="truncate text-highlight">
-                    {item.name}
-                  </span>
-                ) : (
-                  <a href={item.href} class="truncate transition hover:text-highlight">
-                    {item.name}
-                  </a>
-                )}
-              </li>
-            );
-          })
-        }
-      </ol>
-    </nav>
+    <Breadcrumbs items={crumbs} class="case-study-hero__crumbs" />
 
     <div class="case-study-hero__layout">
       <div class="case-study-hero__copy min-w-0">

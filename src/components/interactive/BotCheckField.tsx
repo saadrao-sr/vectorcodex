@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, type ChangeEvent } from 'react';
 
 export const BOT_CHECK_FIELD = 'human_check';
 
@@ -14,11 +14,27 @@ type Props = {
   error?: string;
   className?: string;
   name?: string;
+  /**
+   * Called when the box is checked. Use to validate / scroll to empty fields above
+   * so users understand why the form still will not submit.
+   */
+  onRequireFields?: (form: HTMLFormElement | null) => void;
 };
 
 /** Visible human-verification checkbox shared across site forms. */
-export default function BotCheckField({ error, className = '', name = BOT_CHECK_FIELD }: Props) {
+export default function BotCheckField({
+  error,
+  className = '',
+  name = BOT_CHECK_FIELD,
+  onRequireFields,
+}: Props) {
   const id = useId();
+
+  function onChange(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target.checked) return;
+    onRequireFields?.(event.target.form);
+  }
+
   return (
     <div className={className}>
       <label
@@ -38,6 +54,7 @@ export default function BotCheckField({ error, className = '', name = BOT_CHECK_
           className="mt-1 h-4 w-4 shrink-0 rounded border-white/30 bg-transparent text-highlight focus:ring-highlight"
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : undefined}
+          onChange={onChange}
         />
         <span className="text-sm leading-6 text-white/80">
           I am not a robot. Please check this box to confirm you are submitting this form yourself.

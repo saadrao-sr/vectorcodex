@@ -3,31 +3,34 @@ import type { Crumb } from '../../types/content';
 
 interface Props {
   items: Crumb[];
+  class?: string;
 }
 
-const { items } = Astro.props;
+const { items, class: className = 'mb-5 sm:mb-6' } = Astro.props;
 ---
 
-<nav aria-label="Breadcrumb" class="mb-5 sm:mb-6">
-  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] leading-none text-white/55">
-    {
-      items.map((item, index) => {
-        const last = index === items.length - 1;
-        return (
-          <li class="inline-flex max-w-full items-center gap-2">
-            {index > 0 && <span aria-hidden="true" class="text-white/30">/</span>}
-            {last ? (
-              <span aria-current="page" class="truncate text-highlight">
-                {item.name}
-              </span>
-            ) : (
-              <a href={item.href} class="truncate transition hover:text-highlight">
-                {item.name}
-              </a>
-            )}
-          </li>
-        );
-      })
-    }
-  </ol>
-</nav>
+{
+  items.length > 0 && (
+    <nav aria-label="Breadcrumb" class={className}>
+      <ol class="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[0.8125rem] leading-snug text-white/80">
+        {items.map((item, index) => {
+          const last = index === items.length - 1;
+          return (
+            <li class="inline-flex max-w-full items-center gap-2">
+              {index > 0 && <span aria-hidden="true" class="text-white/45">/</span>}
+              {last ? (
+                <span aria-current="page" class="truncate font-medium text-highlight">
+                  {item.name}
+                </span>
+              ) : (
+                <a href={item.href} class="truncate transition hover:text-highlight">
+                  {item.name}
+                </a>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  )
+}
