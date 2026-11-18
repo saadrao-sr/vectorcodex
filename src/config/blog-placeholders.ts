@@ -80,7 +80,7 @@ export const blogPlaceholders: BlogPost[] = [
       { label: 'Facebook', href: 'https://www.facebook.com/' },
       { label: 'Pinterest', href: 'https://www.pinterest.com/' },
     ],
-    image: { ...cover, alt: 'SEO foundations article cover for VectorCodex insights' },
+    image: { ...cover, alt: 'SEO foundations article cover for VectorCodex blog' },
     categories: [{ name: 'SEO', slug: 'seo' }],
     tags: [
       { name: 'Technical SEO', slug: 'technical-seo' },

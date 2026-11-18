@@ -18,7 +18,7 @@ export const mobileMenuLinks: NavLink[] = [
   { href: '/services/', label: 'Services' },
   { href: '/industries/', label: 'Industries' },
   { href: '/case-studies/', label: 'Case Studies' },
-  { href: '/blog/', label: 'Insights' },
+  { href: '/blog/', label: 'Blog' },
   { href: '/contact/', label: 'Contact' },
 ];
 
@@ -44,7 +44,7 @@ export const companyLinks: NavLink[] = [
   { href: '/about/', label: 'About' },
   { href: '/services/', label: 'Our Services' },
   { href: '/industries/', label: 'Industries' },
-  { href: '/blog/', label: 'Insights' },
+  { href: '/blog/', label: 'Blog' },
   { href: '/contact/', label: 'Contact' },
 ];
 

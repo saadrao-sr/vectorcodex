@@ -188,7 +188,7 @@ export default function InsightsCarousel({ items }: Props) {
         <button
           type="button"
           className={`${navBtnClass} hidden sm:inline-flex`}
-          aria-label="Previous insights"
+          aria-label="Previous blog posts"
           onClick={() => go(-1)}
           disabled={count <= perView}
         >
@@ -217,7 +217,7 @@ export default function InsightsCarousel({ items }: Props) {
           }}
         >
           <p id={labelId} className="sr-only">
-            Insights carousel. Use arrow keys or the previous and next buttons to browse articles.
+            Blog carousel. Use arrow keys or the previous and next buttons to browse articles.
           </p>
           <p id={statusId} className="sr-only" aria-live="polite">
             Showing {statusTitles}. Slide {index + 1} of {pageCount}.
@@ -252,7 +252,7 @@ export default function InsightsCarousel({ items }: Props) {
         <button
           type="button"
           className={`${navBtnClass} hidden sm:inline-flex`}
-          aria-label="Next insights"
+          aria-label="Next blog posts"
           onClick={() => go(1)}
           disabled={count <= perView}
         >
@@ -264,23 +264,23 @@ export default function InsightsCarousel({ items }: Props) {
         <button
           type="button"
           className={`${navBtnClass} sm:hidden`}
-          aria-label="Previous insights"
+          aria-label="Previous blog posts"
           onClick={() => go(-1)}
           disabled={count <= perView}
         >
           <ChevronLeft size={18} aria-hidden="true" />
         </button>
 
-        <div className="flex items-center gap-2" role="tablist" aria-label="Insight slides">
+        <div className="flex items-center gap-2" role="tablist" aria-label="Blog slides">
           {Array.from({ length: pageCount }, (_, pageIndex) => {
             const active = pageIndex === index;
             return (
               <button
-                key={`insight-dot-${pageIndex}`}
+                key={`blog-dot-${pageIndex}`}
                 type="button"
                 role="tab"
                 aria-selected={active}
-                aria-label={`Show insight set ${pageIndex + 1} of ${pageCount}`}
+                aria-label={`Show blog set ${pageIndex + 1} of ${pageCount}`}
                 className={[
                   'h-2.5 rounded-full transition-[width,background-color,border-color] duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-highlight',
                   active
@@ -296,7 +296,7 @@ export default function InsightsCarousel({ items }: Props) {
         <button
           type="button"
           className={`${navBtnClass} sm:hidden`}
-          aria-label="Next insights"
+          aria-label="Next blog posts"
           onClick={() => go(1)}
           disabled={count <= perView}
         >
