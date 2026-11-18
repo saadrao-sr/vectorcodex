@@ -268,7 +268,7 @@ vc_test_assert(!empty($pricing['ok']), 'pricing calculator ok', $passed, $failed
 if (!empty($pricing['ok'])) {
 	$p = $pricing['data']['payload'];
 	vc_test_assert(isset($p['businessAnswers']['companyName']), 'pricing keeps businessAnswers', $passed, $failed, $lines);
-	vc_test_assert(isset($p['serviceAnswers']['web']['websiteType']), 'pricing keeps serviceAnswers', $passed, $failed, $lines);
+	vc_test_assert(isset($p['serviceAnswers']['web']['siteType']), 'pricing keeps serviceAnswers', $passed, $failed, $lines);
 	vc_test_assert(isset($p['contactAnswers']['jobTitle']), 'pricing keeps contactAnswers job title', $passed, $failed, $lines);
 	vc_test_assert(isset($p['contactAnswers']['consent']) && $p['contactAnswers']['consent'] === 'yes', 'pricing keeps contactAnswers', $passed, $failed, $lines);
 	vc_test_assert(isset($p['estimate']['label']), 'pricing keeps estimate', $passed, $failed, $lines);

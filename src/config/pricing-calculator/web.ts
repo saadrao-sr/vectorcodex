@@ -4,6 +4,7 @@ export const webSteps: StepDef[] = [
   {
     id: 'web-type',
     title: 'Website type',
+    description: 'Website URL and industry were captured in your business details.',
     fields: [
       {
         id: 'siteType',
@@ -27,13 +28,6 @@ export const webSteps: StepDef[] = [
           { value: 'new', label: 'New website' },
           { value: 'redesign', label: 'Redesign / rebuild' },
         ],
-      },
-      {
-        id: 'existingUrl',
-        label: 'Existing website URL',
-        type: 'url',
-        placeholder: 'https://example.com',
-        showIf: (a) => a.buildType === 'redesign',
       },
       {
         id: 'pageCount',

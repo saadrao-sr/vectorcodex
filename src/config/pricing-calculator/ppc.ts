@@ -48,14 +48,8 @@ export const ppcSteps: StepDef[] = [
   {
     id: 'ppc-audience',
     title: 'Audience and spend',
+    description: 'Target market was captured in your business details.',
     fields: [
-      {
-        id: 'targetLocations',
-        label: 'Target countries / locations',
-        type: 'text',
-        required: true,
-        placeholder: 'e.g. United Kingdom, UAE',
-      },
       {
         id: 'targetAudience',
         label: 'Target audience',

@@ -4,14 +4,8 @@ export const seoSteps: StepDef[] = [
   {
     id: 'seo-site',
     title: 'Your website',
+    description: 'Website URL, industry and target market were captured in your business details.',
     fields: [
-      {
-        id: 'currentUrl',
-        label: 'Current website URL',
-        type: 'url',
-        required: true,
-        placeholder: 'https://example.com',
-      },
       {
         id: 'websiteType',
         label: 'Website type',
@@ -52,15 +46,8 @@ export const seoSteps: StepDef[] = [
   },
   {
     id: 'seo-targets',
-    title: 'Targets and locations',
+    title: 'Local SEO and keywords',
     fields: [
-      {
-        id: 'targetLocations',
-        label: 'Target locations and countries',
-        type: 'text',
-        required: true,
-        placeholder: 'e.g. London, UK & Dubai, UAE',
-      },
       {
         id: 'needsLocalSeo',
         label: 'Do you need Local SEO?',
@@ -187,10 +174,10 @@ export const seoSteps: StepDef[] = [
       },
       {
         id: 'seoChallenges',
-        label: 'Current SEO challenges and primary goals',
+        label: 'Current SEO challenges',
         type: 'textarea',
         required: true,
-        placeholder: 'What is blocking growth today, and what would success look like?',
+        placeholder: 'What is blocking organic visibility or rankings today?',
       },
     ],
   },

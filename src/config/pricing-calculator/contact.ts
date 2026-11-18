@@ -28,13 +28,6 @@ export const contactSteps: StepDef[] = [
         placeholder: '+44…',
       },
       {
-        id: 'company',
-        label: 'Company name',
-        type: 'text',
-        required: true,
-        placeholder: 'Company name',
-      },
-      {
         id: 'jobTitle',
         label: 'Job title / position',
         type: 'text',

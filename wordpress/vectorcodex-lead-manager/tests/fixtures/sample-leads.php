@@ -119,21 +119,20 @@ return array(
 				),
 				'serviceAnswers'     => array(
 					'web' => array(
-						'currentUrl'  => 'https://price.example',
-						'websiteType' => 'ecommerce',
-						'pageCount'   => '11-30',
+						'siteType'  => 'ecommerce',
+						'buildType' => 'redesign',
+						'pageCount' => '6-15',
 					),
 					'seo' => array(
-						'currentUrl'      => 'https://price.example',
-						'seoStatus'       => 'basic',
-						'targetLocations' => 'UK',
+						'websiteType' => 'ecommerce',
+						'seoStatus'   => 'basic',
+						'pageCount'   => '11-30',
 					),
 				),
 				'contactAnswers'     => array(
 					'fullName'        => 'Gabe Price',
 					'email'           => 'gabe.price@example.com',
 					'phone'           => '+447700903333',
-					'company'         => 'Price Co',
 					'jobTitle'        => 'Marketing Director',
 					'country'         => 'United Kingdom',
 					'contactMethod'   => 'email',

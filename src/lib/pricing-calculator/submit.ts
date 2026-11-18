@@ -63,7 +63,10 @@ export async function submitPricingEnquiry(
   body.set('name', String(payload.contactAnswers.fullName ?? ''));
   body.set('email', String(payload.contactAnswers.email ?? ''));
   body.set('phone', String(payload.contactAnswers.phone ?? ''));
-  body.set('company', String(payload.contactAnswers.company ?? ''));
+  body.set(
+    'company',
+    String(payload.contactAnswers.company ?? payload.businessAnswers.companyName ?? ''),
+  );
 
   prepareLeadFormData(body, 'pricing_calculator', { turnstileToken: options?.turnstileToken });
 
